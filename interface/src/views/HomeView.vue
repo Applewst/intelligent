@@ -1,9 +1,14 @@
+
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+
+  // import ref from 'vue';
+
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div>这是主页</div>
 </template>
+
+<style scoped>
+
+</style>
