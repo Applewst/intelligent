@@ -1,4 +1,5 @@
 <script setup>
+
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
@@ -23,10 +24,15 @@ function handleMenuSelect(key) {
     ElMessage.success('已退出登录')
   }
 }
+
+// import { useStore } from '../stores/counter'
+
+// const store = useStore()
+
 </script>
 
 <template>
-  <div class="header">
+ 
     <div class="header-top">
       <div class="logo"><img src="../assets/images/OIP-C.jpg" alt="" style="width: 180px;"></div>
       <div class="search-center">
@@ -62,6 +68,31 @@ function handleMenuSelect(key) {
           </template>
         </el-dropdown>
       </div>
+
+    <div class="l-content">
+      <el-button size="small" class="el-button" @click="handleCollapse">
+        <component class="icons" :is="menu"></component>
+      </el-button>
+      <el-breadcrumb separator="/" class="bread">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div class="r-content">
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          <img src="../assets/images/user.jpg" class="user" />
+          <el-icon class="el-icon--right">
+            <arrow-down />
+          </el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item>退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
     </div>
     <el-menu
       class="header-menu"
@@ -105,11 +136,7 @@ function handleMenuSelect(key) {
 </template>
 
 <style scoped lang="less">
-.header {
-  width: 100%;
-  background: #fff;
-  box-shadow: 0 2px 8px #f0f1f2;
-}
+
 .header-top {
   display: flex;
   align-items: center;
@@ -164,8 +191,27 @@ function handleMenuSelect(key) {
 }
 .header-menu {
   border-bottom: none;
-  background: #6cb6f5;
-  padding-left: 180px;
-  
+  background: #409EFF;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  box-shadow: 0 2px 8px #e0e7ef;
+  font-size: 16px;
+}
+.header-menu :deep(.el-menu-item),
+.header-menu :deep(.el-sub-menu__title) {
+  border-radius: 6px;
+  margin: 0 4px;
+  transition: background 0.2s;
+}
+.header-menu :deep(.el-menu-item:hover),
+.header-menu :deep(.el-sub-menu__title:hover) {
+  background: #66b1ff;
 }
 </style>
+
+
