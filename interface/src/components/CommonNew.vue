@@ -22,19 +22,22 @@ const handlenewClick = (newId) => {
   router.push(`/news/${newId}`) // 跳转到新闻详情页
 }
 
-// 组件挂载时获取数据
 onMounted(async () => {
   try {
     loading.value = true
-    // 调用后端接口获取实际数据
-    const data = await getnewList()
-    newList.value = data
+    // 调用 API 获取数据（可传递参数，如分类筛选）
+    const response = await getnewList({ category: 'all' })
 
-    if (data.length === 0) {
-      ElMessage.info('当前没有动态数据') // 更新提示文本
+    // 关键：从 response 中提取 data 字段
+    newList.value = response.data || []
+
+    // 空数据提示
+    if (newList.value.length === 0) {
+      ElMessage.info('当前没有动态数据')
     }
   } catch (err) {
-    ElMessage.error(err.message || '获取动态失败，请重试') // 更新提示文本
+    ElMessage.error(err.message || '获取动态失败，请重试')
+    newList.value = [] // 错误时清空数据
   } finally {
     loading.value = false
   }
@@ -109,7 +112,6 @@ onMounted(async () => {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
- 
 }
 
 /* 标题栏样式 */
@@ -129,7 +131,7 @@ onMounted(async () => {
 
 .new-header h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 1.8rem;
   font-weight: 600;
   color: #333;
 }

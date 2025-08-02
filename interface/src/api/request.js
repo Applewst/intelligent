@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { ElMessage } from 'element-plus';
 const baseURL = 'http://localhost:8080/api' //后面再改
 const service = axios.create({
   baseURL,
@@ -18,7 +17,7 @@ service.interceptors.request.use(function (config) {
 service.interceptors.response.use(function (res) {
     // 2xx 范围内的状态码都会触发该函数。
    if(res.data.code===0){
-      return res  
+      return res
     }
     ElMessage.error(res.data.message || '服务异常')
   }, function (error) {

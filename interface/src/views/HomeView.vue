@@ -2,6 +2,7 @@
 import CommonHeader from '../components/CommonHeader.vue'
 // import ref from 'vue';
 import CommonNew from '@/components/CommonNew.vue'
+import CommonProject from '@/components/CommonProject.vue'
 </script>
 
 <template>
@@ -12,6 +13,7 @@ import CommonNew from '@/components/CommonNew.vue'
       </el-header>
       <el-main class="common-main">
         <common-new />
+        <common-project />
       </el-main>
       <el-footer class="common-footer">Footer</el-footer>
     </el-container>
