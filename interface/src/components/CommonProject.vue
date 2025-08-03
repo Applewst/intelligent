@@ -1,8 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { WarningFilled, ArrowRight } from '@element-plus/icons-vue'
 import { getProjectList } from '@/api/project'
 
 // 路由实例
@@ -114,7 +112,7 @@ const handleShowMore = () => {
 .research-directions-container {
   padding: 2rem;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -131,26 +129,11 @@ const handleShowMore = () => {
   padding-bottom: 0.8rem;
   width: 100%;
 }
-
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, #409eff, #6dd5fa);
-  border-radius: 3px;
-}
-
 /* 网格布局 - 3个项目 */
 .directions-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 4rem;
   width: 100%;
-  margin-bottom: 3rem;
   justify-items: center;
 }
 
