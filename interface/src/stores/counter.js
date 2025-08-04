@@ -7,6 +7,20 @@ export const useCounterStore = defineStore('counter', () => {
   function increment() {
     count.value++
   }
+  const userName = ref('z')   //用户名
+  const userType = ref('123')    //用户类型
+  const setUser = (name, type) => {
+    userName.value = name
+    userType.value = type
+  }  //修改用户名和用户类型
 
-  return { count, doubleCount, increment }
+  return { 
+    count, 
+    doubleCount, 
+    increment ,
+    userName,
+    userType,
+    setUser
+  
+  }
 })
