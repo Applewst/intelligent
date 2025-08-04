@@ -109,9 +109,10 @@ onMounted(async () => {
 
 <style scoped>
 .new-container {
+  /* margin-top: 1000px; */
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 50px auto;
 }
 
 /* 标题栏样式 */

@@ -29,12 +29,21 @@ import CommonTeacher from '@/components/CommonTeacher.vue'
 <style scoped lang="less">
 .common-container {
   height: 100%;
+  display: flex; // 确保容器是垂直排列的
+  flex-direction: column; // 垂直排列
 }
+// .common-header {
+//   height: 80px; // 确保 header 有固定高度
+// }
+
 .simple-title-container {
   text-align: center;
   margin-bottom: 30px; /* 与下方轮播保持间距 */
   padding: 10px 0;
 }
+// .common-main {
+//   flex: 1; // 允许 main 占用剩余空间
+// }
 
 /* 主标题样式 */
 .main-title {
