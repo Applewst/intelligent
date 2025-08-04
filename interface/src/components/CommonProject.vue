@@ -112,10 +112,11 @@ const handleShowMore = () => {
 .research-directions-container {
   padding: 2rem;
   max-width: 1000px;
-  margin: 20px auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
 }
 
 /* 标题样式 */

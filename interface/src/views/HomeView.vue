@@ -4,6 +4,7 @@ import CommonHeader from '../components/CommonHeader.vue'
 import CommonNew from '@/components/CommonNew.vue'
 import CommonProject from '@/components/CommonProject.vue'
 import CommonTeacher from '@/components/CommonTeacher.vue'
+import CommonPhoto from '@/components/CommonPhoto.vue'
 </script>
 
 <template>
@@ -20,6 +21,7 @@ import CommonTeacher from '@/components/CommonTeacher.vue'
           <h2 class="main-title">教师队伍</h2>
         </div>
         <common-teacher />
+        <common-photo />
       </el-main>
       <el-footer class="common-footer">Footer</el-footer>
     </el-container>

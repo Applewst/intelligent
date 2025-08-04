@@ -8,7 +8,6 @@ const mockTeacherData = [
     title: '前端开发工程师',
     email: 'zhangshan@example.com',
     avatar: 'https://picsum.photos/id/1005/200/200',
-    tagType: 'primary',
   },
   {
     id: 2,
@@ -16,7 +15,6 @@ const mockTeacherData = [
     title: '后端开发工程师',
     email: 'lisi@example.com',
     avatar: 'https://picsum.photos/id/1012/200/200',
-    tagType: 'primary',
   },
   {
     id: 3,
@@ -24,7 +22,6 @@ const mockTeacherData = [
     title: '产品经理',
     email: 'wangwu@example.com',
     avatar: 'https://picsum.photos/id/1027/200/200',
-    tagType: 'success',
   },
   {
     id: 4,
@@ -32,7 +29,6 @@ const mockTeacherData = [
     title: 'UI设计师',
     email: 'zhaoliu@example.com',
     avatar: 'https://picsum.photos/id/1025/200/200',
-    tagType: 'warning',
   },
   {
     id: 5,
@@ -40,7 +36,6 @@ const mockTeacherData = [
     title: '测试工程师',
     email: 'qianqi@example.com',
     avatar: 'https://picsum.photos/id/1074/200/200',
-    tagType: 'info',
   },
   {
     id: 6,
