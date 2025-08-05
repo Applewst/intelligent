@@ -1,6 +1,5 @@
 <script setup>
 import CommonHeader from '../components/CommonHeader.vue'
-// import ref from 'vue';
 import CommonNew from '@/components/CommonNew.vue'
 import CommonProject from '@/components/CommonProject.vue'
 import CommonTeacher from '@/components/CommonTeacher.vue'
@@ -23,7 +22,6 @@ import CommonPhoto from '@/components/CommonPhoto.vue'
         <common-teacher />
         <common-photo />
       </el-main>
-      <el-footer class="common-footer">Footer</el-footer>
     </el-container>
   </div>
 </template>

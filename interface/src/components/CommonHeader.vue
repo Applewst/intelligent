@@ -1,5 +1,4 @@
 <script setup>
-
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
@@ -33,32 +32,24 @@ function handleMenuSelect(key) {
 // import { useStore } from '../stores/counter'
 
 // const store = useStore()
-
 </script>
 
 <template>
   <div class="header-top">
-    <div class="logo"><img src="../assets/images/OIP-C.jpg" alt="" style="width: 180px;"></div>
+    <div class="logo"><img src="../assets/images/OIP-C.jpg" alt="" style="width: 180px" /></div>
     <div class="search-center">
-      <el-input
-        placeholder="搜索"
-        size="small"
-        class="search-input"
-        :prefix-icon="Search"
-      />
+      <el-input placeholder="搜索" size="small" class="search-input" :prefix-icon="Search" />
     </div>
     <div class="header-actions">
       <el-button type="primary" size="small">English</el-button>
-      <el-dropdown
-        trigger="click"
-        @command="handleMenuSelect"
-      >
+      <el-dropdown trigger="click" @command="handleMenuSelect">
         <span class="el-dropdown-link" @click="handleAvatarClick">
           <el-avatar
             v-if="isLogin"
             :style="userType === 'admin' ? 'border:2px solid #409EFF' : 'border:2px solid gold'"
             size="large"
-          >{{ userName ? userName[0] : '' }}</el-avatar>
+            >{{ userName ? userName[0] : '' }}</el-avatar
+          >
           <el-avatar v-else size="large" icon="el-icon-user"></el-avatar>
         </span>
         <template #dropdown>
@@ -117,7 +108,6 @@ function handleMenuSelect(key) {
 </template>
 
 <style scoped lang="less">
-
 .header-top {
   display: flex;
   align-items: center;
@@ -178,10 +168,6 @@ function handleMenuSelect(key) {
   justify-content: space-around;
 }
 
-.header-menu-container {
-  // margin-top: 20px; /* 根据需求调整间距 */
-}
-
 .header-menu {
   border-bottom: none;
   background: #6cb6f5;
@@ -207,7 +193,6 @@ function handleMenuSelect(key) {
 .header-menu :deep(.el-sub-menu__title:hover) {
   background: #66b1ff;
 }
-
 </style>
 
 

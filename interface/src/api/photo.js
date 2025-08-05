@@ -1,14 +1,10 @@
 
 import service from './request';
 
-
 // 切换模式：true-使用模拟数据，false-使用真实AJAX请求
 const USE_MOCK_DATA = true;
 
-/**
- * 获取照片墙图片列表
- * 同时支持真实AJAX请求和模拟数据
- */
+
 export const getPhotoWallImages = async () => {
   // 使用模拟数据模式
   if (USE_MOCK_DATA) {
