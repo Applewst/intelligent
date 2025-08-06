@@ -1,7 +1,10 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
-
+import { useCounterStore } from "../stores/counter";
+const store = useCounterStore();
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
   
     // 当前表单状态，初始为登录表单
@@ -15,6 +18,7 @@ import { ElMessage } from "element-plus";
       password: "",
     });
 
+
     // 注册表单的数据模型
     const registerForm = reactive({
       username: "",
@@ -27,16 +31,16 @@ import { ElMessage } from "element-plus";
       username: [
         { required: true, message: "请输入用户名", trigger: "blur" },
         {
-          pattern: /^[a-zA-Z0-9_]{5,20}$/,
-          message: "用户名格式不正确！仅允许字母、数字和下划线，长度为 5-20",
+          pattern:/^[\u4e00-\u9fa5a-zA-Z0-9_]{2,10}$/,
+          message: "用户名格式不正确！仅允许汉字，字母、数字和下划线，长度为 2-10",
           trigger: "blur",
         },
       ],
       password: [
         { required: true, message: "请输入密码", trigger: "blur" },
         {
-          pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/,
-          message: "密码格式不正确！至少包含一个字母、一个数字和一个特殊字符，长度为 8-20",
+          pattern: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/,
+          message: "密码格式不正确！至少包含一个字母、一个数字，长度为 6-20",
           trigger: "blur",
         },
       ],
@@ -47,16 +51,16 @@ import { ElMessage } from "element-plus";
       username: [
         { required: true, message: "请输入用户名", trigger: "blur" },
         {
-          pattern: /^[a-zA-Z0-9_]{5,20}$/,
-          message: "用户名格式不正确！仅允许字母、数字和下划线，长度为 5-20",
+          pattern: /^[\u4e00-\u9fa5a-zA-Z0-9_]{2,10}$/,
+          message: "用户名格式不正确！仅允许汉字，字母、数字和下划线，长度为 2-10",
           trigger: "blur",
         },
       ],
       password: [
         { required: true, message: "请输入密码", trigger: "blur" },
         {
-          pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/,
-          message: "密码格式不正确！至少包含一个字母、一个数字和一个特殊字符，长度为 8-20",
+          pattern: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/,
+          message: "密码格式不正确！至少包含一个字母、一个数字，长度为 6-20",
           trigger: "blur",
         },
       ],
@@ -88,6 +92,12 @@ import { ElMessage } from "element-plus";
           // 验证登录表单
           if (valid) {
             ElMessage.success("登录成功！");
+            //登录成功，跳到首页
+            router.push('/');
+            store.isLogin = true;
+            store.setUser(loginForm.username, 'admin');
+
+            
           } else {
             ElMessage.error("表单验证失败，请检查输入！");
           }
@@ -97,6 +107,9 @@ import { ElMessage } from "element-plus";
           // 验证注册表单
           if (valid) {
             ElMessage.success("注册成功！");
+            //注册成功，跳到登录
+            currentForm.value = "login";
+            loginRef.value.resetFields();  // 重置登录表单
           } else {
             ElMessage.error("表单验证失败，请检查输入！");
           }
@@ -155,6 +168,7 @@ import { ElMessage } from "element-plus";
               prefix-icon="el-icon-lock"
             ></el-input>
           </el-form-item>
+          
           <!-- 记住我复选框和忘记密码链接 -->
           <el-form-item class="remember-me">
             <el-checkbox v-model="rememberMe">记住我</el-checkbox>
@@ -206,6 +220,7 @@ import { ElMessage } from "element-plus";
               prefix-icon="el-icon-lock"
             ></el-input>
           </el-form-item>
+          
           <!-- 注册按钮 -->
           <el-form-item>
             <el-button

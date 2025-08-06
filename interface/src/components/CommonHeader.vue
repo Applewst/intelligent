@@ -1,22 +1,26 @@
 <script setup>
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { useCounterStore } from '../stores/counter'
+
 const store = useCounterStore()
 const activeIndex = ref('home')
 const userType = ref('') // internal 或 admin
 const userName = ref('')
-store.setUser('三', 'internal') // 设置用户信息
+// store.setUser('三', 'internal') // 设置用户信息
 
 const isLogin = ref(true) // 是否已登录
-
+onMounted(() => {
+  // 初始化用户信息
+  isLogin.value = store.isLogin
+  userName.value = store.userName
+  userType.value = store.userType
+})
 function handleAvatarClick() {
   if (!isLogin.value) {
     // 模拟登录
-    isLogin.value = true
-    userName.value = store.userName
-    userType.value = store.userType
+    
     ElMessage.success('登录成功')
   }
 }
