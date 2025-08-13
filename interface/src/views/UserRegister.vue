@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, ref } from "vue";
+import {View,Hide} from '@element-plus/icons-vue'
 import { ElMessage } from "element-plus";
 import { useCounterStore } from "../stores/counter";
 const store = useCounterStore();
@@ -107,6 +108,8 @@ const router = useRouter();
           // 验证注册表单
           if (valid) {
             ElMessage.success("注册成功！");
+            //清空表单数据
+            registerRef.value.resetFields();
             //注册成功，跳到登录
             currentForm.value = "login";
             loginRef.value.resetFields();  // 重置登录表单
@@ -167,6 +170,7 @@ const router = useRouter();
               placeholder="请输入密码"
               prefix-icon="el-icon-lock"
             ></el-input>
+            
           </el-form-item>
           
           <!-- 记住我复选框和忘记密码链接 -->
@@ -327,5 +331,10 @@ const router = useRouter();
 /* 忘记密码链接鼠标悬停样式 */
 .forgot-password:hover {
   text-decoration: underline;
+}
+
+.icon-password {
+  width: 20px;
+  height: 20px;
 }
 </style>

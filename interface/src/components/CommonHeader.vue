@@ -3,6 +3,8 @@ import { ref,onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { useCounterStore } from '../stores/counter'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const store = useCounterStore()
 const activeIndex = ref('home')
@@ -20,8 +22,7 @@ onMounted(() => {
 function handleAvatarClick() {
   if (!isLogin.value) {
     // 模拟登录
-    
-    ElMessage.success('登录成功')
+    router.push('/login')
   }
 }
 
@@ -40,14 +41,14 @@ function handleMenuSelect(key) {
 
 <template>
   <div class="header-top">
-    <div class="logo"><img src="../assets/images/OIP-C.jpg" alt="" style="width: 180px" /></div>
+    <div class="logo"><img src="../assets/images/hut.png" alt="" style="width: 180px" /></div>
     <div class="search-center">
       <el-input placeholder="搜索" size="small" class="search-input" :prefix-icon="Search" />
     </div>
     <div class="header-actions">
       <el-button type="primary" size="small">English</el-button>
       <el-dropdown trigger="click" @command="handleMenuSelect">
-        <span class="el-dropdown-link" @click="handleAvatarClick">
+        <span class="el-dropdown-link" >
           <el-avatar
             v-if="isLogin"
             :style="userType === 'admin' ? 'border:2px solid #409EFF' : 'border:2px solid gold'"
@@ -58,7 +59,7 @@ function handleMenuSelect(key) {
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item v-if="!isLogin" command="login">登录</el-dropdown-item>
+            <el-dropdown-item v-if="!isLogin" command="login" @click="handleAvatarClick">登录</el-dropdown-item>
             <el-dropdown-item v-else command="logout">退出登录</el-dropdown-item>
             <el-dropdown-item v-if="isLogin" disabled>
               {{ userType === 'admin' ? '管理员' : '内部人员' }}
@@ -126,7 +127,9 @@ function handleMenuSelect(key) {
   font-size: 36px;
   color: #fff;
   font-weight: bold;
-  width: 180px;
+  img{
+    object-fit: fill;
+  }
   display: flex;
   align-items: center;
   justify-content: center;

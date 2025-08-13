@@ -7,8 +7,9 @@ export const useCounterStore = defineStore('counter', () => {
   function increment() {
     count.value++
   }
-  const userName = ref('z')   //用户名
-  const userType = ref('123')    //用户类型
+  const userName = ref('')   //用户名
+  const userType = ref('')    //用户类型
+  const isLogin = ref(false)  //是否登录
   const setUser = (name, type) => {
     userName.value = name
     userType.value = type
@@ -20,6 +21,7 @@ export const useCounterStore = defineStore('counter', () => {
     increment ,
     userName,
     userType,
+    isLogin,
     setUser
   
   }
