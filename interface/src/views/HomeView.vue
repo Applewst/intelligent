@@ -13,16 +13,19 @@ import CommonPhoto from '@/components/CommonPhoto.vue'
         <common-header></common-header>
       </el-header>
       <el-main class="common-main">
-        <common-new />
-        <common-project />
-        <!-- 引用组件影响样式，外加标题 -->
-        <div class="simple-title-container">
-          <h2 class="main-title">教师队伍</h2>
+      <router-view></router-view>
+        <div v-if="$route.name === 'home'">
+          <common-new />
+          <common-project />
+          <!-- 引用组件影响样式，外加标题 -->
+          <div class="simple-title-container">
+            <h2 class="main-title">教师队伍</h2>
+          </div>
+          <common-teacher />
         </div>
-        <common-teacher />
-        <common-photo />
       </el-main>
     </el-container>
+    
   </div>
 </template>
 

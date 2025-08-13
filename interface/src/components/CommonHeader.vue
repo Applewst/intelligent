@@ -4,6 +4,7 @@ import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { useCounterStore } from '../stores/counter'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
 
 const store = useCounterStore()
@@ -79,34 +80,35 @@ function handleMenuSelect(key) {
       background-color="#409EFF"
       text-color="#fff"
       active-text-color="#ffd04b"
+      router="true"
     >
-      <el-menu-item index="home">首页</el-menu-item>
-      <el-menu-item index="team">团队介绍</el-menu-item>
-      <el-sub-menu index="result">
+      <el-menu-item index="/">首页</el-menu-item>
+      <el-menu-item index="/team/introduction" >团队介绍</el-menu-item>
+      <el-sub-menu index="search">
         <template #title>研究成果</template>
-        <el-menu-item index="project">研究项目</el-menu-item>
-        <el-menu-item index="paper">发表论文</el-menu-item>
-        <el-menu-item index="award">获奖情况</el-menu-item>
+        <el-menu-item index="/search/project">研究项目</el-menu-item>
+        <el-menu-item index="/search/paper">发表论文</el-menu-item>
+        <el-menu-item index="/search/award">获奖情况</el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="news">
         <template #title>团队动态</template>
-        <el-menu-item index="activity">科研动态</el-menu-item>
-        <el-menu-item index="event">团队活动</el-menu-item>
-        <el-menu-item index="student">学生发展</el-menu-item>
-        <el-menu-item index="photo">照片墙</el-menu-item>
+        <el-menu-item index="/news/activity">科研动态</el-menu-item>
+        <el-menu-item index="/news/event">团队活动</el-menu-item>
+        <el-menu-item index="/news/student">学生发展</el-menu-item>
+        <el-menu-item index="/news/photo">照片墙</el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="member">
         <template #title>成员信息</template>
-        <el-menu-item index="teacher">师资队伍</el-menu-item>
-        <el-menu-item index="student-list">在读学生</el-menu-item>
-        <el-menu-item index="alumni">桃李天下</el-menu-item>
+        <el-menu-item index="/member/teacher">师资队伍</el-menu-item>
+        <el-menu-item index="/member/studentlist">在读学生</el-menu-item>
+        <el-menu-item index="/member/alumni">桃李天下</el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="contact">联系我们</el-menu-item>
+      <el-menu-item index="/link/contact">联系我们</el-menu-item>
       <el-sub-menu index="resource">
         <template #title>资源共享</template>
-        <el-menu-item index="data">实验数据</el-menu-item>
-        <el-menu-item index="doc">内部文档</el-menu-item>
-        <el-menu-item index="code">代码库</el-menu-item>
+        <el-menu-item index="/resource/data">实验数据</el-menu-item>
+        <el-menu-item index="/resource/doc">内部文档</el-menu-item>
+        <el-menu-item index="/resource/code">代码库</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>
