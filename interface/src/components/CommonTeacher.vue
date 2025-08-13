@@ -21,10 +21,7 @@ const getTagColor = (type) => {
 
 // 跳转详情页（保持不变）
 const goToDetail = (person) => {
-  router.push({
-    path: '/teacher-detail',
-    query: { id: person.id },
-  })
+  router.push(`/teacher-detail/${person.id}`)
 }
 
 const fetchTeacherData = async () => {

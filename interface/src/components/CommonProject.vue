@@ -44,11 +44,6 @@ onMounted(() => {
 const handleCardClick = (projectId) => {
   router.push(`/projects/${projectId}`)
 }
-
-// 显示更多按钮点击事件
-const handleShowMore = () => {
-  router.push('/projects')
-}
 </script>
 
 <template>
@@ -98,21 +93,14 @@ const handleShowMore = () => {
       <p class="error-text">{{ error }}</p>
       <el-button type="text" @click="fetchDirections">重试</el-button>
     </div>
-
-    <div class="more-button-container" v-if="!loading && !error && directions.length > 0">
-      <el-button type="primary" size="default" class="more-button" @click="handleShowMore">
-        显示更多
-        <el-icon class="ml-1"><ArrowRight /></el-icon>
-      </el-button>
-    </div>
   </div>
 </template>
 
 <style scoped>
 .research-directions-container {
-  padding: 2rem;
+  padding: 5rem;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -130,6 +118,7 @@ const handleShowMore = () => {
   padding-bottom: 0.8rem;
   width: 100%;
 }
+
 /* 网格布局 - 3个项目 */
 .directions-grid {
   display: grid;
@@ -269,26 +258,6 @@ const handleShowMore = () => {
   margin-bottom: 1rem;
 }
 
-/* 显示更多按钮样式 */
-.more-button-container {
-  margin-top: 2rem;
-  width: 100%;
-  text-align: center;
-}
-
-.more-button {
-  padding: 0.6rem 2.2rem;
-  font-size: 1rem;
-  background: linear-gradient(90deg, #409eff, #6dd5fa);
-  border: none;
-  transition: all 0.3s ease;
-}
-
-.more-button:hover {
-  background: linear-gradient(90deg, #36bffa, #93d5ff);
-  transform: translateY(-1px);
-}
-
 /* 响应式调整 */
 @media (max-width: 768px) {
   .directions-grid,
@@ -311,10 +280,6 @@ const handleShowMore = () => {
 
   .direction-card {
     max-width: 250px;
-  }
-
-  .more-button {
-    width: 100%;
   }
 }
 </style>

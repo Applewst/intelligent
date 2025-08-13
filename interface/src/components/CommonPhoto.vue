@@ -108,11 +108,9 @@ const loadPhotos = async () => {
 
 // 查看更多按钮点击事件
 const handleViewMore = () => {
-  // 实际项目中跳转路由
-  // router.push('/photos/all').catch(err => {
-  //   ElMessage.error('跳转失败')
-  // })
-  ElMessage.success('跳转到全部照片页面')
+  router.push('/photos').catch((err) => {
+    ElMessage.error('跳转失败')
+  })
 }
 
 // 生命周期
@@ -148,8 +146,8 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding: 0 20px;
+  padding: 30px;
+  margin-bottom: -30px;
 }
 
 .main-title {
