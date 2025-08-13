@@ -17,11 +17,6 @@ const handleViewMore = () => {
   router.push('/news') // 跳转到新闻列表页
 }
 
-// 新闻卡片点击事件 - 跳转到详情页
-const handlenewClick = (newId) => {
-  router.push(`/news/${newId}`) // 跳转到新闻详情页
-}
-
 onMounted(async () => {
   try {
     loading.value = true
@@ -67,14 +62,7 @@ onMounted(async () => {
       </div>
 
       <!-- 动态卡片 -->
-      <el-card
-        v-for="item in newList"
-        :key="item.id"
-        v-else
-        class="new-card"
-        hoverable
-        @click="handlenewClick(item.id)"
-      >
+      <el-card v-for="item in newList" :key="item.id" v-else class="new-card" hoverable>
         <!-- 动态图片 -->
         <el-image
           :src="item.qrCode"
