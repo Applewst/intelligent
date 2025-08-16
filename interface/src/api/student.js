@@ -33,7 +33,7 @@ export const getStudentList = async (params = {}) => {
       })
     } else {
       // 真实后端接口
-      const response = await service.post('/student/list', params)
+      const response = await service.post('/students', params)
       return response
     }
   } catch (error) {
