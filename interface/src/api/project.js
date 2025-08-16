@@ -5,17 +5,17 @@ const mockProjectData = [
   {
     id: 1,
     imageUrl: 'https://picsum.photos/seed/proj1/200/200',
-    title: '人工智能',
+    title: '服务推荐',
   },
   {
     id: 2,
     imageUrl: 'https://picsum.photos/seed/proj2/200/200',
-    title: '量子计算',
+    title: '自然语言，大模型',
   },
   {
     id: 3,
     imageUrl: 'https://picsum.photos/seed/proj3/200/200',
-    title: '生物技术',
+    title: '图像处理，计算机视觉',
   },
 
 ];
