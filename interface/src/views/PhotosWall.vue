@@ -1,12 +1,17 @@
 <script setup>
-// import { RouterLink, RouterView } from 'vue-router'
 </script>
 
-<template>photos</template>
+<template>
+  <div class="team-introduce">
+    <h1>photos</h1>
+  </div>
+</template>
 
-<style scoped>
-#app {
-  width: 100%;
-  height: 100%;
+<style scoped lang="less">
+.team-introduce {
+  text-align: center;
+  margin-top: 100px;
+  font-size: 24px;
+  color: #333;
 }
 </style>

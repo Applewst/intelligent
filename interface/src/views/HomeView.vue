@@ -13,7 +13,7 @@ import CommonPhoto from '@/components/CommonPhoto.vue'
         <common-header></common-header>
       </el-header>
       <el-main class="common-main">
-      <router-view></router-view>
+        <router-view></router-view>
         <div v-if="$route.name === 'home'">
           <common-new />
           <common-project />
@@ -22,10 +22,10 @@ import CommonPhoto from '@/components/CommonPhoto.vue'
             <h2 class="main-title">教师队伍</h2>
           </div>
           <common-teacher />
+          <common-photo />
         </div>
       </el-main>
     </el-container>
-    
   </div>
 </template>
 

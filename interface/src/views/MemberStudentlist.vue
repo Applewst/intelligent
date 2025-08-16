@@ -1,10 +1,9 @@
 <script setup>
-
 </script>
 
 <template>
   <div class="team-introduce">
-    <h1>Member Student List</h1>
+    <h1>MemberStudentList</h1>
   </div>
 </template>
 

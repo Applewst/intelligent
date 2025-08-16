@@ -16,6 +16,17 @@ const project = ref({})
 // onMounted(() => fetchData())
 </script>
 
-<template>detail:{{ projectId }}</template>
+<template>
+  <div class="team-introduce">
+    <h1>detail:{{ projectId }}</h1>
+  </div>
+</template>
 
-<style scoped></style>
+<style scoped>
+.team-introduce {
+  text-align: center;
+  margin-top: 100px;
+  font-size: 24px;
+  color: #333;
+}
+</style>

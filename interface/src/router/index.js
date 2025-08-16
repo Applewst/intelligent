@@ -86,18 +86,7 @@ const router = createRouter({
           name: 'code',
           component: ()=>import('../views/ResourceCode.vue')
         },
-
-        
-      
-      
-      ]
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: UserRegister
-    },
-    {
+        {
       path:'/news',
       name:'news',
       component:()=>import('../views/MoreNews.vue'),
@@ -119,6 +108,16 @@ const router = createRouter({
       name: 'photos',
       component: ()=>import('../views/PhotosWall.vue'),
     },
+      ]
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: UserRegister
+    },
+
+
+
   ],
 })
 
