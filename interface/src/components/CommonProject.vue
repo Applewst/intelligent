@@ -42,7 +42,7 @@ onMounted(() => {
 
 // 卡片点击事件
 const handleCardClick = (projectId) => {
-  router.push(`/projects/${projectId}`)
+  router.push(`/search/project/${projectId}`)
 }
 </script>
 

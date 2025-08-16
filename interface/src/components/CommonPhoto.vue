@@ -1,43 +1,3 @@
-<template>
-  <div class="photo-wall-container">
-    <!-- 顶部区域：标题居左，查看更多居右 -->
-    <div class="top-bar">
-      <h1 class="main-title">照片墙</h1>
-      <div class="action-area">
-        <el-button @click="handleViewMore" type="primary" class="view-more-btn">
-          查看更多
-          <ArrowRight class="btn-icon" />
-        </el-button>
-      </div>
-    </div>
-
-    <!-- 照片墙主体 -->
-    <div class="photo-wall" ref="photoWall">
-      <!-- 加载状态 -->
-      <div v-if="isLoading" class="loading-state">
-        <div class="spinner"></div>
-        <p>加载照片中...</p>
-      </div>
-
-      <!-- 错误提示 -->
-      <div v-else-if="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
-
-      <!-- 照片列表（使用API数据） -->
-      <div
-        v-else
-        v-for="(photo, index) in displayedPhotos"
-        :key="index"
-        class="photo-item"
-        :style="getPhotoStyle(index)"
-      >
-        <img :src="photo.url" :alt="`照片 ${index + 1}`" />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
@@ -108,7 +68,7 @@ const loadPhotos = async () => {
 
 // 查看更多按钮点击事件
 const handleViewMore = () => {
-  router.push('/photos').catch((err) => {
+  router.push('/news/photo').catch((err) => {
     ElMessage.error('跳转失败')
   })
 }
@@ -125,6 +85,46 @@ onBeforeUnmount(() => {
   }
 })
 </script>
+
+<template>
+  <div class="photo-wall-container">
+    <!-- 顶部区域：标题居左，查看更多居右 -->
+    <div class="top-bar">
+      <h1 class="main-title">照片墙</h1>
+      <div class="action-area">
+        <el-button @click="handleViewMore" type="primary" class="view-more-btn">
+          查看更多
+          <ArrowRight class="btn-icon" />
+        </el-button>
+      </div>
+    </div>
+
+    <!-- 照片墙主体 -->
+    <div class="photo-wall" ref="photoWall">
+      <!-- 加载状态 -->
+      <div v-if="isLoading" class="loading-state">
+        <div class="spinner"></div>
+        <p>加载照片中...</p>
+      </div>
+
+      <!-- 错误提示 -->
+      <div v-else-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <!-- 照片列表（使用API数据） -->
+      <div
+        v-else
+        v-for="(photo, index) in displayedPhotos"
+        :key="index"
+        class="photo-item"
+        :style="getPhotoStyle(index)"
+      >
+        <img :src="photo.url" :alt="`照片 ${index + 1}`" />
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .photo-wall-container {

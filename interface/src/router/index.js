@@ -19,7 +19,7 @@ const router = createRouter({
         {
           path: '/search/project',
           name: 'project',
-          component: ()=>import('../views/SearchProject.vue')
+          component: ()=>import('../views/SearchProject.vue'),
         },
         {
           path: '/search/paper',
@@ -34,7 +34,7 @@ const router = createRouter({
         {
           path: '/news/activity',
           name: 'activity',
-          component: ()=>import('../views/NewsActivity.vue')
+          component: ()=>import('../views/NewsActivity.vue'),
         },
         {
           path: '/news/event',
@@ -87,27 +87,22 @@ const router = createRouter({
           component: ()=>import('../views/ResourceCode.vue')
         },
         {
-      path:'/news',
-      name:'news',
-      component:()=>import('../views/MoreNews.vue'),
-    },
-    {
-      path: '/projects/:projectId',
-      name: 'ProjectDetail',
-      component: ()=>import('../views/ProjectDetail.vue'),
-      props: route => ({ projectId: route.params.projectId })
-    },
-    {
-      path: '/teacher-detail/:teacherId',
-      name: 'TeacherDetail',
-      component: ()=>import('../views/TeacherDetail.vue'),
-      props: route => ({ projectId: route.params.teacherId })
-    },
-    {
-      path: '/photos',
-      name: 'photos',
-      component: ()=>import('../views/PhotosWall.vue'),
-    },
+          path: '/search/project/:projectId',
+          name: 'ProjectDetail',
+          component: ()=>import('../views/ProjectDetail.vue'),
+          props: route => ({ projectId: route.params.projectId })
+        },
+        {
+          path: '/member/teacher/:teacherId',
+          name: 'TeacherDetail',
+          component: ()=>import('../views/TeacherDetail.vue'),
+          props: route => ({ projectId: route.params.teacherId })
+        },
+        {
+          path: '/photos',
+          name: 'photos',
+          component: ()=>import('../views/NewsPhoto.vue'),
+        },
       ]
     },
     {

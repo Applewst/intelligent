@@ -21,7 +21,7 @@ const getTagColor = (type) => {
 
 // 跳转详情页（保持不变）
 const goToDetail = (person) => {
-  router.push(`/teacher-detail/${person.id}`)
+  router.push(`/member/teacher/${person.id}`)
 }
 
 const fetchTeacherData = async () => {

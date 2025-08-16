@@ -14,7 +14,7 @@ const router = useRouter()
 
 // 查看更多按钮点击事件
 const handleViewMore = () => {
-  router.push('/news') // 跳转到新闻列表页
+  router.push('/news/activity') // 跳转到新闻列表页
 }
 
 onMounted(async () => {
@@ -44,7 +44,7 @@ onMounted(async () => {
     <!-- 标题栏：标题居中 + 查看更多按钮 -->
     <div class="new-header">
       <div class="header-content">
-        <h2>最新动态</h2>
+        <h2>最新科研动态</h2>
         <el-button type="text" class="view-more-btn" @click="handleViewMore">
           查看更多
           <el-icon class="btn-icon">
@@ -100,7 +100,7 @@ onMounted(async () => {
   /* margin-top: 1000px; */
   padding: 20px;
   max-width: 1200px;
-  margin: 50px auto;
+  margin: 80px auto;
 }
 
 /* 标题栏样式 */

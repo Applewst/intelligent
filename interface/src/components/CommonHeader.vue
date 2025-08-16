@@ -1,11 +1,20 @@
 <script setup>
-import { ref,onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { useCounterStore } from '../stores/counter'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
+
+const activeMenuIndex = computed(() => {
+  const fullPath = route.path
+
+  const parentMatch = ['/search/project', '/member/teacher'].find((p) => fullPath.startsWith(p))
+
+  return parentMatch || fullPath // 没找到就按原样匹配
+})
 
 const store = useCounterStore()
 const activeIndex = ref('home')
@@ -49,7 +58,7 @@ function handleMenuSelect(key) {
     <div class="header-actions">
       <el-button type="primary" size="small">English</el-button>
       <el-dropdown trigger="click" @command="handleMenuSelect">
-        <span class="el-dropdown-link" >
+        <span class="el-dropdown-link">
           <el-avatar
             v-if="isLogin"
             :style="userType === 'admin' ? 'border:2px solid #409EFF' : 'border:2px solid gold'"
@@ -60,7 +69,9 @@ function handleMenuSelect(key) {
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item v-if="!isLogin" command="login" @click="handleAvatarClick">登录</el-dropdown-item>
+            <el-dropdown-item v-if="!isLogin" command="login" @click="handleAvatarClick"
+              >登录</el-dropdown-item
+            >
             <el-dropdown-item v-else command="logout">退出登录</el-dropdown-item>
             <el-dropdown-item v-if="isLogin" disabled>
               {{ userType === 'admin' ? '管理员' : '内部人员' }}
@@ -75,7 +86,7 @@ function handleMenuSelect(key) {
     <el-menu
       class="header-menu"
       mode="horizontal"
-      :default-active="activeIndex"
+      :default-active="activeMenuIndex"
       @select="(key) => (activeIndex = key)"
       background-color="#409EFF"
       text-color="#fff"
@@ -83,7 +94,7 @@ function handleMenuSelect(key) {
       router="true"
     >
       <el-menu-item index="/">首页</el-menu-item>
-      <el-menu-item index="/team/introduction" >团队介绍</el-menu-item>
+      <el-menu-item index="/team/introduction">团队介绍</el-menu-item>
       <el-sub-menu index="search">
         <template #title>研究成果</template>
         <el-menu-item index="/search/project">研究项目</el-menu-item>
@@ -129,7 +140,7 @@ function handleMenuSelect(key) {
   font-size: 36px;
   color: #fff;
   font-weight: bold;
-  img{
+  img {
     object-fit: fill;
   }
   display: flex;
