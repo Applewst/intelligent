@@ -87,7 +87,7 @@ import { useRouter } from 'vue-router';
       v-for="(module, moduleIndex) in modules"
       :key="moduleIndex"
     >
-      <h2>{{ module.title }}</h2>
+      <h2 class="module-title">{{ module.title }}</h2>
       <div class="image-container">
         <div
           class="image-item"
@@ -97,17 +97,19 @@ import { useRouter } from 'vue-router';
           @mouseleave="hideDetails(moduleIndex, imageIndex)"
         >
           <img :src="image.src" alt="项目图片" />
+          <p>我是文字</p>
           <p v-if="module.details[`${imageIndex + 1}`].visible">
             {{ module.details[`${imageIndex + 1}`].content }}
           </p>
         </div>
       </div>
-      <button
+      <el-button
         class="details-button"
+        style="color: brown"
         @click="goToDetails(moduleIndex + 1)"
       >
         点击详情
-      </button>
+    </el-button>
     </div>
   </div>
 </template>
@@ -128,12 +130,17 @@ import { useRouter } from 'vue-router';
   width: 1200px;     /* 控制模块宽度 */
   border: 1px solid #ccc;
   padding: 10px;
+  margin-bottom: 50px;
   border-radius: 5px;
   position: relative;
 }
 
 .module h2 {
-  margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 30px;
+
 }
 
 .image-container {
@@ -183,7 +190,7 @@ import { useRouter } from 'vue-router';
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(255, 255, 255, 0.7);
+
   border: none;
   padding: 5px 10px;
   cursor: pointer;
