@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User {
     private Integer id;
-    private String username;
+    private String name;
     private String password;
+    private String grade;       //年级
+    private String identity;    //权限身份
+    private String major;   //专业
+    private String avatar;  //头像地址
 }
