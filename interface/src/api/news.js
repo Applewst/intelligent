@@ -62,3 +62,25 @@ export const getnewList = async (params = {}) => {
     data: params
   });
 };
+
+
+// 获取全部科研动态（含本地 mock）
+export const getAllNews = async (params = {}) => {
+  const useMock = import.meta.env.VITE_USE_MOCK === 'true' || !import.meta.env.VITE_API_BASE_URL;
+
+  if (useMock) {
+    // 模拟网络延迟
+    await new Promise(resolve => setTimeout(resolve, 800));
+    return {
+      code: 0,
+      data: mocknewData          // 直接返回全部 4 条
+    };
+  }
+
+  // 生产环境调用真实接口
+  return service({
+    url: '/news/all',
+    method: 'post',
+    data:params
+  });
+};
