@@ -55,7 +55,7 @@ export const getEventList = async (params = {}) => {
   // 生产环境
   return service({
     url: '/events',
-    method: 'post',
-    data: params
+    method: 'get',
+    params: params
   })
 }

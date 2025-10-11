@@ -1,4 +1,3 @@
-
 import service from './request';
 
 // 模拟产品数据（用于本地测试）
@@ -58,8 +57,8 @@ export const getnewList = async (params = {}) => {
   // 使用统一配置的service调用真实接口
   return service({
     url: '/news',
-    method: 'post',
-    data: params
+    method: 'get',
+    params: params
   });
 };
 
@@ -80,7 +79,7 @@ export const getAllNews = async (params = {}) => {
   // 生产环境调用真实接口
   return service({
     url: '/news/all',
-    method: 'post',
-    data:params
+    method: 'get',
+    params:params
   });
 };
