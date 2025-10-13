@@ -25,6 +25,7 @@ const router = useRouter();
       username: "",
       password: "",
       confirmPassword: "",
+      jurisdiction: "",
     });
 
     // 登录表单的校验规则
@@ -76,6 +77,14 @@ const router = useRouter();
               callback();
             }
           },
+          trigger: "blur",
+        },
+      ],
+      jurisdiction: [
+        { required: true, message: "请输入权限", trigger: "blur" },
+        {
+          pattern: /^[A-Za-z]{5,20}$/,
+          message: "权限格式不正确！仅允许英文，长度为 5-20",
           trigger: "blur",
         },
       ],
@@ -210,7 +219,7 @@ const router = useRouter();
           <el-form-item prop="password">
             <el-input
               v-model="registerForm.password"
-              type="password"
+              type="show-password"
               placeholder="请输入密码"
               prefix-icon="el-icon-lock"
             ></el-input>
@@ -219,12 +228,20 @@ const router = useRouter();
           <el-form-item prop="confirmPassword">
             <el-input
               v-model="registerForm.confirmPassword"
-              type="password"
+              type="show-password"
               placeholder="请确认密码"
               prefix-icon="el-icon-lock"
             ></el-input>
           </el-form-item>
-          
+          <!-- 权限 -->
+          <el-form-item prop="jurisdiction">
+            <el-input
+              v-model="registerForm.jurisdiction"
+              
+              placeholder="请输入权限"
+              prefix-icon="el-icon-lock"
+            ></el-input>
+          </el-form-item>
           <!-- 注册按钮 -->
           <el-form-item>
             <el-button

@@ -76,16 +76,10 @@ const viewMorePapers = () => {
        <!-- 下方的大盒子 -->
     <div class="big-box">
       <el-row v-for="(paper, index) in papers" :key="index" :gutter="20" class="paper-item">
-        <el-col :span="24">
-          <div class="paper-content">
-            <div class="left-content">
-              <p>{{ paper.title }}</p>
-              <p class="paper-info">{{ paper.authors }}</p>
-            </div>
-            <div class="right-content">
-              <img :src="paper.image" alt="Paper Image" class="paper-image" @click="viewPaperDetail(paper.id)" />
-            </div>
-          </div>
+        <el-col :span="24" class="paper-content">
+          <el-card shadow="hover" class="card-item">
+            
+          </el-card>
         </el-col>
       </el-row>
      
@@ -107,6 +101,7 @@ const viewMorePapers = () => {
   width: 1000px;
   // height: 700px;
   margin: 0 auto;
+  margin-bottom: 40px;
   .research-item {
     display: flex;
     height: 200px;
@@ -146,40 +141,17 @@ const viewMorePapers = () => {
 
 
 .big-box {
+  width: 1000px;
+  margin: 0 auto;
   .paper-item {
+    
+    
+    
+    margin-bottom: 30px;
     .paper-content {
-      display: flex;
       margin: 0 auto;
-      margin-top: 50px;
-      height: 100px;
-      align-items: center;
-      width: 1000px;
-      padding: 20px;
-      border-radius: 8px;
-      background-color: #fff;
     }
-
-    .left-content {
-      flex: 1;
-      p {
-        margin: 0;
-        font-size: 16px;
-        color: #333;
-      }
-      .paper-info {
-        font-size: 12px;
-        color: #666;
-      }
-    }
-
-    .right-content {
-      .paper-image {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        cursor: pointer;
-      }
-    }
+    
   }
 
   .more-button {
