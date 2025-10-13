@@ -6,7 +6,7 @@ import com.web.api.error.Error;
  * 登录失败
  */
 public class NoFindAccountException extends RuntimeException {
-    public NoFindAccountException(String message) {
+    public NoFindAccountException() {
         super(Error.NOACCOUNT.toString());
     }
 }

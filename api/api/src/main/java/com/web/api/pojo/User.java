@@ -1,4 +1,4 @@
-package pojo;
+package com.web.api.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User {
     private Integer id;
-    private String name;
+    private String username;
     private String password;
-    private String grade;       //年级
+    private String salt;   //加密盐
     private String identity;    //权限身份
-    private String major;   //专业
-    private String avatar;  //头像地址
+    private boolean isDisabled; //是否禁用
 }

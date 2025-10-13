@@ -3,7 +3,7 @@ package com.web.api.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pojo.Result;
+import com.web.api.pojo.Result;
 
 /**
  * 首页内容
