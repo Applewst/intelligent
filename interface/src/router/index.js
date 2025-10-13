@@ -59,7 +59,7 @@ const router = createRouter({
         {
           path: '/member/studentlist',
           name: 'studentlist',
-          component: ()=>import('../views/MemberStudentlist.vue')
+          component: ()=>import('../views/MemberStudentList.vue')
         },
         {
           path: '/member/alumni',
@@ -114,6 +114,10 @@ const router = createRouter({
 
 
   ],
+  scrollBehavior(to, from, savedPosition) {
+    // 始终滚动到顶部
+    return { top: 0 }
+  }
 })
 
 export default router

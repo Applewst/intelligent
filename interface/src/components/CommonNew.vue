@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getnewList } from '@/api/new.js'
+import { getnewList } from '@/api/news.js'
 
 // 新闻列表数据
 const newList = ref([])

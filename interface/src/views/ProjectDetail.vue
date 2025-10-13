@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import SearchProject from '../components/SearchProject.vue'
 // import { getProjectDetail } from '@/api/project'
 
 const route = useRoute()
@@ -18,7 +19,10 @@ const project = ref({})
 
 <template>
   <div class="team-introduce">
-    <h1>detail:{{ projectId }}</h1>
+    <!-- <h1>detail:{{ projectId }}</h1>
+      -->
+    <SearchProject :projectId="projectId"/>
+
   </div>
 </template>
 
