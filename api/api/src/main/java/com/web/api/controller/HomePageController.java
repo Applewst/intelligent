@@ -1,6 +1,10 @@
 package com.web.api.controller;
 
+import com.web.api.service.impl.DynamicServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.web.api.pojo.Result;
@@ -11,6 +15,9 @@ import com.web.api.pojo.Result;
 @Slf4j
 @RestController
 public class HomePageController {
+
+    @Autowired
+    private DynamicServiceImpl dynamicServiceImpl;
 
     /**
      * 教师队伍
@@ -39,9 +46,10 @@ public class HomePageController {
     /**
      * 最新动态
      */
-    @PostMapping("/news")
+    @GetMapping("/news")
     public Result news() {
-        return new Result();
+
+        return dynamicServiceImpl.NewDynamic();
     }
 }
 

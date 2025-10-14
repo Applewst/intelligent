@@ -122,6 +122,7 @@ public class ShiroConfig {
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
         //设置过滤器链
 
+        filterChainDefinitionMap.put("/news","anon");
         filterChainDefinitionMap.put("/register","anon"); //注册接口可以匿名访问
         filterChainDefinitionMap.put("/login","anon");  //任何人都可以访问
         filterChainDefinitionMap.put("/static/**","anon"); //静态资源可以匿名访问
@@ -133,6 +134,7 @@ public class ShiroConfig {
 
         return shiroFilterFactoryBean;
     }
+
 }
 
 
