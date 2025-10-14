@@ -1,6 +1,8 @@
 package com.web.api.controller;
 
+import com.web.api.mapper.SearchDirectionMapper;
 import com.web.api.service.impl.DynamicServiceImpl;
+import com.web.api.service.impl.SearchDirectionServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,10 @@ public class HomePageController {
 
     @Autowired
     private DynamicServiceImpl dynamicServiceImpl;
+
+    @Autowired
+    private SearchDirectionServiceImpl searchDirectionServiceImpl;
+
 
     /**
      * 教师队伍
@@ -48,8 +54,15 @@ public class HomePageController {
      */
     @GetMapping("/news")
     public Result news() {
-
         return dynamicServiceImpl.NewDynamic();
+    }
+
+    /**
+     * 研究方向
+     */
+    @GetMapping("/projects")
+    public Result getProject() {
+        return searchDirectionServiceImpl.searchDirection();
     }
 }
 
