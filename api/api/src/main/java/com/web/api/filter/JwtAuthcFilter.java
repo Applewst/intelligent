@@ -38,7 +38,7 @@ public class JwtAuthcFilter extends AccessControlFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         //判断当前请求头中是否带有jwtToken的字符串
-        String jwtToken = WebUtils.toHttp(request).getHeader("jwtToken");
+        String jwtToken = WebUtils.toHttp(request).getHeader("token");
 
         HttpServletRequest httpRequest = WebUtils.toHttp(request);
         // 1. 没有 token

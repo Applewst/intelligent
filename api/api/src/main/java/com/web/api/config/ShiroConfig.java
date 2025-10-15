@@ -1,6 +1,5 @@
 package com.web.api.config;
 
-
 import com.web.api.config.impl.JwtTokenManager;
 import com.web.api.config.impl.ShiroSessionManager;
 import com.web.api.filter.JwtAuthcFilter;
@@ -11,15 +10,12 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,8 +29,7 @@ public class ShiroConfig {
 
     //创建权限管理器
     @Bean
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(UserRealm userRealm,
-                                                                  DefaultWebSessionManager sessionManager) {
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(UserRealm userRealm) {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
         //关联userRealm
         defaultWebSecurityManager.setRealm(userRealm);
@@ -75,30 +70,10 @@ public class ShiroConfig {
         return new LifecycleBeanPostProcessor();
     }
 
-    //AOP增强(使用注解鉴权方式)
-    @Bean
-    @DependsOn("lifecycleBeanPostProcessor")
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator(){
-        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
-        return defaultAdvisorAutoProxyCreator;
-    }
-
-    /**
-     * 配合DefaultAdvisorAutoProxyCreator事项注解权限校验
-     * @return
-     */
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager
-                                                                                           defaultWebSecurityManager){
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(defaultWebSecurityManager);
-        return authorizationAttributeSourceAdvisor;
-    }
 
     /**
      * 封装自定义过滤器
-     * @return
+     * @return Map<String, Filter>过滤器集合
      */
     private Map<String, Filter> filters(){
         Map<String, Filter> filters = new HashMap<>();
@@ -120,14 +95,22 @@ public class ShiroConfig {
 
         //添加shiro内置过滤器链
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
+
         //设置过滤器链
-
+        //首页内容
         filterChainDefinitionMap.put("/news","anon");
-        filterChainDefinitionMap.put("/register","anon"); //注册接口可以匿名访问
-        filterChainDefinitionMap.put("/login","anon");  //任何人都可以访问
-        filterChainDefinitionMap.put("/static/**","anon"); //静态资源可以匿名访问
-        filterChainDefinitionMap.put("/admin","jwt-roles[admin]"); //必须拥有admin角色才可以访问
+        filterChainDefinitionMap.put("/projects","anon");
+        filterChainDefinitionMap.put("/teachers","anon");
+        filterChainDefinitionMap.put("/photos","anon");
 
+        //登录接口
+        filterChainDefinitionMap.put("/login","anon");
+
+        //注册接口(后续改admin)
+        filterChainDefinitionMap.put("/register","anon");
+
+        //静态资源
+        filterChainDefinitionMap.put("/static/**","anon");
 
         //载入过滤器链
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

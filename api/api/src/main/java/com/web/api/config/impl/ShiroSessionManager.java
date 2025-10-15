@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class ShiroSessionManager extends DefaultWebSessionManager {
 
     //从请求中获得sessionId的key
-    private static final String AUTHORIZATION = "jwtToken";
+    private static final String AUTHORIZATION = "token";
 
     //自定义注入的资源类型名称
     private static final String REFERENCED_SESSION_ID_SOURCE = "Stateless request";
@@ -28,13 +28,13 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
 
     protected Serializable getSessionId(ServletRequest request, ServletResponse response) throws ShiroException {
         //判断请求header中是否有jwtToken字段
-        String jwtToken = WebUtils.toHttp(request).getHeader(AUTHORIZATION);
-        if (jwtToken == null || jwtToken.isEmpty()) {
+        String token = WebUtils.toHttp(request).getHeader(AUTHORIZATION);
+        if (token == null || token.isEmpty()) {
             //如果没有携带token，则按照父类的方式在cookie进行获取sessionId(默认实现)
             return super.getSessionId(request, response);
         } else  {
             //如果请求头中有token，则以token的方式获取sessionId
-            Claims claims = jwtTokenManager.decodeToken(jwtToken);
+            Claims claims = jwtTokenManager.decodeToken(token);
             //获取id
             String id = claims.getId();
 

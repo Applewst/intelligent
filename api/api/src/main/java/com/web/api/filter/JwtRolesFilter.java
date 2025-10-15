@@ -61,7 +61,7 @@ public class JwtRolesFilter extends RolesAuthorizationFilter {
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
         //判断当前请求头中是否带有jwtToken的字符串
-        String jwtToken = WebUtils.toHttp(request).getHeader("jwtToken");
+        String jwtToken = WebUtils.toHttp(request).getHeader("token");
 
         HttpServletRequest httpRequest = WebUtils.toHttp(request);
         // 1. 没有 token
@@ -91,8 +91,7 @@ public class JwtRolesFilter extends RolesAuthorizationFilter {
                 //判断是否拥有对应角色
                 if (rolesArray != null && rolesArray.length != 0) {
                     Set<String> roles = CollectionUtils.asSet(rolesArray);
-                    boolean a = subject.hasAllRoles(roles);
-                    return a;
+                    return subject.hasAllRoles(roles);
                 } else {
                     //无权限要求时，放行
                     return true;
