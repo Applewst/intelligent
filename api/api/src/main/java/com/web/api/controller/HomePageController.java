@@ -1,8 +1,13 @@
 package com.web.api.controller;
 
+
+import com.web.api.mapper.TeacherMapper;
+import com.web.api.service.TeacherService;
 import com.web.api.service.impl.DynamicServiceImpl;
 import com.web.api.service.impl.SearchDirectionServiceImpl;
+import com.web.api.service.impl.TeacherServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,11 +20,15 @@ import com.web.api.pojo.Result;
 @RestController
 public class HomePageController {
 
+
     @Autowired
     private DynamicServiceImpl dynamicServiceImpl;
 
     @Autowired
     private SearchDirectionServiceImpl searchDirectionServiceImpl;
+
+    @Autowired
+    private TeacherServiceImpl teacherServiceImpl;
 
     /**
      * 最新动态
@@ -36,8 +45,11 @@ public class HomePageController {
     public Result getProject() {
         return searchDirectionServiceImpl.searchDirection();
     }
+    @GetMapping("/teachers")
+    public Result getTeacher(){return teacherServiceImpl.getTeacher(); }
 }
     /**
+     *
      *教师队伍
      */
 
