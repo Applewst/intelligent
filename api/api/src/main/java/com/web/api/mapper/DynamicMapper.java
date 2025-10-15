@@ -17,5 +17,4 @@ public interface DynamicMapper {
      */
     @Select("select * from dynamic order by id desc limit 4")
     public List<Dynamic> selectNewDynamic();
-
 }

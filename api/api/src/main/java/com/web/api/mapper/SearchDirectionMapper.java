@@ -1,6 +1,6 @@
 package com.web.api.mapper;
 
-import com.web.api.service.impl.SearchDirection;
+import com.web.api.pojo.SearchDirection;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -15,4 +15,3 @@ public interface SearchDirectionMapper {
     @Select(" select * from research_direction")
     public List<SearchDirection> selectSearchDirection();
 }
-//66
