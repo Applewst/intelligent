@@ -15,3 +15,4 @@ public interface SearchDirectionMapper {
     @Select(" select * from research_direction")
     public List<SearchDirection> selectSearchDirection();
 }
+//66
