@@ -5,7 +5,9 @@ import com.web.api.pojo.Result;
 import com.web.api.service.StudentService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudenetMapper studenetMapper;
