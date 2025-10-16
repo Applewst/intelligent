@@ -1,0 +1,8 @@
+create table 'student'(
+'id'  tinyint not null auto_increment,
+'name' varchar(20) default null,
+'grade' varchar(20) default null,
+'major' varchar(20) default null,
+'avatar' varchar(20) default null,
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
