@@ -37,6 +37,7 @@ public class UserController {
         return Result.success();
     }
 
+
     @GetMapping("/admin")
     public Result admin() {
         return Result.success();

@@ -4,6 +4,7 @@ package com.web.api.controller;
 import com.web.api.mapper.TeacherMapper;
 import com.web.api.service.TeacherService;
 import com.web.api.service.impl.DynamicServiceImpl;
+import com.web.api.service.impl.PhotosWallServiceImpl;
 import com.web.api.service.impl.SearchDirectionServiceImpl;
 import com.web.api.service.impl.TeacherServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +31,13 @@ public class HomePageController {
     @Autowired
     private TeacherServiceImpl teacherServiceImpl;
 
+    @Autowired
+    private PhotosWallServiceImpl photosWallServiceImpl;
+
     /**
      * 最新动态
      */
+
     @GetMapping("/news")
     public Result news() {
         return dynamicServiceImpl.NewDynamic();
@@ -41,17 +46,28 @@ public class HomePageController {
     /**
      * 研究方向
      */
+
     @GetMapping("/projects")
     public Result getProject() {
         return searchDirectionServiceImpl.searchDirection();
     }
-    @GetMapping("/teachers")
-    public Result getTeacher(){return teacherServiceImpl.getTeacher(); }
-}
+
     /**
      *
      *教师队伍
      */
+
+    @GetMapping("/teachers")
+    public Result getTeacher(){return teacherServiceImpl.getTeacher(); }
+    /**
+     * 照片墙
+     */
+
+    @GetMapping("/photos")
+    public Result getPhoto(){
+        return photosWallServiceImpl.getPhotosWall();
+    }
+}
 
 
 
