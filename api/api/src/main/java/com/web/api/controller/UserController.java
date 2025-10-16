@@ -36,10 +36,4 @@ public class UserController {
         userServiceImpl.register(user);
         return Result.success();
     }
-
-
-    @GetMapping("/admin")
-    public Result admin() {
-        return Result.success();
-    }
 }

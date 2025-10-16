@@ -7,6 +7,7 @@ import com.web.api.pojo.User;
  * 用户操作接口
  */
 public interface UserService {
+
     /**
      * 根据用户名查询用户信息
      * @return 用户信息

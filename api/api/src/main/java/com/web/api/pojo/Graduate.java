@@ -5,21 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 教师类
+ * 毕业生类
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Teacher {
-    private String id;
+public class Graduate {
+    private int id;
     /** 姓名 */
     private String name;
-    /** 文章 */
-    private String title;
-    /** 邮箱 */
-    private String email;
+    /** 年级 */
+    private String grade;
+    /** 专业 */
+    private String major;
     /** 头像路径 */
     private String avatar;
-    /** 个人简介 */
-    private String info;
 }

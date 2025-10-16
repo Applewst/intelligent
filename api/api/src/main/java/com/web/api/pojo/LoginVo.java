@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LoginVo {
-    private String username;    //用户名
-    private String password;    //密码
+    /** 用户名 */
+    private String username;
+    /** 密码 */
+    private String password;
 }

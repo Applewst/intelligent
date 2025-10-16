@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 登录服务实现类
+ */
 @Slf4j
 @Service
 public class LoginServiceimpl implements LoginService {
@@ -45,7 +48,7 @@ public class LoginServiceimpl implements LoginService {
             jwtToken = jwtTokenManager.issuedToken("system", subject.getSession().getTimeout(), sessionId, claim);
         } catch (Exception e) {
             log.warn("用户{}登录失败: {}",loginVo.getUsername(), e.getMessage());
-            return Result.error("登录失败: " + e.getMessage());
+            return Result.error("登录失败,账号或密码错误");
         }
         return Result.success(jwtToken);
     }

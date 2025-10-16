@@ -7,6 +7,7 @@ import com.web.api.pojo.Result;
  * 登录服务接口
  */
 public interface LoginService {
+
     /**
      * 登录方法
      * @param loginVo 登录信息

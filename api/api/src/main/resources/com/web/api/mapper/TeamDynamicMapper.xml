@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.api.mapper.TeamDynamicMapper">
+    <select id="getAllDynamics" resultType="com.web.api.pojo.TeamDynamic">
+        select *
+        from team_dynamic
+    </select>
+    <select id="getNewDynamic" resultType="com.web.api.pojo.TeamDynamic">
+        select *
+        from team_dynamic
+        order by id DESC
+        limit #{num}
+    </select>
+    <select id="getAllImgs" resultType="java.lang.String">
+        select img
+        from team_dynamic
+    </select>
+</mapper>

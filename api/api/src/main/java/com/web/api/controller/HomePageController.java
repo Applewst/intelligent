@@ -1,14 +1,9 @@
 package com.web.api.controller;
 
-
-import com.web.api.mapper.TeacherMapper;
-import com.web.api.service.TeacherService;
-import com.web.api.service.impl.DynamicServiceImpl;
-import com.web.api.service.impl.PhotosWallServiceImpl;
-import com.web.api.service.impl.SearchDirectionServiceImpl;
+import com.web.api.service.impl.ResearchDirectionServiceImpl;
 import com.web.api.service.impl.TeacherServiceImpl;
+import com.web.api.service.impl.TeamDynamicServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,52 +16,49 @@ import com.web.api.pojo.Result;
 @RestController
 public class HomePageController {
 
-
     @Autowired
-    private DynamicServiceImpl dynamicServiceImpl;
-
-    @Autowired
-    private SearchDirectionServiceImpl searchDirectionServiceImpl;
+    private TeamDynamicServiceImpl teamDynamicServiceImpl;
 
     @Autowired
     private TeacherServiceImpl teacherServiceImpl;
 
     @Autowired
-    private PhotosWallServiceImpl photosWallServiceImpl;
+    private ResearchDirectionServiceImpl researchDirectionServiceImpl;
 
     /**
      * 最新动态
      */
-
     @GetMapping("/news")
     public Result news() {
-        return dynamicServiceImpl.NewDynamic();
+        //返回最新4条动态
+        return Result.success(teamDynamicServiceImpl.NewDynamics(4));
     }
 
     /**
      * 研究方向
      */
-
     @GetMapping("/projects")
     public Result getProject() {
-        return searchDirectionServiceImpl.searchDirection();
+        return Result.success(researchDirectionServiceImpl.getAllDirection());
     }
 
     /**
      *
      *教师队伍
      */
-
     @GetMapping("/teachers")
-    public Result getTeacher(){return teacherServiceImpl.getTeacher(); }
+    public Result getTeacher(){
+        return Result.success(teacherServiceImpl.getAllTeachers());
+    }
+
     /**
      * 照片墙
      */
-
     @GetMapping("/photos")
     public Result getPhoto(){
-        return photosWallServiceImpl.getPhotosWall();
+        return Result.success(teamDynamicServiceImpl.getAllImgs());
     }
+
 }
 
 

@@ -1,19 +1,25 @@
 package com.web.api.service.impl;
 
-import com.web.api.mapper.StudenetMapper;
-import com.web.api.pojo.Result;
+import com.web.api.mapper.StudentMapper;
+import com.web.api.pojo.Student;
 import com.web.api.service.StudentService;
-import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
+/**
+ * 学生服务实现类
+ */
+@Slf4j
 @Service
 public class StudentServiceImpl implements StudentService {
     @Autowired
-    private StudenetMapper studenetMapper;
+    private StudentMapper studentMapper;
 
     @Override
-    public Result getStudent() {
-        return Result.success(studenetMapper.getStudent());
+    public List<Student> getAllStudents() {
+        log.info("查询所有学生信息");
+        return studentMapper.getAllStudents();
     }
 }

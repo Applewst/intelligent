@@ -7,13 +7,15 @@ import lombok.NoArgsConstructor;
 /**
  * 统一响应类
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Result {
-    private Integer code;
+    /**状态码 */
+    private Integer code;   //1成功,0失败
+    /**提示信息 */
     private String message;
+    /**返回数据 */
     private Object data;
 
     //成功响应,无返回

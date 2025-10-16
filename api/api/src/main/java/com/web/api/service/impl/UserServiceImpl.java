@@ -11,6 +11,9 @@ import com.web.api.pojo.User;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 用户服务实现类
+ */
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JwtData findIdUserNameRoleByName(String username) {
+        log.info("根据用户名'{}'查询用户ID,用户名,身份", username);
         return userMapper.findIdNameIdentityByName(username);
     }
 
@@ -43,7 +47,7 @@ public class UserServiceImpl implements UserService {
         try {
             userMapper.addUser(newUser);
         } catch (Exception e) {
-            log.warn("用户" + newUser.getUsername() + "登录失败" + e.getMessage());
+            log.warn("用户" + newUser.getUsername() + "登录失败: " + e.getMessage());
             throw new RuntimeException("注册失败" + e.getMessage());
         }
     }

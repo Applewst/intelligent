@@ -78,7 +78,7 @@ public class JwtRolesFilter extends RolesAuthorizationFilter {
                 Subject subject = getSubject(request, response);
                 //解析用户名
                 Claims claims = jwtTokenManager.decodeToken(jwtToken);
-                String userJson = (String) claims.get("user");
+                String userJson = (String) claims.get("user.sql");
                 JwtData data = JSONObject.parseObject(userJson, JwtData.class);
                 String username = data.getUsername();
                 if (subject.getPrincipal() == null) {

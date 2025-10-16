@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.api.mapper.ResearchDirectionMapper">
+    <select id="getAllDirections" resultType="com.web.api.pojo.ResearchDirection">
+        select *
+        from research_direction
+    </select>
+</mapper>
