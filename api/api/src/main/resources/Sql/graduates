@@ -1,3 +1,8 @@
 create table 'graduates'(
-'url' DEFAULT NULL
+‘id’ tinyint not null auto_increment
+'name' varchar(20) DEFAULT NULL,
+'grade' varchar(20) DEFAULT NULL,
+'major' varchar(20) DEFAULT NULL,
+'avatar' varchar(50) DEFAULT NULL,
+PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
