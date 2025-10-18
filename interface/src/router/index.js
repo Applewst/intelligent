@@ -72,19 +72,9 @@ const router = createRouter({
           component: ()=>import('../views/LinkContact.vue')
         },
         {
-          path: '/resource/data',
-          name: 'data',
+          path: '/resource',
+          name: 'resource',
           component: ()=>import('../views/ResourceData.vue')
-        },
-        {
-          path: '/resource/doc',
-          name: 'doc',
-          component: ()=>import('../views/ResourceDoc.vue')
-        },
-        {
-          path: '/resource/code',
-          name: 'code',
-          component: ()=>import('../views/ResourceCode.vue')
         },
         {
           path: '/search/project/:projectId',

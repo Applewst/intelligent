@@ -76,7 +76,7 @@ export const getTeacherList = async (params = {}) => {
       });
     } else {
       // 真实接口请求：调用service发送POST请求
-      const response = await service.get('/teachers', {params});
+      const response = await service.get('/api/teachers', {params});
       return response; // 返回真实接口响应
     }
   } catch (error) {
@@ -109,7 +109,7 @@ export const getTeacherDetail = async (id) => {
     });
   }
    return service
-    .get(`/teacher/${id}`)          // 路径参数
+    .get(`/api/teacher/${id}`)          // 路径参数
     .then(res => ({ data: res.data })) // 保持和 mock 同一外层格式
     .catch(err => {
       // 把后端错误消息透传出去，组件里 catch 到即可

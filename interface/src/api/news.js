@@ -56,7 +56,7 @@ export const getnewList = async (params = {}) => {
 
   // 使用统一配置的service调用真实接口
   return service({
-    url: '/news',
+    url: 'api/news',
     method: 'get',
     params: params
   });
@@ -78,7 +78,7 @@ export const getAllNews = async (params = {}) => {
 
   // 生产环境调用真实接口
   return service({
-    url: '/news/all',
+    url: 'api/news/all',
     method: 'get',
     params:params
   });

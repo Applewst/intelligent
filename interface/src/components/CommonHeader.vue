@@ -115,12 +115,7 @@ function handleMenuSelect(key) {
         <el-menu-item index="/member/alumni">桃李天下</el-menu-item>
       </el-sub-menu>
       <el-menu-item index="/link/contact">联系我们</el-menu-item>
-      <el-sub-menu index="resource">
-        <template #title>资源共享</template>
-        <el-menu-item index="/resource/data">实验数据</el-menu-item>
-        <el-menu-item index="/resource/doc">内部文档</el-menu-item>
-        <el-menu-item index="/resource/code">代码库</el-menu-item>
-      </el-sub-menu>
+      <el-menu-item index="/resource">资源共享</el-menu-item>
     </el-menu>
   </div>
 </template>
