@@ -7,7 +7,7 @@
     <select id="selectNewDynamics" resultType="com.web.api.pojo.ScientificDynamic">
         select *
         from scientific_dynamic
-        order by id DESC
+        order by time DESC
         limit #{num}
     </select>
     <select id="getAllDynamic" resultType="com.web.api.pojo.ScientificDynamic">

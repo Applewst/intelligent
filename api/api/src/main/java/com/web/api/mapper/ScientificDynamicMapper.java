@@ -18,7 +18,7 @@ public interface ScientificDynamicMapper {
     public List<ScientificDynamic> getAllDynamic();
 
     /**
-     * 查询最新4条动态
+     * 查询最新int条动态
      */
     public List<ScientificDynamic> selectNewDynamics(@Param("num") int num);
 }

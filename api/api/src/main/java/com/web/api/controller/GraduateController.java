@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 毕业生
  */
 @RestController
-public class Graduate {
+public class GraduateController {
 
     @Autowired
     private GraduatesServiceImpl graduatesServiceImpl;

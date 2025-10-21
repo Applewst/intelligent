@@ -15,6 +15,5 @@ public interface StudentMapper {
         /**
          * 查询所有在读学生
          */
-        @Select("select * from student")
         List<Student> getAllStudents();
 }

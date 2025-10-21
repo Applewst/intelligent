@@ -14,6 +14,5 @@ public interface ResearchDirectionMapper {
     /**
      * 查询所有研究方向
      */
-    @Select("select * from research_direction")
     List<ResearchDirection> getAllDirections();
 }

@@ -1,6 +1,7 @@
 package com.web.api.controller;
 
 import com.web.api.service.impl.ResearchDirectionServiceImpl;
+import com.web.api.service.impl.ScientificDynamicServiceImpl;
 import com.web.api.service.impl.TeacherServiceImpl;
 import com.web.api.service.impl.TeamDynamicServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,9 @@ public class HomePageController {
     private TeamDynamicServiceImpl teamDynamicServiceImpl;
 
     @Autowired
+    private ScientificDynamicServiceImpl scientificDynamicServiceImpl;
+
+    @Autowired
     private TeacherServiceImpl teacherServiceImpl;
 
     @Autowired
@@ -31,7 +35,7 @@ public class HomePageController {
     @GetMapping("/news")
     public Result news() {
         //返回最新4条动态
-        return Result.success(teamDynamicServiceImpl.NewDynamics(4));
+        return Result.success(scientificDynamicServiceImpl.NewDynamics(4));
     }
 
     /**
@@ -56,7 +60,7 @@ public class HomePageController {
      */
     @GetMapping("/photos")
     public Result getPhoto(){
-        return Result.success(teamDynamicServiceImpl.getAllImgs());
+        return Result.success(teamDynamicServiceImpl.getAllImgs(6));
     }
 
 }

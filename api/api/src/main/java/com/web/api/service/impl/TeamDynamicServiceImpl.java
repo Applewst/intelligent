@@ -21,9 +21,9 @@ public class TeamDynamicServiceImpl implements DynamicService<TeamDynamic> {
     /**
      * 获取所有团队动态图片
      */
-    public List<String> getAllImgs() {
-        log.info("查询所有团队动态图片");
-        return teamDynamicMapper.getAllImgs();
+    public List<String> getAllImgs(int num) {
+        log.info("查询最新{}条团队动态图片",num);
+        return teamDynamicMapper.getNewImgs(num);
     }
 
     @Override
