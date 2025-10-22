@@ -11,11 +11,13 @@
     <select id="getNewDynamic" resultType="com.web.api.pojo.TeamDynamic">
         select *
         from team_dynamic
-        order by id DESC
+        order by time DESC
         limit #{num}
     </select>
-    <select id="getAllImgs" resultType="java.lang.String">
+    <select id="getNewImgs" resultType="java.lang.String">
         select img
         from team_dynamic
+        order by time DESC
+        limit #{num}
     </select>
 </mapper>

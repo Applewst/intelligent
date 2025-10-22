@@ -23,7 +23,7 @@ public interface TeamDynamicMapper {
     List<TeamDynamic> getNewDynamic(@Param("num") int num);
 
     /**
-     * 获取所有图片链接
+     * 获取最新num图片链接
      */
-    List<String> getAllImgs();
+    List<String> getNewImgs(@Param("num") int num);
 }

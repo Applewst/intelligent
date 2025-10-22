@@ -28,6 +28,11 @@ public class Result {
         return new Result(1, "success", data);
     }
 
+    //成功响应,带返回和提示
+    public static Result success(String msg, Object data) {
+        return new Result(1, msg, data);
+    }
+
     //失败返回,
     public static Result error(String msg){
         return new Result(0, msg, null);

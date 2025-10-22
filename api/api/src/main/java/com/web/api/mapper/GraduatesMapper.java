@@ -15,6 +15,5 @@ public interface GraduatesMapper {
     /**
      * 查询所有毕业生
      */
-    @Select("select * from graduates")
     List<Graduate> getAllGraduates();
 }
