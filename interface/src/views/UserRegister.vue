@@ -3,11 +3,10 @@ import { reactive, ref } from "vue";
 import {View,Hide} from '@element-plus/icons-vue'
 import { ElMessage } from "element-plus";
 import { useCounterStore } from "../stores/counter";
+import {UserLogin} from '../api/login.js'
 const store = useCounterStore();
 import { useRouter } from 'vue-router';
 const router = useRouter();
-
-  
     // 当前表单状态，初始为登录表单
     const currentForm = ref("login");
     // 记住密码状态，初始为不记住密码
@@ -18,8 +17,6 @@ const router = useRouter();
       username: "",
       password: "",
     });
-
-
     // 注册表单的数据模型
     const registerForm = reactive({
       username: "",
@@ -83,7 +80,7 @@ const router = useRouter();
       jurisdiction: [
         { required: true, message: "请输入权限", trigger: "blur" },
         {
-          pattern: /^[A-Za-z]{5,20}$/,
+          pattern: /^[A-Za-z]{1,20}$/,
           message: "权限格式不正确！仅允许英文，长度为 5-20",
           trigger: "blur",
         },
@@ -96,39 +93,40 @@ const router = useRouter();
     const registerRef = ref(null);
 
     // 提交表单处理函数
-    const handleSubmit = async (formRef) => {
+    const handleSubmit = async () => {
       if (currentForm.value === "login") {
-        await loginRef.value.validate(async (valid) => {
-          // 验证登录表单
-          if (valid) {
-            ElMessage.success("登录成功！");
-            //登录成功，跳到首页
-            router.push('/');
-            store.isLogin = true;
-            store.setUser(loginForm.username, 'admin');
-
+          try {
+            //登录请求
+            const response = await UserLogin(loginForm.username, loginForm.password);
+            console.log('登录成功', response.data);
             
-          } else {
-            ElMessage.error("表单验证失败，请检查输入！");
+            // 存储token（假设返回数据中有token）
+            if (response.data.token) {
+              localStorage.setItem('token', response.token);
+            }
+            
+            // 跳转到首页
+            router.push('/');
+            ElMessage.success('登录成功');
+            
+          } catch (error) {
+            console.error('登录失败', error);
+            ElMessage.error(error.response?.data?.message || '登录失败');
           }
-        });
       } else {
-        await registerRef.value.validate(async (valid) => {
-          // 验证注册表单
-          if (valid) {
-            ElMessage.success("注册成功！");
-            //清空表单数据
-            registerRef.value.resetFields();
-            //注册成功，跳到登录
-            currentForm.value = "login";
-            loginRef.value.resetFields();  // 重置登录表单
-          } else {
-            ElMessage.error("表单验证失败，请检查输入！");
-          }
-        });
-      }
+        try{
+      // 注册表单提交处理
+            const response = await UserLogin(registerForm.username, registerForm.password, registerForm.jurisdiction);
+            console.log('注册成功', response.data);
+            ElMessage.success('注册成功，请登录');
+            // 切换回登录表单
+            toggleForm('login');
+        }catch(error){
+          console.error('注册失败', error);
+          ElMessage.error(error.response?.data?.message || '注册失败');
+        }
     };
-
+  }
     // 切换表单类型函数
     const toggleForm = (formType) => {
       currentForm.value = formType;
