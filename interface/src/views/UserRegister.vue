@@ -92,6 +92,8 @@ const router = useRouter();
     // 注册表单引用
     const registerRef = ref(null);
 
+
+    
     // 提交表单处理函数
     const handleSubmit = async () => {
       if (currentForm.value === "login") {
@@ -101,12 +103,18 @@ const router = useRouter();
             console.log('登录成功', response.data);
             
             // 存储token（假设返回数据中有token）
-            if (response.data.token) {
-              localStorage.setItem('token', response.token);
+            if (response.data) {
+              // store.token = response.data;
+              localStorage.setItem('token', response.data);
+              localStorage.setItem('username', loginForm.username);
             }
             
             // 跳转到首页
             router.push('/');
+            store.isLogin=true;
+            store.userName=loginForm.username;
+            store.userType='admin';
+            
             ElMessage.success('登录成功');
             
           } catch (error) {

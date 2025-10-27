@@ -40,6 +40,10 @@ function handleMenuSelect(key) {
   if (key === 'logout') {
     isLogin.value = false
     userName.value = ''
+    
+    //本地储存的token删除
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
     ElMessage.success('已退出登录')
   }
 }
@@ -63,7 +67,7 @@ function handleMenuSelect(key) {
             v-if="isLogin"
             :style="userType === 'admin' ? 'border:2px solid #409EFF' : 'border:2px solid gold'"
             size="large"
-            >{{ userName ? userName[0] : '' }}</el-avatar
+            >{{ userName ? userName : '' }}</el-avatar
           >
           <el-avatar v-else size="large" icon="el-icon-user"></el-avatar>
         </span>
@@ -72,7 +76,7 @@ function handleMenuSelect(key) {
             <el-dropdown-item v-if="!isLogin" command="login" @click="handleAvatarClick"
               >登录</el-dropdown-item
             >
-            <el-dropdown-item v-else command="logout">退出登录</el-dropdown-item>
+            <el-dropdown-item v-else command="logout" >退出登录</el-dropdown-item>
             <el-dropdown-item v-if="isLogin" disabled>
               {{ userType === 'admin' ? '管理员' : '内部人员' }}
             </el-dropdown-item>

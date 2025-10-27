@@ -5,6 +5,7 @@
 <template>
   <div class="team-introduce">
     <h1>Resource Data</h1>
+
   </div>
 </template>
 

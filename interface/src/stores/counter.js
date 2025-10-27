@@ -10,6 +10,12 @@ export const useCounterStore = defineStore('counter', () => {
   const userName = ref('')   //用户名
   const userType = ref('')    //用户类型
   const isLogin = ref(false)  //是否登录
+
+
+  if(localStorage.getItem('token')){
+    isLogin.value=true;
+    userName.value=localStorage.getItem('username')||'';
+  }
   const setUser = (name, type) => {
     userName.value = name
     userType.value = type
