@@ -1,5 +1,6 @@
 <script setup>
   import { ref,computed } from 'vue'
+  import { useDataStore } from '@/stores'
   const list = ref([
     {
       path:'/home',
@@ -9,56 +10,69 @@
       url:'Home'
     },
     {
-      path:'/student',
-      name:'student',
-      label:'学生管理',
+      path:'/team',
+      name:'team',
+      label:'团队活动',
       icon:'house',
-      url:'Stu'
+      url:'Team'
     },
     {
-      path:'/resource',
-      name:'resource',
-      label:'资源管理',
+      path:'/teacher',
+      name:'teacher',
+      label:'教师管理',
       icon:'house',
       url:'Resource'
     },
     {
-      path:'/other',
-      name:'other',
-      label:'其他',
+      path:'/search',
+      name:'search',
+      label:'科研管理',
+      icon:'house',
+      url:'Search'
+    },
+    {
+      path:'/student',
+      name:'student',
+      label:'学生管理',
       icon:'location',
       children:[
         {
-          path:'page1',
-          name:'page1',
-          label:'页面1',
+          path:'/graduate',
+          name:'graduate',
+          label:'毕业生',
           icon:'setting',
-          url:'Page1'
+          url:'Graduate'
         },
         {
-          path:'page2',
-          name:'page2',
-          label:'页面2',
+          path:'/inschool',
+          name:'inschool',
+          label:'在校生',
           icon:'setting',
-          url:'Page2'
+          url:'InSchool'
         }
       ]
     }
   ])
   const noChild = computed(() => list.value.filter(item => !item.children) )
   const hasChild = computed(() => list.value.filter(item => item.children) )  //看是否需要二级目录
-  console.log(hasChild.value);
-  
+
+  const store = useDataStore()
+  const isCollapse = computed(() => store.state.isCollapse) 
+  //侧边栏宽度
+  const widths = computed(() => store.state.isCollapse ? '60px' : '180px')
 </script>
 
 <template>
-  <el-aside width="180px">
+  <el-aside :width="widths">
     <el-menu
       background-color="#545c64"
       text-color="#fff"
-      
+      :collapse="isCollapse"
+      collapse-transition="true"
+      router="true"
       >
-      <h3>后台管理系统</h3>
+      <h3 v-if="!isCollapse">后台管理系统</h3>
+      <h3 v-else>后台</h3>
       <el-menu-item 
         v-for="item in noChild"
         :key="item.path"
@@ -109,6 +123,7 @@
     line-height:48px;
     color:#fff;
     text-align: center;
+    margin-bottom: 10px;
   }
 }
 .el-aside{

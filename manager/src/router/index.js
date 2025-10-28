@@ -4,9 +4,36 @@ const routes = [
   {
     path:'/',
     name:'Main',
-    component:()=> import('@/views/Main.vue')
-  }
+    component:()=> import('@/views/Main.vue'),
+    redirect:'/home',
+    children:[
+      {
+        path:'/home',
+        name:'Home',
+        component:()=> import('@/views/HomeManager.vue')
+      },
+      
+      {
+        path:'/teacher',
+        name:'Teacher',
+        component:()=> import('@/views/TeacherManager.vue')
+      },
+      {
+        path:'/team',
+        name:'Team',
+        component:()=> import('@/views/TeamManager.vue')
+      },
+      {
+        path:'/search',
+        name:'Search',
+        component:()=> import('@/views/SearchManager.vue')
+      },
+      
+    ]
+ }
 ]
+  
+
 
 const router = createRouter({
   history: createWebHistory(),
