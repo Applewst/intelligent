@@ -56,7 +56,7 @@ function handleMenuSelect(key) {
 <template>
   <div class="allheader">
     <div class="header-top">
-        <div class="logo"><img src="../assets/images/hut.png" alt="" style="width: 100px" /></div>
+        <div class="logo"><img src="../assets/images/hut.png" alt="" style="width: 80px" /></div>
         <div class="search-center">
           <el-input placeholder="搜索" size="small" class="search-input" :prefix-icon="Search" />
         </div>
@@ -139,7 +139,7 @@ function handleMenuSelect(key) {
   justify-content: space-between;
   background: #dddee0;
   padding: 0 32px;
-  height: 100px;
+  height: 80px;
   position: fixed; /* 固定定位 */
   top: 0; /* 固定在顶部 */
   width: 100%; /* 宽度占满整个屏幕 */
@@ -214,8 +214,8 @@ function handleMenuSelect(key) {
   min-width: 0;
   // box-shadow: 0 2px 8px #e0e7ef;
   font-size: 20px;
-   position: fixed; /* 固定定位 */
-  top: 100px;
+  position: fixed; /* 固定定位 */
+  top: 80px;
    z-index: 1000;
 }
 

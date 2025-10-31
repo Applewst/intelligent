@@ -1,12 +1,5 @@
-
-<script setup>
-import { ref, computed, watch } from 'vue';
-
-// 模拟数据
-const module = {
-  title: '论文搜索结果',
-};
-
+import service from '../utils/request';
+import { ref } from "vue";
 const papers = ref([
   {
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
@@ -115,199 +108,17 @@ const papers = ref([
   },
 ]);
 
-const total = ref(papers.value.length); // 总数
-// 分页相关数据
-const pageSize = ref(3); // 每页默认展示的数量
-const pageOptions = [3, 6, 9, 12]; // 可选的每页展示数量
-const currentPage = ref(1); // 当前页码
-
-// 当前页的论文数据
-const currentPagePapers = computed(() => {
-  const start = (currentPage.value - 1) * pageSize.value;
-  const end = start + pageSize.value;
-  return papers.value.slice(start, end);
-});
-
-// 监听每页展示数量的变化
-watch(pageSize, () => {
-  currentPage.value = 1; // 每次改变每页展示数量时，重置当前页码
-});
-
-// 监听当前页码的变化
-function handleCurrentChange(val) {
-  currentPage.value = val;
-}
-
-// 初始化
-const initialize = () => {
-  // 如果需要从后端获取数据，可以在这里初始化
-};
-
-initialize();
-</script>
-
-<template>
-  <div class="search-paper">
-  
-    <div class="module">
+export const searchPapers = async ()=>{
+  const useMock = true;
+  if(useMock){
+    return {
+      "code": 1,
+      "msg": "success",
+      "data": papers.value
+    }
+  }
+  return service.get('/api/search/papers',{
     
-      <h2 class="module-title">{{ module.title }}</h2>
-      <!-- 卡片展示区域 -->
-      <div class="paper-container">
-          <el-card
-            class="paper-item"
-            v-for="(paper, index) in currentPagePapers"
-            :key="index"
-          >
-            <div class="paper-info">
-              <!-- 卡片图片 -->
-              <div class="paper-image">
-                <img :src="paper.image" alt="Paper Image" />
-              </div>
-
-              <!-- 文字说明 -->
-              <div class="paper-content">
-                <!-- 标题 -->
-                <div class="paper-title">{{ paper.title }}</div>
-                <!-- 摘要 -->
-                <div class="paper-detail">{{ paper.detail }}</div>
-                <!-- 作者和时间 -->
-                <div class="paper-footer">
-                  <p class="author">{{ paper.author }}</p>
-                  <p class="time">{{ paper.time }}</p>
-                </div>
-              </div>
-            </div>
-          </el-card>
-        </div>
-      <!-- 分页组件 -->
-      <div class="pagination">
-        <el-pagination
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :page-sizes="pageOptions"
-          :disabled="disabled"
-          :background="background"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-          @current-change="handleCurrentChange"
-        />
-      </div>
-  </div>
-  </div>
-
-</template>
-
-
-<style scoped lang="less">
-.search-paper {
-  margin-top: 100px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  })
 }
-
-.module {
-  margin: 0 auto;
-  width: 1200px;
-  padding: 10px;
-  margin-bottom: 50px;
-  border-radius: 5px;
-  position: relative;
-}
-
-.module-title {
-  text-align: center;
-  margin-bottom: 60px;
-  font-weight: bold;
-  font-size: 30px;
-}
-
-.pagination-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.paper-container {
-  display: flex; /* 使用 flex 布局 */
-  flex-direction: column; /* 卡片竖着排列 */
-  gap: 20px; /* 卡片之间的间距 */
-}
-
-.paper-item {
-  height: 300px;
-  overflow: hidden;
-}
-
-.paper-info {
-  display: flex;
-  height: 100%;
-}
-
-.paper-image {
-  flex: 1;
-}
-
-.paper-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.paper-content {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-.paper-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.paper-detail {
-  flex: 1;
-  line-height: 1.5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-
-.paper-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.author {
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.time {
-  font-size: 14px;
-}
-
-.page-selection {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.label {
-  font-size: 14px;
-}
-</style>
+ 

@@ -4,7 +4,7 @@ import CommonNew from '@/components/CommonNew.vue'
 import CommonProject from '@/components/CommonProject.vue'
 import CommonTeacher from '@/components/CommonTeacher.vue'
 import CommonPhoto from '@/components/CommonPhoto.vue'
-
+import CommonFooter from '@/components/CommonFooter.vue'
 </script>
 
 <template>
@@ -26,6 +26,9 @@ import CommonPhoto from '@/components/CommonPhoto.vue'
           <common-photo />
         </div>
       </el-main>
+      <el-footer>
+        <common-footer></common-footer>
+      </el-footer>
     </el-container>
   </div>
 </template>
