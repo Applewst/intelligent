@@ -134,7 +134,7 @@ import { ref, reactive, computed,watch } from 'vue';
       <el-table :data="filteredDynamicList" style="width: 100%" border >
         <el-table-column prop="title" label="标题" width="180" />
         <el-table-column prop="tag" label="主题" width="240" />
-        <el-table-column prop="time" label="时间" />
+        <el-table-column prop="time" label="上传时间" />
         <el-table-column label="操作" width="200">
           <template #default="{ row }">
             <el-button size="small" type="primary" @click="openEditForm(row)">
@@ -168,9 +168,9 @@ import { ref, reactive, computed,watch } from 'vue';
           <el-form-item label="主题" prop="tag">
             <el-input v-model="addForm.tag"></el-input>
           </el-form-item>
-          <el-form-item label="上传时间" prop="time">
+          <!-- <el-form-item label="上传时间" prop="time">
             <el-input v-model="addForm.time"></el-input>
-          </el-form-item>
+          </el-form-item> -->
          
         </el-form>
         <template #footer>
@@ -190,9 +190,9 @@ import { ref, reactive, computed,watch } from 'vue';
           <el-form-item label="主题" prop="tag">
             <el-input v-model="editForm.tag"></el-input>
           </el-form-item>
-          <el-form-item label="时间" prop="time">
+          <!-- <el-form-item label="上传时间" prop="time">
             <el-input v-model="editForm.email"></el-input>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
         <template #footer>
           <span class="dialog-footer">
