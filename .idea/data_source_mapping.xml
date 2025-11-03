@@ -3,5 +3,6 @@
   <component name="DataSourcePerFileMappings">
     <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/graduates.sql" value="01461e94-4e7e-4444-951b-7fb8afdb3327" />
     <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/student.sql" value="01461e94-4e7e-4444-951b-7fb8afdb3327" />
+    <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/teacher.sql" value="01461e94-4e7e-4444-951b-7fb8afdb3327" />
   </component>
 </project>

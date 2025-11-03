@@ -4,13 +4,34 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.web.api.mapper.TeacherMapper">
-    <select id="getAllTeachers" resultType="com.web.api.pojo.Teacher">
-        select *
-        from teacher
-    </select>
-    <select id="getTeacherById" resultType="com.web.api.pojo.Teacher">
-        select *
-        from teacher
+    <insert id="insert">
+        insert into teacher(name, title, email, avatar, detail, gender)
+        values (#{name}, #{title}, #{email}, #{avatar}, #{detail}, #{gender})
+    </insert>
+    <update id="update">
+        update teacher
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="detail != null and detail != ''">detail = #{detail},</if>
+            <if test="gender != null">gender = #{gender}</if>
+        </set>
         where id = #{id}
+    </update>
+    <delete id="deleteBatch">
+        delete from teacher where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="page" resultType="com.web.api.pojo.Teacher">
+        select name,title,email,avatar,gender from teacher
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
     </select>
 </mapper>
