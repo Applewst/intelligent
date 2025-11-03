@@ -1,10 +1,13 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onUpdated } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { useCounterStore } from '../stores/counter'
+import { useUserStore } from '../stores/user'
 import { useRouter, useRoute } from 'vue-router'
 
+
+const storeuser = useUserStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -45,9 +48,16 @@ function handleMenuSelect(key) {
     localStorage.removeItem('token')
     localStorage.removeItem('username')
     ElMessage.success('已退出登录')
+    window.location.reload()
   }
 }
 
+onUpdated(() => {
+  // 每次组件更新时检查登录状态
+  isLogin.value = store.isLogin
+  userName.value = store.userName
+  userType.value = store.userType
+})
 // import { useStore } from '../stores/counter'
 
 // const store = useStore()
@@ -120,7 +130,8 @@ function handleMenuSelect(key) {
             <el-menu-item index="/member/alumni">桃李天下</el-menu-item>
           </el-sub-menu>
           <el-menu-item index="/link/contact">联系我们</el-menu-item>
-          <el-menu-item index="/resource">资源共享</el-menu-item>
+          <el-menu-item index="/resource" v-show="store.isLogin">资源共享</el-menu-item>
+
         </el-menu>
       </div>
   </div>
