@@ -3,7 +3,6 @@ package com.web.api.mapper;
 import com.github.pagehelper.Page;
 import com.web.api.pojo.Teacher;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
