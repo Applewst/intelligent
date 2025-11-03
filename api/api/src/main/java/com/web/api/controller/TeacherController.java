@@ -29,7 +29,8 @@ public class TeacherController {
      * @return 分页结果
      */
     @GetMapping
-    public Result page(Integer pageNum, Integer pageSize) {
+    public Result page(@RequestParam(defaultValue = "1") Integer pageNum,
+                       @RequestParam(defaultValue = "10") Integer pageSize) {
         log.info("教师分页查询，页码：{}，每页记录数：{}", pageNum, pageSize);
         PageResult pageResult = teacherService.page(pageNum, pageSize);
         return Result.success(pageResult);

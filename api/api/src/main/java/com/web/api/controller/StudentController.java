@@ -29,7 +29,8 @@ public class StudentController {
      * @return 分页结果
      */
     @GetMapping
-    public Result page(Integer pageNum, Integer pageSize) {
+    public Result page(@RequestParam(defaultValue = "1") Integer pageNum,
+                       @RequestParam(defaultValue = "10") Integer pageSize) {
         log.info("分页查询在读学生信息：pageNum={}, pageSize={}", pageNum, pageSize);
         PageResult pageResult = studentService.pageQuery(pageNum, pageSize);
         return Result.success(pageResult);
