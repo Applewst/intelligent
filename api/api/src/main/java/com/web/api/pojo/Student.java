@@ -3,7 +3,6 @@ package com.web.api.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 在读学生类

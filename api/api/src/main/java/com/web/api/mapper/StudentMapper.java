@@ -4,7 +4,6 @@ import com.github.pagehelper.Page;
 import com.web.api.pojo.Student;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
