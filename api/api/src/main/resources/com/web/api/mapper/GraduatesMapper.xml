@@ -4,8 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.web.api.mapper.GraduatesMapper">
-    <select id="getAllGraduates" resultType="com.web.api.pojo.Graduate">
-        select *
-        from graduates
-    </select>
+    <update id="update">
+        update graduates
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar}</if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteBatch">
+        delete from graduates
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

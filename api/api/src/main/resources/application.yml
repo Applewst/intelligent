@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: api
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+jwt:
+  base64-encode-secret-key: k4v7zK8p2q5r9s3t6u1w8x4y7z2a5b8c9d1e3f6g7hg=
+
+server:
+  servlet:
+    context-path: /api
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    org.apache.shiro: DEBUG
+    com.web.api.mapper: DEBUG
+    com.github.pagehelper: DEBUG
+---
+# 激活的环境配置
+spring:
+  profiles:
+    active: dev

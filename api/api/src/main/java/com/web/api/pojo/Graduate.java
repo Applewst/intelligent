@@ -11,13 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Graduate {
-    private int id;
-    /** 姓名 */
+    private Integer id;
+    // 姓名
     private String name;
-    /** 年级 */
-    private String grade;
-    /** 专业 */
-    private String major;
-    /** 头像路径 */
+    //  性别 0-女 1-男
+    private Integer gender;
+    // 头像URL
     private String avatar;
 }
