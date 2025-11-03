@@ -43,6 +43,12 @@ public class GraduatesServiceImpl implements GraduatesService {
      */
     @Override
     public void save(Graduate graduate) {
+        if (graduate.getGender() == null) {
+            graduate.setGender(0);
+        }
+        if (graduate.getName().isEmpty()) {
+            graduate.setName(null);
+        }
         graduatesMapper.insert(graduate);
     }
 

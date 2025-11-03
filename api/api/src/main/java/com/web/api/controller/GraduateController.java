@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,12 +44,6 @@ public class GraduateController {
     @PostMapping
     public Result save(Graduate graduate) {
         log.info("保存毕业生信息：{}", graduate);
-        if (graduate.getGender() == null) {
-            graduate.setGender(0);
-        }
-        if (graduate.getAvatar() == null || graduate.getAvatar().isEmpty()) {
-            graduate.setAvatar(null);
-        }
         graduatesService.save(graduate);
         return Result.success();
     }
@@ -77,8 +70,7 @@ public class GraduateController {
     @DeleteMapping
     public Result deleteById(Integer id) {
         log.info("根据ID删除毕业生信息：id={}", id);
-        List<Integer> ids = new ArrayList<>();
-        ids.add(id);
+        List<Integer> ids = List.of(id);
         graduatesService.deleteBatchByIds(ids);
         return Result.success();
     }
