@@ -1,5 +1,6 @@
 package com.web.api.service;
 
+import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Student;
 
 import java.util.List;
@@ -10,8 +11,32 @@ import java.util.List;
 public interface StudentService {
 
     /**
-     * 获取所有在读学生信息
-     * @return 在读学生列表
+     * 分页查询在读学生信息
+     *
+     * @param pageNum  当前页数
+     * @param pageSize 每页大小
+     * @return 分页结果
      */
-    List<Student> getAllStudents();
+    PageResult pageQuery(Integer pageNum, Integer pageSize);
+
+    /**
+     * 新增在读学生信息
+     *
+     * @param student 在读学生信息
+     */
+    void save(Student student);
+
+    /**
+     * 修改在读学生信息
+     *
+     * @param student 在读学生信息
+     */
+    void updateById(Student student);
+
+    /**
+     * 根据ID删除批量在读学生信息
+     *
+     * @param ids 在读学生ID列表
+     */
+    void deleteBatchByIds(List<Integer> ids);
 }

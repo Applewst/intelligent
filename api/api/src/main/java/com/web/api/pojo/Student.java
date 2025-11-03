@@ -13,12 +13,14 @@ import org.apache.ibatis.annotations.Mapper;
 @NoArgsConstructor
 public class Student {
     private String id;
-    /** 姓名 */
+    // 姓名
     private String name;
-    /** 年级 */
+    // 年级
     private String grade;
-    /** 专业 */
-    private String major;
-    /** 头像路径 */
+    // 学工号
+    private String stucode;
+    // 性别 女-0 男-1
+    private Integer gender;
+    // 头像URL
     private String avatar;
 }
