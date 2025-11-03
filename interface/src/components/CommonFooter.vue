@@ -1,7 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-
-
 </script>
 
 <template>
@@ -9,5 +7,4 @@ import { ref, computed } from 'vue'
 </template>
 
 <style scoped lang="less">
-
 </style>

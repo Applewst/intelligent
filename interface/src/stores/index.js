@@ -16,7 +16,7 @@ export const useAllStores = () => {
   const projectStore = useProjectStore()
   const teacherStore = useTeacherStore()
   const studentStore = useStudentStore()
-  
+
   return {
     counterStore,
     userStore,
