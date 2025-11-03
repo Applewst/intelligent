@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student {
-    private String id;
+    private Integer id;
     // 姓名
     private String name;
     // 年级
