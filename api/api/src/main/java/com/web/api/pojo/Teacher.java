@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Teacher {
-    private String id;
-    /** 姓名 */
+    private Integer id;
+    // 姓名
     private String name;
-    /** 文章 */
+    // 研究方向
     private String title;
-    /** 邮箱 */
+    // 邮箱
     private String email;
-    /** 头像路径 */
+    // 照片
     private String avatar;
-    /** 个人简介 */
-    private String info;
+    // 详情
+    private String detail;
+    // 性别
+    private Integer gender;
 }

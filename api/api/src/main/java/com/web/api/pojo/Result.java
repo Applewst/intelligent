@@ -11,11 +11,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Result {
-    /**状态码 */
+    /**
+     * 状态码
+     */
     private Integer code;   //1成功,0失败
-    /**提示信息 */
+    /**
+     * 提示信息
+     */
     private String message;
-    /**返回数据 */
+    /**
+     * 返回数据
+     */
     private Object data;
 
     //成功响应,无返回
@@ -34,7 +40,7 @@ public class Result {
     }
 
     //失败返回,
-    public static Result error(String msg){
+    public static Result error(String msg) {
         return new Result(0, msg, null);
     }
 }

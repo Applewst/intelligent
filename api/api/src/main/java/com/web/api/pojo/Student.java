@@ -3,7 +3,6 @@ package com.web.api.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 在读学生类
@@ -12,13 +11,15 @@ import org.apache.ibatis.annotations.Mapper;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student {
-    private String id;
-    /** 姓名 */
+    private Integer id;
+    // 姓名
     private String name;
-    /** 年级 */
+    // 年级
     private String grade;
-    /** 专业 */
-    private String major;
-    /** 头像路径 */
+    // 学工号
+    private String stucode;
+    // 性别 女-0 男-1
+    private Integer gender;
+    // 头像URL
     private String avatar;
 }

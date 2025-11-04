@@ -4,8 +4,39 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.web.api.mapper.StudentMapper">
-    <select id="getAllStudents" resultType="com.web.api.pojo.Student">
-        select *
-        from student
+    <update id="updateById">
+        update student
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="grade != null and grade != ''">
+                grade = #{grade},
+            </if>
+            <if test="stucode != null and stucode != ''">
+                stucode = #{stucode},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avator = #{avatar}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteBatch">
+        delete from student where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="pageQuery" resultType="com.web.api.pojo.Student">
+        select id,name,grade,stucode,gender,avatar from student
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
     </select>
 </mapper>

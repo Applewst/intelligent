@@ -1,6 +1,8 @@
 package com.web.api.mapper;
 
+import com.github.pagehelper.Page;
 import com.web.api.pojo.Graduate;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -11,9 +13,33 @@ import java.util.List;
  */
 @Mapper
 public interface GraduatesMapper {
+    /**
+     * 分页查询毕业生信息
+     *
+     * @return 毕业生列表
+     */
+    @Select("select id,name,gender,avatar from graduates")
+    Page<Graduate> pageQuery();
 
     /**
-     * 查询所有毕业生
+     * 插入毕业生信息
+     *
+     * @param graduate 毕业生信息
      */
-    List<Graduate> getAllGraduates();
+    @Insert("insert into graduates(name,gender,avatar) values(#{name},#{gender},#{avatar})")
+    void insert(Graduate graduate);
+
+    /**
+     * 更新毕业生信息
+     *
+     * @param graduate 毕业生信息
+     */
+    void update(Graduate graduate);
+
+    /**
+     * 根据ID批量删除毕业生信息
+     *
+     * @param ids 毕业生ID列表
+     */
+    void deleteBatch(List<Integer> ids);
 }

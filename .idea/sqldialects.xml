@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/graduates.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/research_direction.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/scientific_dynamic.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/student.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/teacher.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/team_dynamic.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/api/api/src/main/resources/com/web/api/mapper/StudentMapper.xml" dialect="GenericSQL" />
+    <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>
