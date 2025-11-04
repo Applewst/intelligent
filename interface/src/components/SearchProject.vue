@@ -1,76 +1,77 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-
+// import { useRouter } from 'vue-router';
+import { GetSearchProjects } from '../api/search';
 const props = defineProps({
   projectId: Number
 })
 console.log(props.projectId)
 
-const modules = ref([
-    {
-      title: '服务推荐',
-      images: [
-        { src: '../assets/images/1.jpg', time: '2023-01-01', name: '项目1' },
-        { src: 'path/to/image2.png', time: '2023-02-01', name: '项目2' },
-        { src: 'path/to/image3.png', time: '2023-03-01', name: '项目3' },
-        { src: 'path/to/image4.png', time: '2023-04-01', name: '项目4' },
-        { src: 'path/to/image5.png', time: '2023-05-01', name: '项目5' },
-        { src: 'path/to/image6.png', time: '2023-06-01', name: '项目6' },
-      ],
-      details: {
-        '1': { visible: true, content: '服务推荐详情 1' },
-        '2': { visible: false, content: '服务推荐详情 2' },
-        '3': { visible: false, content: '服务推荐详情 3' },
-        '4': { visible: false, content: '服务推荐详情 4' },
-        '5': { visible: false, content: '服务推荐详情 5' },
-        '6': { visible: false, content: '服务推荐详情 6' },
-      },
-    },
-    {
-      title: '自然语言处理',
-      images: [
-        { src: 'path/to/image7.png', time: '2023-07-01', name: '项目7' },
-        { src: 'path/to/image8.png', time: '2023-08-01', name: '项目8' },
-        { src: 'path/to/image9.png', time: '2023-09-01', name: '项目9' },
-        { src: 'path/to/image10.png', time: '2023-10-01', name: '项目10' },
-        { src: 'path/to/image11.png', time: '2023-11-01', name: '项目11' },
-        { src: 'path/to/image12.png', time: '2023-12-01', name: '项目12' },
-      ],
-      details: {
-        '1': { visible: true, content: '自然语言处理详情 1' },
-        '2': { visible: false, content: '自然语言处理详情 2' },
-        '3': { visible: false, content: '自然语言处理详情 3' },
-        '4': { visible: false, content: '自然语言处理详情 4' },
-        '5': { visible: false, content: '自然语言处理详情 5' },
-        '6': { visible: false, content: '自然语言处理详情 6' },
-      },
-    },
-    {
-      title: '图像处理',
-      images: [
-        { src: 'path/to/image13.png', time: '2023-01-15', name: '项目13' },
-        { src: 'path/to/image14.png', time: '2023-02-15', name: '项目14' },
-        { src: 'path/to/image15.png', time: '2023-03-15', name: '项目15' },
-        { src: 'path/to/image16.png', time: '2023-04-15', name: '项目16' },
-        { src: 'path/to/image17.png', time: '2023-05-15', name: '项目17' },
-        { src: 'path/to/image18.png', time: '2023-06-15', name: '项目18' },
-      ],
-      details: {
-        '1': { visible: true, content: '图像处理详情 1' },
-        '2': { visible: false, content: '图像处理详情 2' },
-        '3': { visible: false, content: '图像处理详情 3' },
-        '4': { visible: false, content: '图像处理详情 4' },
-        '5': { visible: false, content: '图像处理详情 5' },
-        '6': { visible: false, content: '图像处理详情 6' },
-      },
-    },
-  ]);
+// const modules = ref([
+//     {
+//       title: '服务推荐',
+//       images: [
+//         { src: '../assets/images/1.jpg', time: '2023-01-01', name: '项目1' },
+//         { src: 'path/to/image2.png', time: '2023-02-01', name: '项目2' },
+//         { src: 'path/to/image3.png', time: '2023-03-01', name: '项目3' },
+//         { src: 'path/to/image4.png', time: '2023-04-01', name: '项目4' },
+//         { src: 'path/to/image5.png', time: '2023-05-01', name: '项目5' },
+//         { src: 'path/to/image6.png', time: '2023-06-01', name: '项目6' },
+//       ],
+//       details: {
+//         '1': { visible: true, content: '服务推荐详情 1' },
+//         '2': { visible: false, content: '服务推荐详情 2' },
+//         '3': { visible: false, content: '服务推荐详情 3' },
+//         '4': { visible: false, content: '服务推荐详情 4' },
+//         '5': { visible: false, content: '服务推荐详情 5' },
+//         '6': { visible: false, content: '服务推荐详情 6' },
+//       },
+//     },
+//     {
+//       title: '自然语言处理',
+//       images: [
+//         { src: 'path/to/image7.png', time: '2023-07-01', name: '项目7' },
+//         { src: 'path/to/image8.png', time: '2023-08-01', name: '项目8' },
+//         { src: 'path/to/image9.png', time: '2023-09-01', name: '项目9' },
+//         { src: 'path/to/image10.png', time: '2023-10-01', name: '项目10' },
+//         { src: 'path/to/image11.png', time: '2023-11-01', name: '项目11' },
+//         { src: 'path/to/image12.png', time: '2023-12-01', name: '项目12' },
+//       ],
+//       details: {
+//         '1': { visible: true, content: '自然语言处理详情 1' },
+//         '2': { visible: false, content: '自然语言处理详情 2' },
+//         '3': { visible: false, content: '自然语言处理详情 3' },
+//         '4': { visible: false, content: '自然语言处理详情 4' },
+//         '5': { visible: false, content: '自然语言处理详情 5' },
+//         '6': { visible: false, content: '自然语言处理详情 6' },
+//       },
+//     },
+//     {
+//       title: '图像处理',
+//       images: [
+//         { src: 'path/to/image13.png', time: '2023-01-15', name: '项目13' },
+//         { src: 'path/to/image14.png', time: '2023-02-15', name: '项目14' },
+//         { src: 'path/to/image15.png', time: '2023-03-15', name: '项目15' },
+//         { src: 'path/to/image16.png', time: '2023-04-15', name: '项目16' },
+//         { src: 'path/to/image17.png', time: '2023-05-15', name: '项目17' },
+//         { src: 'path/to/image18.png', time: '2023-06-15', name: '项目18' },
+//       ],
+//       details: {
+//         '1': { visible: true, content: '图像处理详情 1' },
+//         '2': { visible: false, content: '图像处理详情 2' },
+//         '3': { visible: false, content: '图像处理详情 3' },
+//         '4': { visible: false, content: '图像处理详情 4' },
+//         '5': { visible: false, content: '图像处理详情 5' },
+//         '6': { visible: false, content: '图像处理详情 6' },
+//       },
+//     },
+//   ]);
 
 const tables = ref([])
 
-onMounted(() => {
-  tables.value = modules.value[props.projectId - 1];
+onMounted(async () => {
+  const response = await GetSearchProjects(props.projectId);
+  tables.value = response.data;
 })
 
 function showDetails(index, imageIndex) {

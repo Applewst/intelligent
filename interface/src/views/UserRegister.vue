@@ -3,7 +3,7 @@ import { reactive, ref } from "vue";
 import {View,Hide} from '@element-plus/icons-vue'
 import { ElMessage } from "element-plus";
 import { useCounterStore } from "../stores/counter";
-import {UserLogin} from '../api/login.js'
+import {UserLogin,UserRegister} from '../api/login.js'
 const store = useCounterStore();
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -124,7 +124,7 @@ const router = useRouter();
       } else {
         try{
       // 注册表单提交处理
-            const response = await UserLogin(registerForm.username, registerForm.password, registerForm.jurisdiction);
+            const response = await UserRegister(registerForm.username, registerForm.password, registerForm.jurisdiction);
             console.log('注册成功', response.data);
             ElMessage.success('注册成功，请登录');
             // 切换回登录表单
