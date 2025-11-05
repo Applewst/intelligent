@@ -6,8 +6,8 @@ import org.apache.shiro.authc.AuthenticationException;
 /**
  * 账号被封禁
  */
-public class AccountBaned extends AuthenticationException {
-    public AccountBaned(String message) {
+public class AccountBanedException extends AuthenticationException {
+    public AccountBanedException(String message) {
         super(Error.NOACCOUNT.toString());
     }
 }

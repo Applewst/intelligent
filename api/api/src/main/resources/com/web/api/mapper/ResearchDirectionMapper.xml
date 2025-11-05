@@ -4,8 +4,51 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.web.api.mapper.ResearchDirectionMapper">
+    <insert id="addDirection">
+        insert into
+            research_direction (title, imageUrl)
+        values
+            (#{title}, #{imageUrl})
+    </insert>
+
+    <update id="motifyDirectionById">
+        update research_direction
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="imageUrl != null and imageUrl != ''">
+                imageUrl = #{imageUrl},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDirectionById">
+        delete from
+            research_direction
+        where
+            id = #{id}
+    </delete>
+
     <select id="getAllDirections" resultType="com.web.api.pojo.ResearchDirection">
         select *
         from research_direction
+    </select>
+
+    <select id="getDirectionById" resultType="com.web.api.pojo.ResearchDirection">
+        select *
+        from
+            research_direction
+        where
+            id = #{id}
+    </select>
+    <select id="getImageUrlById" resultType="java.lang.String">
+        select
+            imageUrl
+        from
+            research_direction
+        where
+            id = #{id}
     </select>
 </mapper>

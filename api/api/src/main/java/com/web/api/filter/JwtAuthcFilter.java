@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.web.api.config.impl.JwtToken;
 import com.web.api.config.impl.JwtTokenManager;
 import com.web.api.error.Error;
-import com.web.api.exception.AccountBaned;
+import com.web.api.exception.AccountBanedException;
 import com.web.api.pojo.JwtData;
 import com.web.api.pojo.Result;
 import io.jsonwebtoken.Claims;
@@ -71,7 +71,7 @@ public class JwtAuthcFilter extends AccessControlFilter {
             //验证过程中抛异常（如签名错误、过期等）
             log.warn("JwtAuthcFilter:{}", e.getMessage());
             httpRequest.setAttribute("authFailReason", "invalid_token");
-            if(e.getClass().equals(AccountBaned.class)){
+            if(e.getClass().equals(AccountBanedException.class)){
                 httpRequest.setAttribute("authFailReason", "account_baned");
             }
             return false;
@@ -93,7 +93,7 @@ public class JwtAuthcFilter extends AccessControlFilter {
         } else if("account_baned".equals(reason)){
             msg = Error.ACCOUNTBAN.toString();
         } else if ("missing_token".equals(reason)) {
-            msg = Error.NoToken.toString();
+            msg = Error.NOTOKEN.toString();
         } else {
             msg = "认证失败";
         }

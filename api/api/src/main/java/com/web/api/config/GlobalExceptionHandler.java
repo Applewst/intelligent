@@ -1,16 +1,16 @@
 package com.web.api.config;
 
-import com.web.api.exception.AccountBaned;
-import com.web.api.exception.NoFindAccountException;
-import com.web.api.exception.PermissionException;
+import com.web.api.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.web.api.pojo.Result;
-
 import java.nio.file.AccessDeniedException;
 
+/**
+ * 全局异常处理器
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -24,28 +24,47 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 登录失败: NoFindAccountException
+     * 账号被封禁: AccountBanedException
      */
-    @ExceptionHandler(NoFindAccountException.class)
-    public ResponseEntity<Result> handleNoFindAccountException(NoFindAccountException e){
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Result> handleBanedAccountException(AccountBanedException e){
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(Result.error(e.getMessage()));
     }
 
     /**
-     * 账号被封禁: AccountBanedException
+     * 未找到账号异常: NoFindAccountException
      */
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Result> handleBanedAccountException(AccountBaned e){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(NoFindAccountException.class)
+    public ResponseEntity<Result> handleNoFindAccountException(DatabaseOperationException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Result.error(e.getMessage()));
+    }
+
+    /**
+     * 未提供ID异常: NoIdException
+     */
+    @ExceptionHandler(NoIdException.class)
+    public ResponseEntity<Result> handleNoIdException(NoIdException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Result.error(e.getMessage()));
+    }
+
+    /**
+     * 未提供令牌异常: NoTokenException
+     */
+    @ExceptionHandler(NoTokenException.class)
+    public ResponseEntity<Result> handleNoTokenException(NoTokenException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Result.error(e.getMessage()));
     }
 
     /**
      * 其他运行时异常: RuntimeException
      */
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Result> handleException(RuntimeException e){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Result.error("服务器异常: " + e.getMessage()));
     }
 }

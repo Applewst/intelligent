@@ -1,7 +1,13 @@
 package com.web.api.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.web.api.exception.DatabaseOperationException;
+import com.web.api.exception.NoFindException;
+import com.web.api.exception.NoIdException;
 import com.web.api.mapper.UserMapper;
 import com.web.api.pojo.JwtData;
+import com.web.api.pojo.PageResult;
 import com.web.api.service.UserService;
 import com.web.api.util.DigestsUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.web.api.pojo.User;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,9 +41,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(User user) {
+        //加密密码
         Map<String,String> newPassword = new HashMap<>();
         newPassword = DigestsUtil.encryptPassword(user.getPassword());
 
+        //创建新用户对象
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(newPassword.get("password"));
@@ -47,11 +56,61 @@ public class UserServiceImpl implements UserService {
         try {
             userMapper.addUser(newUser);
         } catch (Exception e) {
-            log.warn("用户" + newUser.getUsername() + "登录失败: " + e.getMessage());
-            throw new RuntimeException("注册失败" + e.getMessage());
+            log.warn("用户" + newUser.getUsername() + "注册失败: " + e.getMessage());
+            throw new DatabaseOperationException();
         }
     }
 
+    @Override
+    public PageResult getUserList(int pageNum, int pageSize) {
+        //1.设置分页参数
+        PageHelper.startPage(pageNum, pageSize);
+        //2.执行查询,转为Page格式
+        List<User> empList = userMapper.getAllUser();
+        Page<User> p = (Page<User>) empList;
+        //3.返回分页结果
+        return new PageResult((long) p.getPages(),p.getResult());
+    }
+
+    @Override
+    public void modifyUserById(User user) {
+        if (user.getIdentity() == null || user.getIdentity().isEmpty()) {
+            log.warn("用户ID" + user.getId() + "身份不能为空，修改失败");
+            throw new NoIdException();
+        }
+        //检查用户是否存在
+        if (userMapper.findUserById(user.getId())) {
+            log.warn("用户" + user.getUsername() + "不存在，修改失败");
+            throw new NoFindException();
+        }
+        //当前密码不为空时，说明需要修改密码
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            // 重新加密密码
+            Map<String, String> newPassword = DigestsUtil.encryptPassword(user.getPassword());
+            user.setPassword(newPassword.get("password"));
+            user.setSalt(newPassword.get("salt"));
+        }
+        try {
+            userMapper.modifyUserById(user);
+        } catch (Exception e) {
+            log.warn("用户" + user.getUsername() + "信息修改失败: " + e.getMessage());
+            throw new DatabaseOperationException();
+        }
+    }
+
+    @Override
+    public void deleteUserById(int id) {
+        if (userMapper.findUserById(id)) {
+            log.warn("用户ID" + id + "不存在，删除失败");
+            throw new NoFindException();
+        }
+        try {
+            userMapper.deleteUserById(id);
+        } catch (Exception e) {
+            log.warn("用户ID" + id + "删除失败: " + e.getMessage());
+            throw new DatabaseOperationException();
+        }
+    }
 }
 
 

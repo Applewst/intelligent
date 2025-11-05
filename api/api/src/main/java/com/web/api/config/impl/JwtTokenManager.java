@@ -29,6 +29,7 @@ public class JwtTokenManager {
 
     @Autowired
     JwtProperties jwtProperties;
+
     @Autowired
     private View error;
 

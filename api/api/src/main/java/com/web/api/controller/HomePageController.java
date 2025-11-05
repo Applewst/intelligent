@@ -1,5 +1,6 @@
 package com.web.api.controller;
 
+import com.web.api.pojo.LoginVo;
 import com.web.api.service.impl.ResearchDirectionServiceImpl;
 import com.web.api.service.impl.ScientificDynamicServiceImpl;
 import com.web.api.service.impl.TeacherServiceImpl;
@@ -29,6 +30,9 @@ public class HomePageController {
     @Autowired
     private ResearchDirectionServiceImpl researchDirectionServiceImpl;
 
+    @Autowired
+    private com.web.api.service.impl.LoginServiceimpl loginServiceimpl;
+
     /**
      * 最新动态
      */
@@ -44,6 +48,14 @@ public class HomePageController {
     @GetMapping("/projects")
     public Result getProject() {
         return Result.success(researchDirectionServiceImpl.getAllDirection());
+    }
+
+    /**
+     * 登录
+     */
+    @GetMapping("/login")
+    public Result login(LoginVo loginVo) {
+        return loginServiceimpl.login(loginVo);
     }
 
     /**

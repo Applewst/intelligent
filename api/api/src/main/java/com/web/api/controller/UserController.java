@@ -1,9 +1,7 @@
 package com.web.api.controller;
 
-import com.web.api.pojo.LoginVo;
 import com.web.api.pojo.User;
-import com.web.api.service.impl.LoginServiceimpl;
-import com.web.api.service.impl.UserServiceImpl;
+import com.web.api.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,29 +9,52 @@ import com.web.api.pojo.Result;
 
 @Slf4j
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
     @Autowired
-    private LoginServiceimpl loginServiceimpl;
-
-    @Autowired
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
 
     /**
-     * 登录
+     * 分页获取用户列表
+     * @param pageNum 当前页码
+     * @param pageSize 每页数量
+     * @return 用户列表
      */
-    @GetMapping("/login")
-    public Result login(LoginVo loginVo) {
-        return loginServiceimpl.login(loginVo);
+    @GetMapping("/user")
+    public Result getUserList(int pageNum, int pageSize) {
+        return Result.success(userService.getUserList(pageNum, pageSize));
     }
 
     /**
-     * 注册
+     * 注册用户
+     * @param user 用户信息
+     * @return 注册结果
      */
     @PostMapping("/register")
     public Result register(User user) {
-        userServiceImpl.register(user);
-        return Result.success();
+        userService.register(user);
+        return Result.success("用户注册成功");
+    }
+
+    /**
+     * 修改用户信息
+     * @param user 用户信息
+     * @return 修改结果
+     */
+    @PutMapping("/user")
+    public Result modifyUser(User user) {
+        userService.modifyUserById(user);
+        return Result.success("用户信息修改成功");
+    }
+
+    /**
+     * 删除用户
+     * @param id 用户ID
+     * @return 删除结果
+     */
+    @DeleteMapping("/user/{id}")
+    public Result deleteUser(@PathVariable int id) {
+        userService.deleteUserById(id);
+        return Result.success("用户删除成功");
     }
 }

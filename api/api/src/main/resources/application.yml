@@ -5,6 +5,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+app:
+  upload-dir: F:/work/Java/intelligent/uploads
+
 jwt:
   base64-encode-secret-key: k4v7zK8p2q5r9s3t6u1w8x4y7z2a5b8c9d1e3f6g7hg=
 

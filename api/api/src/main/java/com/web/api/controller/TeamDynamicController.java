@@ -14,9 +14,4 @@ public class TeamDynamicController {
 
     @Autowired
     private TeamDynamicServiceImpl teamDynamicServiceImpl;
-
-    @GetMapping("/events")
-    public Result getAllTeamDynamics() {
-        return Result.success(teamDynamicServiceImpl.getAllDynamics());
-    }
 }

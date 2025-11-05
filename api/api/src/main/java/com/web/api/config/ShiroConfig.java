@@ -110,7 +110,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/register","anon");
 
         //静态资源
-        filterChainDefinitionMap.put("/static/**","anon");
+        filterChainDefinitionMap.put("/uploads/**","anon");
 
         //载入过滤器链
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
