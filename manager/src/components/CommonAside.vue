@@ -31,6 +31,13 @@
       url:'Search'
     },
     {
+      path:'/paper',
+      name:'paper',
+      label:'论文管理',
+      icon:'house',
+      url:'Paper'
+    },
+    {
       path:'/student',
       name:'student',
       label:'学生管理',
