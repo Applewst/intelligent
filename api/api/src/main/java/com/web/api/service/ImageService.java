@@ -1,13 +1,20 @@
 package com.web.api.service;
 
-import org.springframework.web.multipart.MultipartFile;
-
 /**
  * 图片服务接口
  */
 public interface ImageService {
 
-    public void saveImage(MultipartFile file, String newName);
+    /**
+     * 保存图片
+     * @param url 图片URL
+     * @param newName 新文件名
+     */
+    void saveImage(String url, String newName);
 
-    public void deleteImage(String imageUrl);
+    /**
+     * 删除图片
+     * @param imageUrl 图片URL
+     */
+    void deleteImage(String imageUrl);
 }

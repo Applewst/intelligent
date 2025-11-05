@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.web.api.pojo.User;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void register(User user) {
         //加密密码
-        Map<String,String> newPassword = new HashMap<>();
+        Map<String,String> newPassword;
         newPassword = DigestsUtil.encryptPassword(user.getPassword());
 
         //创建新用户对象
@@ -74,13 +73,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyUserById(User user) {
-        if (user.getIdentity() == null || user.getIdentity().isEmpty()) {
-            log.warn("用户ID" + user.getId() + "身份不能为空，修改失败");
+        if (user.getId() == null) {
+            log.warn("身份不能为空，修改失败");
             throw new NoIdException();
         }
         //检查用户是否存在
-        if (userMapper.findUserById(user.getId())) {
-            log.warn("用户" + user.getUsername() + "不存在，修改失败");
+        if (!userMapper.findUserById(user.getId())) {
+            log.warn("用户ID:" + user.getId() + "不存在，修改失败");
             throw new NoFindException();
         }
         //当前密码不为空时，说明需要修改密码
@@ -100,12 +99,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(int id) {
-        if (userMapper.findUserById(id)) {
+        if (!userMapper.findUserById(id)) {
             log.warn("用户ID" + id + "不存在，删除失败");
             throw new NoFindException();
         }
         try {
             userMapper.deleteUserById(id);
+            log.info("用户ID" + id + "删除成功");
         } catch (Exception e) {
             log.warn("用户ID" + id + "删除失败: " + e.getMessage());
             throw new DatabaseOperationException();

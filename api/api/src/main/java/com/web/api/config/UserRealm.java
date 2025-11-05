@@ -23,8 +23,8 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 判断此 Realm 是否支持此 Token
-     * @param token
-     * @return
+     * @param token token
+     * @return boolean
      */
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -35,8 +35,8 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 授权
-     * @param principalCollection
-     * @return
+     * @param principalCollection 主体集合
+     * @return 授权信息
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -54,9 +54,9 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 认证
-     * @param authenticationToken
-     * @return
-     * @throws AuthenticationException
+     * @param authenticationToken 认证令牌
+     * @return 认证信息
+     * @throws AuthenticationException 认证异常
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
@@ -70,8 +70,10 @@ public class UserRealm extends AuthorizingRealm {
         String username = (String) authenticationToken.getPrincipal();
         //获取用户
         User user = userServiceImpl.findUserByName(username);
-        log.info("用户: {} 正在登录", user.getUsername());
-
+        log.info("用户: {} 正在登录", username);
+        if (user == null) {
+            throw new UnknownAccountException("用户不存在");
+        }
         if (user.isDisabled()){
             throw new DisabledAccountException("账号已被禁用");
         }

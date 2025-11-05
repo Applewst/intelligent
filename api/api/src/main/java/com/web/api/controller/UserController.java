@@ -9,6 +9,7 @@ import com.web.api.pojo.Result;
 
 @Slf4j
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -20,7 +21,7 @@ public class UserController {
      * @param pageSize 每页数量
      * @return 用户列表
      */
-    @GetMapping("/user")
+    @GetMapping("")
     public Result getUserList(int pageNum, int pageSize) {
         return Result.success(userService.getUserList(pageNum, pageSize));
     }
@@ -41,7 +42,7 @@ public class UserController {
      * @param user 用户信息
      * @return 修改结果
      */
-    @PutMapping("/user")
+    @PutMapping("")
     public Result modifyUser(User user) {
         userService.modifyUserById(user);
         return Result.success("用户信息修改成功");
@@ -52,7 +53,7 @@ public class UserController {
      * @param id 用户ID
      * @return 删除结果
      */
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("{id}")
     public Result deleteUser(@PathVariable int id) {
         userService.deleteUserById(id);
         return Result.success("用户删除成功");

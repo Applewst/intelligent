@@ -4,17 +4,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.web.api.mapper.UserMapper">
+    <insert id="addUser">
+        insert into
+            user (username, password, salt, identity)
+        values
+            (#{username}, #{password}, #{salt}, #{identity})
+    </insert>
+
     <update id="modifyUserById">
         update user
         <set>
-            <if test="username != null">
+            <if test="username != null and username != ''">
                 username = #{username},
             </if>
-            <if test="password != null">
+            <if test="password != null and password != ''">
                 password = #{password},
                 salt = #{salt},
             </if>
-            <if test="identity != null">
+            <if test="identity != null and identity != ''">
                 identity = #{identity},
             </if>
         </set>

@@ -47,13 +47,13 @@ public class HomePageController {
      */
     @GetMapping("/projects")
     public Result getProject() {
-        return Result.success(researchDirectionServiceImpl.getAllDirection());
+        return Result.success(researchDirectionServiceImpl.getAllDirections(1, 5));
     }
 
     /**
      * 登录
      */
-    @GetMapping("/login")
+    @GetMapping("/user/login")
     public Result login(LoginVo loginVo) {
         return loginServiceimpl.login(loginVo);
     }

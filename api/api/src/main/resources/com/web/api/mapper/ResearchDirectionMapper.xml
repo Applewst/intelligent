@@ -6,9 +6,9 @@
 <mapper namespace="com.web.api.mapper.ResearchDirectionMapper">
     <insert id="addDirection">
         insert into
-            research_direction (title, imageUrl)
+            research_direction (title, imageUrl, time)
         values
-            (#{title}, #{imageUrl})
+            (#{title}, #{imageUrl}, #{time})
     </insert>
 
     <update id="motifyDirectionById">

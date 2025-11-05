@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResearchDirection {
-    private int id;
+    private Integer id;
     /** 标题 */
     private String title;
     /** 图片路径 */
