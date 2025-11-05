@@ -28,6 +28,12 @@ const routes = [
         name:'Search',
         component:()=> import('@/views/SearchManager.vue')
       },
+      {
+        path:'/paper',
+        name:'Paper',
+        component:()=> import('@/views/PaperManager.vue')
+      },
+      
       
     ]
  }

@@ -346,7 +346,7 @@ const initActivityChart = () => {
   width: 320px;
   position: sticky;
   top: 20px;
-  height: fit-content;
+  height: 320px;
 }
 
 .calendar-day {
