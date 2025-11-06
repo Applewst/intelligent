@@ -42,7 +42,7 @@
           <!-- <el-button type="primary" size="small" @click="openAddForm">新增</el-button> -->
         </div>
       </template>
-      <el-table :data="filteredDynamicList" style="width: 100%" border>
+      <el-table :data="SearchList" style="width: 100%" border>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="title" label="论文名称" width="200" />
         <el-table-column prop="author" label="论文作者" width="200" />
@@ -62,9 +62,10 @@
       <!-- 分页功能 -->
       <div class="pagination">
         <el-pagination
-          v-model:current-page="currentPage"
+         
+          v-model:current-page="pageNum"
           v-model:page-size="pageSize"
-          :total="filteredDynamicList.length"
+          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           :page-sizes="pageOptions"
           @current-change="handleCurrentChange"
@@ -133,68 +134,41 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, onMounted } from 'vue';
 import { QuillEditor } from '@vueup/vue-quill';
 import { ElMessageBox, ElMessage } from 'element-plus';
-
+import { GetPaperList } from '../api/paperApi.js'
 const SearchList = ref([
-  {
-    id: 1,
-    title: "神经网络的原理与应用",
-    author: "张伟",
-    time: "2023-10-01",
-    content: "这是关于神经网络原理与应用的内容。",
-  },
-  {
-    id: 2,
-    title: "卷积神经网络的深度学习",
-    author: "王丽",
-    time: "2023-11-01",
-    content: "这是关于卷积神经网络深度学习的内容。",
-  },
-  {
-    id: 3,
-    title: "神经网络在医疗领域的应用",
-    author: "张伟",
-    time: "2023-10-01",
-    content: "这是关于神经网络在医疗领域应用的内容。",
-  },
-  {
-    id: 4,
-    title: "机器学习中的特征选择",
-    author: "李华",
-    time: "2023-09-15",
-    content: "这是关于机器学习中特征选择的内容。",
-  },
-  {
-    id: 5,
-    title: "深度学习模型的优化策略",
-    author: "王丽",
-    time: "2023-08-20",
-    content: "这是关于深度学习模型优化策略的内容。",
-  },
+
 ]);
+
+// 调用接口获取数据
+onMounted(async () => {
+  try {
+    const response = await GetPaperList(1,3,"张三");
+    total.value = response.data.total;
+    SearchList.value = response.data.row;
+    console.log(SearchList);
+    
+  } catch (error) {
+    console.error('获取论文列表失败:', error);
+  }
+});
 
 // 查询条件
 const searchTitle = ref('');
 const searchAuthor = ref('');
 
 // 当前页数和分页设置
-const currentPage = ref(1);
+const pageNum = ref(1);  //当前页面
 const pageSize = ref(3);
 const pageOptions = [3, 6, 9, 12];
+const total = ref();
 
-// 计算当前页的数据
-const filteredDynamicList = computed(() => {
-  return SearchList.value
-    .filter(item => item.title.includes(searchTitle.value))
-    .filter(item => item.author.includes(searchAuthor.value))
-    .slice((currentPage.value - 1) * pageSize.value, currentPage.value * pageSize.value);
-});
 
 // 分页当前页切换
 const handleCurrentChange = (val) => {
-  currentPage.value = val;
+  pageNum.value = val;
 };
 
 // 新增表单相关逻辑

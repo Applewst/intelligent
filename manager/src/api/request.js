@@ -1,5 +1,9 @@
 import axios from 'axios';
-const service = axios.create()
+const baseURL = 'http://localhost:8080/api'
+const service = axios.create({
+  baseURL,
+  timeout:10000
+})
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
@@ -20,3 +24,5 @@ axios.interceptors.response.use(function (response) {
     // 对响应错误做点什么
     return Promise.reject(error);
   });
+  export default service;
+  export {baseURL}
