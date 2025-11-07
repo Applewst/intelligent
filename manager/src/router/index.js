@@ -11,6 +11,8 @@ const routes = [
         //首页
         path:'/home',
         name:'Home',
+        //保证每次刷新都会回到首页
+        
         component:()=> import('@/views/HomeManager.vue')
       },
       {
