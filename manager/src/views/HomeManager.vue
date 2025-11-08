@@ -39,7 +39,7 @@ const initStudentChart = () => {
     },
     yAxis: {
       type: 'category',
-      data: ['博士生', '硕士生', '本科生', '交换生']
+      data: ['毕业生','在校生']
     },
     series: [
       {
@@ -68,12 +68,15 @@ const initPaperChart = () => {
       trigger: 'axis'
     },
     legend: {
-      data: ['SCI论文', 'EI论文', '核心期刊']
+      data: ['SCI论文', 'EI论文', '核心期刊'],
+      top: '0%',
+      left: 'center'
     },
     grid: {
       left: '3%',
       right: '4%',
       bottom: '3%',
+      top: '15%',
       containLabel: true
     },
     xAxis: {
@@ -120,12 +123,15 @@ const initActivityChart = () => {
       trigger: 'axis'
     },
     legend: {
-      data: ['学术会议', '项目申报', '成果转化']
+      data: ['学术会议', '项目申报', '成果转化'],
+      top: '0%',
+      left: 'center'
     },
     grid: {
       left: '3%',
       right: '4%',
       bottom: '3%',
+      top: '15%',
       containLabel: true
     },
     xAxis: {
@@ -346,7 +352,12 @@ const initActivityChart = () => {
   width: 320px;
   position: sticky;
   top: 20px;
-  // height: 200px;
+  height: fit-content;
+  max-height: 420px;
+}
+
+.sidebar-calendar :deep(.el-card__body) {
+  padding: 8px;
 }
 
 .calendar-day {
@@ -354,26 +365,43 @@ const initActivityChart = () => {
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .calendar-day.is-today {
   background: #409EFF;
   color: white;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   margin: 0 auto;
   font-weight: bold;
 }
 
 :deep(.el-calendar-table .el-calendar-day) {
-  padding: 8px;
+  padding: 4px;
+  height: 45px;
 }
 
 :deep(.el-calendar__header) {
-  padding: 12px 20px;
+  padding: 8px 12px;
   border-bottom: 1px solid #ebeef5;
+  font-size: 14px;
+}
+
+:deep(.el-calendar__title) {
+  font-size: 14px;
+}
+
+:deep(.el-calendar-table thead th) {
+  padding: 6px 0;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+:deep(.el-calendar__button-group) {
+  display: flex;
+  gap: 4px;
 }
 
 @media (max-width: 1200px) {
@@ -384,6 +412,7 @@ const initActivityChart = () => {
   .sidebar-calendar {
     width: 100%;
     position: static;
+    max-height: none;
   }
 }
 </style>
