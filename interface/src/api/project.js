@@ -46,7 +46,7 @@ export const getProjectList = async (params = {}) => {
 
   // 生产环境调用真实接口
   return service({
-    url: '/api/projects', // 项目接口地址
+    url: '/projects', // 项目接口地址
     method: 'get',
     params: params // 传递参数
   });

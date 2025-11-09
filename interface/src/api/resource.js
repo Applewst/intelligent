@@ -14,7 +14,7 @@ export const resourceApi = {
    */
   getResourceList(params) {
     return service({
-      url: "/api/resources",
+      url: "/resources",
       method: "get",
       params,
     })

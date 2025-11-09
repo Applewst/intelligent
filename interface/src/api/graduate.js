@@ -33,7 +33,7 @@ export const getGraduateList = async (params = {}) => {
       })
     } else {
       // 真实后端接口
-      const response = await service.get('/api/graduates', {params})
+      const response = await service.get('/graduates', {params})
       return response
     }
   } catch (error) {

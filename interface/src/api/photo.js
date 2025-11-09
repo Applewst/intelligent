@@ -39,7 +39,7 @@ export const getPhotoWallImages = async () => {
   else {
     try {
       // 真实向后端发送POST请求
-      const response = await service.get('/api/photos');
+      const response = await service.get('/photos');
 
       // 真实接口数据处理
       if (response && response.data && response.data.code === 0) {

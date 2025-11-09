@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import TeamIntroduction from '../views/TeamIntroduction.vue';
 
 const routes = [
   {
@@ -14,6 +15,11 @@ const routes = [
         //保证每次刷新都会回到首页
         
         component:()=> import('@/views/HomeManager.vue')
+      },
+      {
+        path:'/introduce',
+        name:'TeamIntroduction',
+        component:()=>import('@/views/TeamIntroduction.vue')
       },
       {
         //团队动态

@@ -109,7 +109,7 @@ export const getTeacherDetail = async (id) => {
     });
   }
    return service
-    .get(`/api/teacher/${id}`)          // 路径参数
+    .get(`/teacher/${id}`)          // 路径参数
     .then(res => ({ data: res.data })) // 保持和 mock 同一外层格式
     .catch(err => {
       // 把后端错误消息透传出去，组件里 catch 到即可

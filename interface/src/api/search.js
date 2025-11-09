@@ -118,8 +118,8 @@ export const GetsearchPapers = async ()=>{
       "data": papers.value
     }
   }
-  return service.get('/api/search/papers',{
-    
+  return service.get('/search/papers',{
+
   })
 }
 
@@ -198,8 +198,7 @@ export const GetSearchProjects = async (id)=>{
       "data":modules.value[id-1]
     }
   }
-  return service.get('/api/search/project',{
+  return service.get('/search/project',{
     id
   })
 }
- 
