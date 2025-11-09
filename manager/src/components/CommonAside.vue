@@ -16,7 +16,6 @@ const list = ref([
     icon: "house",
     url: "TeamIntroduction",
   },
-
   {
     path: "/team",
     name: "team",
@@ -110,6 +109,13 @@ const list = ref([
         url: "OutStudent",
       },
     ],
+  },
+  {
+    path: "/share",
+    name: "ResourceShare",
+    label: "资源管理",
+    icon: "house",
+    url: "ResourceShare",
   },
 ]);
 const noChild = computed(() => list.value.filter((item) => !item.children));

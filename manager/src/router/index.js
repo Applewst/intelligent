@@ -92,7 +92,12 @@ const routes = [
           }
           
         ]
-      }
+      },
+      {
+        path:'/share',
+        name:'ResourceShare',
+        component:()=>import('@/views/ResourceShare.vue')
+      },
     ]
  }
 ]
