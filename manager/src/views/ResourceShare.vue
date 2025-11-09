@@ -156,7 +156,6 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Search, Plus, Edit, Delete } from "@element-plus/icons-vue";
 import {
   getResourceList,
   addResource,

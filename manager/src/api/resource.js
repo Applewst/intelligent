@@ -1,3 +1,5 @@
+import request from "./request.js"
+
 // 模拟数据
 const mockData = [
   {
@@ -107,15 +109,14 @@ const mockRequest = (page, pageSize, keyword) => {
  * @param {string} keyword - 搜索关键字
  */
 export const getResourceList = (page, pageSize, keyword) => {
-  // 使用模拟数据
-  return mockRequest(page, pageSize, keyword)
+  return request({
+    url: "/resources",
+    method: "get",
+    params: { page, pageSize, keyword },
+  })
 
-  // 真实接口请求（取消注释使用）
-  // return request({
-  //   url: '/resources',
-  //   method: 'get',
-  //   params: { page, pageSize, keyword }
-  // })
+  // 模拟数据（开发调试使用，取消注释可切换）
+  // return mockRequest(page, pageSize, keyword)
 }
 
 /**
@@ -123,28 +124,27 @@ export const getResourceList = (page, pageSize, keyword) => {
  * @param {Object} data - 资源数据
  */
 export const addResource = (data) => {
-  // 模拟添加
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newResource = {
-        ...data,
-        id: Date.now().toString(),
-        uploadTime: new Date().toLocaleString("zh-CN"),
-        downloads: "0",
-      }
-      mockData.unshift(newResource)
-      resolve({
-        code: 200,
-        message: "添加成功",
-      })
-    }, 300)
+  return request({
+    url: "/resources",
+    method: "post",
+    data,
   })
 
-  // 真实接口请求（取消注释使用）
-  // return request({
-  //   url: '/resources',
-  //   method: 'post',
-  //   data
+  // 模拟添加（开发调试使用，取消注释可切换）
+  // return new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     const newResource = {
+  //       ...data,
+  //       id: Date.now().toString(),
+  //       uploadTime: new Date().toLocaleString("zh-CN"),
+  //       downloads: "0",
+  //     }
+  //     mockData.unshift(newResource)
+  //     resolve({
+  //       code: 200,
+  //       message: "添加成功",
+  //     })
+  //   }, 300)
   // })
 }
 
@@ -154,25 +154,24 @@ export const addResource = (data) => {
  * @param {Object} data - 资源数据
  */
 export const updateResource = (id, data) => {
-  // 模拟更新
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const index = mockData.findIndex((item) => item.id === id)
-      if (index !== -1) {
-        mockData[index] = { ...mockData[index], ...data }
-      }
-      resolve({
-        code: 200,
-        message: "更新成功",
-      })
-    }, 300)
+  return request({
+    url: `/resources/${id}`,
+    method: "put",
+    data,
   })
 
-  // 真实接口请求（取消注释使用）
-  // return request({
-  //   url: `/resources/${id}`,
-  //   method: 'put',
-  //   data
+  // 模拟更新（开发调试使用，取消注释可切换）
+  // return new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     const index = mockData.findIndex((item) => item.id === id)
+  //     if (index !== -1) {
+  //       mockData[index] = { ...mockData[index], ...data }
+  //     }
+  //     resolve({
+  //       code: 200,
+  //       message: "更新成功",
+  //     })
+  //   }, 300)
   // })
 }
 
@@ -181,23 +180,22 @@ export const updateResource = (id, data) => {
  * @param {string} id - 资源ID
  */
 export const deleteResource = (id) => {
-  // 模拟删除
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const index = mockData.findIndex((item) => item.id === id)
-      if (index !== -1) {
-        mockData.splice(index, 1)
-      }
-      resolve({
-        code: 200,
-        message: "删除成功",
-      })
-    }, 300)
+  return request({
+    url: `/resources/${id}`,
+    method: "delete",
   })
 
-  // 真实接口请求（取消注释使用）
-  // return request({
-  //   url: `/resources/${id}`,
-  //   method: 'delete'
+  // 模拟删除（开发调试使用，取消注释可切换）
+  // return new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     const index = mockData.findIndex((item) => item.id === id)
+  //     if (index !== -1) {
+  //       mockData.splice(index, 1)
+  //     }
+  //     resolve({
+  //       code: 200,
+  //       message: "删除成功",
+  //     })
+  //   }, 300)
   // })
 }

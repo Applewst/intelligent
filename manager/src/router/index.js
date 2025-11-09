@@ -22,6 +22,11 @@ const routes = [
         component:()=>import('@/views/TeamIntroduction.vue')
       },
       {
+        path:'/contact',
+        name:'ContactUs',
+        component:()=>import('@/views/ContactUs.vue')
+      },
+      {
         //团队动态
         path:'/team',
         name:'Team',
