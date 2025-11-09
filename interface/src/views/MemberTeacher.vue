@@ -5,17 +5,43 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const teachers = ref([])
+const currentPage = ref(1)
+const pageSize = ref(6)
+const total = ref(0)
 
 const cleanAvatar = (raw = '') => {
   const match = raw.match(/https:\/\/picsum\.photos\/id\/\d+\/\d+\/\d+/)
   return match ? match[0] : ''
 }
 
-onMounted(async () => {
-  const res = await getTeacherList()
+const fetchTeachers = async () => {
+  const res = await getTeacherList({
+    pageNum: currentPage.value,
+    pageSize: pageSize.value,
+    name: '', // 传递空的name参数
+  })
+
   if (res.data.code === 0) {
-    teachers.value = res.data.data.list
+    const { list, total: totalCount } = res.data.data
+
+    teachers.value = list
+    total.value = totalCount
   }
+}
+
+const handlePageChange = (page) => {
+  currentPage.value = page
+  fetchTeachers()
+}
+
+const handleSizeChange = (size) => {
+  pageSize.value = size
+  currentPage.value = 1 // 切换每页条数时重置到第一页
+  fetchTeachers()
+}
+
+onMounted(async () => {
+  await fetchTeachers()
 })
 
 const goToDetail = (t) => {
@@ -41,8 +67,22 @@ const goToDetail = (t) => {
         </div>
       </el-col>
     </el-row>
+
+    <!-- 添加分页组件 -->
+    <div class="pagination-wrapper">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[6, 12, 18, 24]"
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
+        @current-change="handlePageChange"
+        @size-change="handleSizeChange"
+      />
+    </div>
   </div>
 </template>
+
 <style scoped lang="less">
 .teacher-simple {
   text-align: center;
@@ -53,13 +93,13 @@ const goToDetail = (t) => {
 }
 .col {
   display: flex;
-  justify-content: center; // 卡片在栅格内居中
+  justify-content: center;
   margin-bottom: 24px;
 }
 
 .teacher-card {
   width: 100%;
-  max-width: 260px; // 限制最大宽度，防止拉伸变形
+  max-width: 260px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,6 +108,7 @@ const goToDetail = (t) => {
   background: #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-4px);
@@ -88,9 +129,9 @@ const goToDetail = (t) => {
 
 .meta {
   display: flex;
-  flex-direction: column; // 纵向排列
+  flex-direction: column;
   align-items: center;
-  gap: 8px; // 上下间距
+  gap: 8px;
 }
 
 .name {
@@ -107,5 +148,12 @@ const goToDetail = (t) => {
 .email {
   font-size: 13px;
   color: #409eff;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding-bottom: 40px;
 }
 </style>

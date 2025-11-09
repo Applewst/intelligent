@@ -18,6 +18,19 @@
         </div>
       </div>
     </div>
+
+    <!-- Added pagination component -->
+    <div class="pagination-wrapper">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 20, 50]"
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -28,14 +41,22 @@ import { ElMessage } from 'element-plus'
 
 const graduates = ref([])
 const loading = ref(true)
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
 
 const fetchGraduateData = async () => {
   try {
     loading.value = true
-    const res = await getGraduateList()
+    const res = await getGraduateList({
+      pageNum: currentPage.value,
+      pageSize: pageSize.value,
+      name: '', // 设置name参数为空值
+    })
 
     if (res.data.code === 0) {
       graduates.value = res.data.data.list
+      total.value = res.data.data.total
     } else {
       ElMessage.warning(res.data.message || '获取数据失败')
     }
@@ -45,6 +66,17 @@ const fetchGraduateData = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleSizeChange = (newSize) => {
+  pageSize.value = newSize
+  currentPage.value = 1
+  fetchGraduateData()
+}
+
+const handleCurrentChange = (newPage) => {
+  currentPage.value = newPage
+  fetchGraduateData()
 }
 
 onMounted(fetchGraduateData)
@@ -115,6 +147,13 @@ onMounted(fetchGraduateData)
       font-size: 14px;
       color: #606266;
     }
+  }
+
+  /* Added pagination styling */
+  .pagination-wrapper {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

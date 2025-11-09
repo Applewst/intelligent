@@ -109,11 +109,10 @@ export const getTeacherDetail = async (id) => {
     });
   }
    return service
-    .get(`/teacher/${id}`)          // 路径参数
-    .then(res => ({ data: res.data })) // 保持和 mock 同一外层格式
-    .catch(err => {
-      // 把后端错误消息透传出去，组件里 catch 到即可
-      throw new Error(err?.response?.data?.message || '获取教师详情失败');
-    });
+    .get("/teacher/detail", { params: { id } }) // 通过 params 传递 id
+    .then((res) => ({ data: res.data }))
+    .catch((err) => {
+      throw new Error(err?.response?.data?.message || "获取教师详情失败")
+    })
 }
 

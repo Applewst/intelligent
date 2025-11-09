@@ -18,6 +18,19 @@
         </div>
       </div>
     </div>
+
+    <!-- Add pagination controls -->
+    <div class="pagination-wrapper">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 20, 50]"
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -29,13 +42,18 @@ import { ElMessage } from 'element-plus'
 const students = ref([])
 const loading = ref(true)
 
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+
 const fetchStudentData = async () => {
   try {
     loading.value = true
-    const res = await getStudentList()
+    const res = await getStudentList(currentPage.value, pageSize.value, '')
 
     if (res.data.code === 0) {
       students.value = res.data.data.list
+      total.value = res.data.data.total
     } else {
       ElMessage.warning(res.data.message || '获取数据失败')
     }
@@ -45,6 +63,17 @@ const fetchStudentData = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleSizeChange = (newSize) => {
+  pageSize.value = newSize
+  currentPage.value = 1
+  fetchStudentData()
+}
+
+const handleCurrentChange = (newPage) => {
+  currentPage.value = newPage
+  fetchStudentData()
 }
 
 onMounted(fetchStudentData)
@@ -115,6 +144,13 @@ onMounted(fetchStudentData)
       font-size: 14px;
       color: #606266;
     }
+  }
+
+  /* Add pagination wrapper styles */
+  .pagination-wrapper {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
   }
 }
 </style>
