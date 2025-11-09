@@ -64,11 +64,7 @@
 import { ref, reactive, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
-import {
-  getTeamIntroduction,
-  updateTeamIntroduction,
-  uploadImage,
-} from "@/api/introduce";
+import { getTeamIntroduction, updateTeamIntroduction } from "@/api/introduce";
 
 const formRef = ref(null);
 const loading = ref(false);
