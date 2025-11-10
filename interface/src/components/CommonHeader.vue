@@ -21,7 +21,7 @@ const activeMenuIndex = computed(() => {
 
 const store = useCounterStore()
 const activeIndex = ref('home')
-const userType = ref('') // internal 或 admin
+const userType = ref('admin') // internal 或 admin
 const userName = ref('')
 // store.setUser('三', 'internal') // 设置用户信息
 
@@ -88,6 +88,7 @@ onUpdated(() => {
                   >登录</el-dropdown-item
                 >
                 <el-dropdown-item v-else command="logout" >退出登录</el-dropdown-item>
+                <!-- 跳转到后台的首页 -->
                 <el-dropdown-item v-if="isLogin" disabled>
                   {{ userType === 'admin' ? '管理员' : '内部人员' }}
                 </el-dropdown-item>

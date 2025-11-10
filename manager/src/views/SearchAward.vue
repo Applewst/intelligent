@@ -11,8 +11,8 @@
       <div class="search-item">
         <label>名称</label>
         <el-input
-          v-model="searchForm.name"
-          placeholder="请输入论文名称"
+          v-model="searchForm.detail"
+          placeholder="请输入获奖名称"
           clearable
         />
       </div>
@@ -20,7 +20,7 @@
         <label>作者</label>
         <el-input
           v-model="searchForm.author"
-          placeholder="请输入作者名称"
+          placeholder="请输入获奖人名称"
           clearable
         />
       </div>
@@ -32,9 +32,19 @@
     <!-- 数据表格 -->
     <el-table :data="tableData" border class="data-table">
       <el-table-column prop="id" label="ID" width="80" align="center" />
-      <el-table-column prop="name" label="论文名称" min-width="300" />
+      <el-table-column prop="detail" label="获奖内容" min-width="200" />
       <el-table-column prop="author" label="论文作者" width="150" />
-      <el-table-column prop="uploadTime" label="上传时间" width="150" sortable />
+      <el-table-column prop="image" label="照片" width="120">
+        <template #default="{ row }">
+          <el-image
+            :src="row.image"
+            :preview-src-list="[row.image]"
+            fit="cover"
+            style="width: 60px; height: 60px; border-radius: 4px"
+          />
+        </template>
+      </el-table-column>   
+      <el-table-column prop="time" label="上传时间" width="150" sortable />
       <el-table-column label="操作" width="180" align="center">
         <template #default="{ row }">
           <el-button type="primary" size="small" @click="handleEdit(row)">
@@ -57,7 +67,7 @@
         <el-option label="20/page" :value="20" />
       </el-select>
       <el-pagination
-        v-model:current-page="currentPage"
+        v-model:current-page="pageNum"
         :page-size="pageSize"
         :total="total"
         layout="prev, pager, next, jumper"
@@ -73,14 +83,21 @@
       @close="handleDialogClose"
     >
       <el-form :model="form" label-width="80px">
-        <el-form-item label="论文名称">
-          <el-input v-model="form.name" placeholder="请输入论文名称" />
+        <el-form-item label="获奖内容">
+          <el-input v-model="form.detail" placeholder="请输入论文名称" />
         </el-form-item>
-        <el-form-item label="论文作者">
+        <el-form-item label="获奖人">
           <el-input v-model="form.author" placeholder="请输入作者名称" />
         </el-form-item>
-        <el-form-item label="论文内容" class="editor-form-item">
-          <div ref="quillEditor" class="quill-editor"></div>
+        <el-form-item label="照片" prop="image">
+          <el-input v-model="form.image" placeholder="请输入照片URL" />
+          <div v-if="form.image" style="margin-top: 10px">
+            <el-image
+              :src="form.image"
+              fit="cover"
+              style="width: 100px; height: 100px; border-radius: 4px"
+            />
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -92,55 +109,76 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, onMounted } from 'vue'
+import { ref, reactive, nextTick, onMounted,watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { GetAwardList, AddAward, UpdateAward, DeleteAward  } from '@/api/SearchApi.js'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 
 // 搜索表单
 const searchForm = reactive({
-  name: '',
+  detail: '',
   author: ''
 })
 
 // 分页参数
-const currentPage = ref(1)
+const pageNum = ref(1)
 const pageSize = ref(3)
 const total = ref(5)
 
 // 表格数据
 const tableData = ref([
-  {
-    id: 1,
-    name: '神经网络的原理与应用',
-    author: '张伟',
-    uploadTime: '2023-10-01'
-  },
-  {
-    id: 2,
-    name: '卷积神经网络的深度学习',
-    author: '王丽',
-    uploadTime: '2023-11-01'
-  },
-  {
-    id: 3,
-    name: '神经网络在医疗领域的应用',
-    author: '张伟',
-    uploadTime: '2023-10-01'
-  },
-  {
-    id: 4,
-    name: '机器学习中的特征选择',
-    author: '李华',
-    uploadTime: '2023-09-15'
-  },
-  {
-    id: 5,
-    name: '深度学习模型的优化策略',
-    author: '王丽',
-    uploadTime: '2023-08-20'
-  }
 ])
+
+// 获取表格数据
+const GetAllAwardData = async () => {
+  console.log('获取获奖列表文本处:', pageNum.value,pageSize.value,searchForm.detail,searchForm.author)
+  const response = await GetAwardList(pageNum.value,pageSize.value,searchForm.detail,searchForm.author)
+  tableData.value = response.data.rows
+  if (response.code === 1) {
+    ElMessage.success('获取获奖列表成功')
+  }else{
+    ElMessage.error('获取获奖列表失败')
+  }
+}
+//新增获奖
+const AddAwardData = async (...data) => {
+  console.log("获取新增获奖文本处:", ...data)
+  const response = await AddAward(...data)
+  if (response.code === 1) {
+    ElMessage.success('新增获奖成功')
+  }else{
+    ElMessage.error('新增获奖失败')
+  }
+}
+//编辑获奖
+const EditAwardData = async (...data) => {
+  console.log("获取编辑获奖文本处:", ...data)
+  const response = await UpdateAward(...data)
+  if (response.code === 1) {
+    ElMessage.success('编辑获奖成功')
+  }else{
+    ElMessage.error('编辑获奖失败')
+  }
+}
+//删除获奖
+const DeleteAwardData = async (id) => {
+  console.log("获取删除获奖文本处:", id)
+  const response = await DeleteAward(id)
+  if (response.code === 1) {
+    ElMessage.success('删除获奖成功')
+  }else{
+    ElMessage.error('删除获奖失败')
+  }
+}
+
+onMounted(() => {
+  GetAllAwardData()
+})
+watch([pageNum,pageSize],()=>{
+  GetAllAwardData()
+})
+
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
@@ -150,9 +188,9 @@ const quillEditor = ref(null)
 let quillInstance = null
 
 const form = reactive({
-  name: '',
+  detail: '',
   author: '',
-  content: ''
+  image: ''
 })
 
 const initQuillEditor = () => {
@@ -193,16 +231,20 @@ const initQuillEditor = () => {
 
 // 搜索
 const handleSearch = () => {
-  console.log('搜索条件:', searchForm)
-  ElMessage.success('搜索功能待实现')
+  pageNum.value = 1
+  GetAllAwardData()
+  //清空
+  searchForm.detail = ''
+  searchForm.author = ''
 }
 
+
 const handleAdd = () => {
-  dialogTitle.value = '新增论文'
+  dialogTitle.value = '新增获奖'
   isEdit.value = false
-  form.name = ''
+  form.detail = ''
   form.author = ''
-  form.content = ''
+  form.image = ''
   dialogVisible.value = true
   initQuillEditor()
   nextTick(() => {
@@ -213,12 +255,12 @@ const handleAdd = () => {
 }
 
 const handleEdit = (row) => {
-  dialogTitle.value = '编辑论文'
+  dialogTitle.value = '编辑获奖'
   isEdit.value = true
-  editId.value = row.id
-  form.name = row.name
+  editId.id = row.id
+  form.detail = row.detail
   form.author = row.author
-  form.content = row.content || ''
+  form.image = row.image || ''
   dialogVisible.value = true
   initQuillEditor()
   nextTick(() => {
@@ -245,27 +287,27 @@ const handleDialogClose = () => {
     quillEditor.value.innerHTML = ''
   }
   // Reset form
-  form.name = ''
+  form.detail = ''
   form.author = ''
-  form.content = ''
+  form.image = ''
 }
 
 const handleSubmit = () => {
-  if (!form.name || !form.author) {
-    ElMessage.warning('请填写论文名称和作者')
+  if (!form.detail || !form.author) {
+    ElMessage.warning('请填写获奖名称和获奖人')
     return
   }
   
   if (quillInstance) {
-    form.content = quillInstance.root.innerHTML
+    
   }
   
   if (isEdit.value) {
-    console.log('编辑论文:', { id: editId.value, ...form })
-    ElMessage.success('编辑成功')
+   
+    EditAwardData(editId.id, form.detail, form.author, form.image)
   } else {
-    console.log('新增论文:', form)
-    ElMessage.success('新增成功')
+    console.log("新增Bug");
+    AddAwardData(form.detail, form.author, form.image)
   }
   
   dialogVisible.value = false
@@ -274,7 +316,7 @@ const handleSubmit = () => {
 // 删除
 const handleDelete = (row) => {
   ElMessageBox.confirm(
-    `确定要删除论文"${row.name}"吗？`,
+    `确定要删除论文"${row.detail}"吗？`,
     '提示',
     {
       confirmButtonText: '确定',
@@ -282,8 +324,7 @@ const handleDelete = (row) => {
       type: 'warning'
     }
   ).then(() => {
-    console.log('删除:', row)
-    ElMessage.success('删除成功')
+    DeleteAwardData(row.id)
   }).catch(() => {
     ElMessage.info('已取消删除')
   })

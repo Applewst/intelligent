@@ -30,6 +30,16 @@
       <el-table-column prop="title" label="项目名称" min-width="300" />
       <el-table-column prop="sort" label="项目类别" width="150" />
       <el-table-column prop="time" label="上传时间" width="150" sortable />
+      <el-table-column prop="image" label="照片" width="120">
+          <template #default="{ row }">
+            <el-image
+              :src="row.image"
+              :preview-src-list="[row.image]"
+              fit="cover"
+              style="width: 60px; height: 60px; border-radius: 4px"
+            />
+          </template>
+        </el-table-column>    
       <el-table-column label="操作" width="180" align="center">
         <template #default="{ row }">
           <el-button type="primary" size="small" @click="handleEdit(row)">
@@ -68,10 +78,10 @@
       @close="handleDialogClose"
     >
       <el-form :model="form" label-width="80px">
-        <el-form-item label="论文名称">
-          <el-input v-model="form.title" placeholder="请输入论文名称" />
+        <el-form-item label="项目名称">
+          <el-input v-model="form.title" placeholder="请输入项目名称" />
         </el-form-item>
-        <el-form-item label="论文类别">
+        <el-form-item label="项目类别">
           <el-select
             v-model="form.sort"
             :options="options"
@@ -80,9 +90,19 @@
             style="width: 240px"
           />
         </el-form-item>
-        <el-form-item label="项目内容" class="editor-form-item">
-          <div ref="quillEditor" class="quill-editor"></div>
+        <el-form-item label="照片" prop="image">
+          <el-input v-model="form.image" placeholder="请输入照片URL" />
+          <div v-if="form.image" style="margin-top: 10px">
+            <el-image
+              :src="form.image"
+              fit="cover"
+              style="width: 100px; height: 100px; border-radius: 4px"
+            />
+          </div>
         </el-form-item>
+        <!-- <el-form-item label="项目内容" class="editor-form-item">
+          <div ref="quillEditor" class="quill-editor"></div>
+        </el-form-item> -->
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -93,11 +113,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, onMounted } from 'vue'
+import { ref, reactive, nextTick, onMounted,watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
-import { GetSearchProject } from '../api/SearchProjectApi'
+import { GetSearchProject,AddSearchProject,DeleteSearchProject,EditSearchProject } from '../api/SearchApi'
 //
 const props = {
   label: 'label',
@@ -125,7 +145,8 @@ const options = [
 // 搜索表单
 const searchForm = reactive({
   title: '',
-  author: ''
+  author: '',
+
 })
 
 // 分页参数
@@ -138,6 +159,8 @@ const total = ref(5)
 const ProjectVal = ref();
 const tableData = ref([
 ])
+
+//获取项目列表
 const GetAllSearchProject = async (...params)=>{
   const response = await GetSearchProject(params);
   tableData.value = response.data
@@ -153,9 +176,44 @@ const GetAllSearchProject = async (...params)=>{
     }
   })
 }
+//新增项目
+const AddAllSearchProject = async (...params)=>{
+  const response = await AddSearchProject(params);
+  console.log("新增项目文本处",params)
+  if(response.code===1){
+    ElMessage.success('新增成功');
+  }else{
+    ElMessage.error('新增失败');
+  }
+}
+//编辑项目
+const EditAllSearchProject = async (...params)=>{
+  const response = await EditSearchProject(params);
+  if(response.code===1){
+    ElMessage.success('编辑成功');
+  }else{
+    ElMessage.error('编辑失败');
+  }
+}
+//删除项目
+const DeleteAllSearchProject = async (id)=>{
+  const response = await DeleteSearchProject(id);
+  if(response.code===1){
+    ElMessage.success('删除成功');
+  }else{
+    ElMessage.error('删除失败');
+  }
+}
+
+
 onMounted(() => {
-  GetAllSearchProject();
+  GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
 })
+//监视每页页数和当前页数
+watch([pageNum, pageSize], () => {
+  GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
+})
+
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
 const isEdit = ref(false)
@@ -166,7 +224,7 @@ let quillInstance = null
 const form = reactive({
   title: '',
   sort: '',
-  content: ''
+  image: '',
 })
 
 const initQuillEditor = () => {
@@ -208,6 +266,7 @@ const initQuillEditor = () => {
 // 搜索
 const handleSearch = () => {
   GetAllSearchProject(pageNum.value,pageSize.value,SearchVal.value);
+  SearchVal.value = ''
 }
 
 const handleAdd = () => {
@@ -215,14 +274,14 @@ const handleAdd = () => {
   isEdit.value = false
   form.title = ''
   form.sort = ''
-  form.content = ''
+  form.image = ''
   dialogVisible.value = true
   initQuillEditor()
-  nextTick(() => {
-    if (quillInstance) {
-      quillInstance.setContents([])
-    }
-  })
+  // nextTick(() => {
+  //   if (quillInstance) {
+  //     quillInstance.setContents([])
+  //   }
+  // })
 }
 
 const handleEdit = (row) => {
@@ -231,7 +290,7 @@ const handleEdit = (row) => {
   editId.value = row.id
   form.title = row.title
   form.sort = row.sort
-  form.content = row.content || ''
+  form.image = row.image
   dialogVisible.value = true
   initQuillEditor()
   nextTick(() => {
@@ -259,26 +318,26 @@ const handleDialogClose = () => {
   }
   // Reset form
   form.title = ''
-  form.author = ''
-  form.content = ''
+  form.sort = ''
+  form.image = ''
 }
 
 const handleSubmit = () => {
-  if (!form.title || !form.author) {
-    ElMessage.warning('请填写论文名称和作者')
+  if (!form.title || !form.sort) {
+    ElMessage.warning('请填写项目名称和项目类别')
     return
   }
   
-  if (quillInstance) {
-    form.content = quillInstance.root.innerHTML
-  }
+  // if (quillInstance) {
+  //   form.content = quillInstance.root.innerHTML
+  // }
   
   if (isEdit.value) {
-    console.log('编辑论文:', { id: editId.value, ...form })
-    ElMessage.success('编辑成功')
+    console.log('编辑论文文本处:', form)
+    EditAllSearchProject(editId.value,form.title,form.sort,form.image);
   } else {
-    console.log('新增论文:', form)
-    ElMessage.success('新增成功')
+    console.log('新增论文文本处:', form)
+    AddAllSearchProject(form.title,form.sort);
   }
   
   dialogVisible.value = false
@@ -287,7 +346,7 @@ const handleSubmit = () => {
 // 删除
 const handleDelete = (row) => {
   ElMessageBox.confirm(
-    `确定要删除论文"${row.title}"吗？`,
+    `确定要删除项目"${row.title}"吗？`,
     '提示',
     {
       confirmButtonText: '确定',
@@ -295,8 +354,8 @@ const handleDelete = (row) => {
       type: 'warning'
     }
   ).then(() => {
-    console.log('删除:', row)
-    ElMessage.success('删除成功')
+    DeleteAllSearchProject(row.id);
+
   }).catch(() => {
     ElMessage.info('已取消删除')
   })

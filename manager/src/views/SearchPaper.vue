@@ -31,9 +31,10 @@
 
     <!-- 数据表格 -->
     <el-table :data="tableData" border class="data-table">
-      <el-table-column prop="id" label="ID" width="80" align="center" />
-      <el-table-column prop="title" label="论文名称" min-width="300" />
+      <el-table-column prop="id" label="ID" width="40" align="center" />
+      <el-table-column prop="title" label="论文名称" width="240" />
       <el-table-column prop="author" label="论文作者" width="150" />
+      <el-table-column prop="detail" label="论文内容" width="670" />
       <el-table-column prop="time" label="上传时间" width="150" sortable />
       <el-table-column label="操作" width="180" align="center">
         <template #default="{ row }">
@@ -49,7 +50,7 @@
 
     <!-- 分页 -->
     <div class="pagination">
-      <span class="total">全部 {{ total }}条</span>
+      <span class="total">共 {{ total }}条</span>
       <el-select v-model="pageSize" class="page-size-select" @change="handlePageSizeChange">
         <el-option label="3个/页" :value="3" />
         <el-option label="5个/页" :value="5" />
@@ -79,7 +80,7 @@
         <el-form-item label="论文作者">
           <el-input v-model="form.author" placeholder="请输入作者名称" />
         </el-form-item>
-        <el-form-item label="论文内容" class="editor-form-item">
+        <el-form-item label="论文内容" v-model="form.detail" class="editor-form-item">
           <div ref="quillEditor" class="quill-editor"></div>
         </el-form-item>
       </el-form>
@@ -92,11 +93,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, onMounted } from 'vue'
+import { ref, reactive, nextTick, onMounted,watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
-import {GetPaperList} from '@/api/paperApi'
+import {GetPaperList,AddPaper,UpdatePaper,DeletePaper} from '@/api/SearchApi.js'
 // 搜索表单
 const searchForm = reactive({
   title: '',
@@ -110,9 +111,6 @@ const total = ref(5)
 
 
 // 表格数据
-
-
-
 const tableData = ref([])
 //获取论文列表
 const GetAllSearchProject = async ()=>{
@@ -121,9 +119,44 @@ const GetAllSearchProject = async ()=>{
   tableData.value = response.data.rows;
   total.value = response.data.total;
 }
-onMounted( ()=>{
-  GetAllSearchProject();
+//新增论文
+const AddSearchPaper = async (...data)=>{
+  console.log('新增论文:',data)
+  const response = await AddPaper(data)
+  if(response.code === 1){
+    ElMessage.success('新增成功')
+  }else{
+    ElMessage.error('新增失败')
+  }
+}
+//修改论文
+const EditSearchPaper = async (...data)=>{
+  console.log('修改论文文本中:',data)
+  const response = await UpdatePaper(data)
+  if(response.code === 1){
+    ElMessage.success('修改成功')
+  }else{
+    ElMessage.error('修改失败')
+  }
+}
+//删除论文
+const DeleteSearchPaper = async (id)=>{
+  console.log('删除论文文本中',id)
+  const response = await DeletePaper(id)
+  if(response.code === 1){
+    ElMessage.success('删除成功')
+  }else{
+    ElMessage.erroe('删除失败')
+  }
+}
 
+
+onMounted( ()=>{
+  GetAllSearchProject()
+})
+//监视每页页数和当前页数
+watch([pageNum, pageSize], () => {
+  GetAllSearchProject();
 })
 
 
@@ -200,16 +233,19 @@ const handleEdit = (row) => {
   dialogTitle.value = '编辑论文'
   isEdit.value = true
   editId.value = row.id
-  form.titile = row.title
+  form.title = row.title
   form.author = row.author
   form.detail = row.detail || ''
   dialogVisible.value = true
+ 
+  
   initQuillEditor()
   nextTick(() => {
     if (quillInstance) {
-      quillInstance.clipboard.dangerouslyPasteHTML(form.content)
+      quillInstance.clipboard.dangerouslyPasteHTML(form.detail)
     }
   })
+  
 }
 
 const handleDialogClose = () => {
@@ -234,6 +270,8 @@ const handleDialogClose = () => {
   form.detail = ''
 }
 
+
+// 提交新增论文
 const handleSubmit = () => {
   if (!form.title || !form.author) {
     ElMessage.warning('请填写论文名称和作者')
@@ -243,15 +281,20 @@ const handleSubmit = () => {
   if (quillInstance) {
     form.detail = quillInstance.root.innerHTML
   }
-  
-  if (isEdit.value) {
-    console.log('编辑论文:', { id: editId.value, ...form })
-    ElMessage.success('编辑成功')
-  } else {
-    console.log('新增论文:', form)
-    ElMessage.success('新增成功')
+  console.log("新增论文参数",form)
+  //清除form.detail的HTML标签，保留文本内容a
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = form.detail;
+  form.detail = tempDiv.textContent || tempDiv.innerText || '';
+  //如果是编辑则调用修改接口
+  if(isEdit.value){
+    //编辑接口
+    EditSearchPaper(editId.value,form.title,form.author,form.detail)
+  }else{
+    AddSearchPaper(form.title,form.author,form.detail);
   }
   
+
   dialogVisible.value = false
 }
 
@@ -266,8 +309,7 @@ const handleDelete = (row) => {
       type: 'warning'
     }
   ).then(() => {
-    console.log('删除:', row)
-    ElMessage.success('删除成功')
+    DeleteSearchPaper(row.id)
   }).catch(() => {
     ElMessage.info('已取消删除')
   })

@@ -97,7 +97,7 @@ import { ref, reactive, nextTick, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
-import { GetSearchProject } from '../api/SearchProjectApi'
+import { GetSearchProject } from '../api/SearchApi'
 //
 const props = {
   label: 'label',
