@@ -1,5 +1,6 @@
 package com.web.api.service;
 
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.ResearchDirection;
 
@@ -12,7 +13,7 @@ public interface ResearchDirectionService {
      * 获取所有研究方向
      * @return 研究方向列表
      */
-    PageResult getAllDirections(int pageNum, int pageSize);
+    PageResult getAllDirections(PageQueryDTO pageQueryDTO);
 
     /**
      * 根据ID获取研究方向

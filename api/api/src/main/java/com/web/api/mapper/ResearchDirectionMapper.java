@@ -22,7 +22,7 @@ public interface ResearchDirectionMapper {
      * 查询所有研究方向
      * @return 研究方向列表
      */
-    List<ResearchDirection> getAllDirections();
+    List<ResearchDirection> getAllDirections(String name);
 
     /**
      * 根据ID查询研究方向

@@ -42,7 +42,7 @@ public interface UserMapper{
      * 查询所有用户
      * @return 用户列表
      */
-    public List<User> getAllUser();
+    public List<User> getAllUser(String name);
 
     /**
      * 根据用户ID修改用户信息

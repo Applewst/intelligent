@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.web.api.exception.DatabaseOperationException;
 import com.web.api.exception.NoFindException;
 import com.web.api.mapper.ResearchDirectionMapper;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.ResearchDirection;
 import com.web.api.service.ImageService;
@@ -29,11 +30,11 @@ public class ResearchDirectionServiceImpl implements ResearchDirectionService {
     private ImageService imageService;
 
     @Override
-    public PageResult getAllDirections(int pageNum, int pageSize) {
+    public PageResult getAllDirections(PageQueryDTO pageQuery) {
         //1.设置分页参数
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize());
         //2.执行查询,转为Page格式
-        List<ResearchDirection> empList = researchDirectionMapper.getAllDirections();
+        List<ResearchDirection> empList = researchDirectionMapper.getAllDirections(pageQuery.getName());
         Page<ResearchDirection> p = (Page<ResearchDirection>) empList;
         //3.返回分页结果
         return new PageResult((long) p.getPages(),p.getResult());

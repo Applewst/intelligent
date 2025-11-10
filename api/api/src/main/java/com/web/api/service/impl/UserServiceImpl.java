@@ -7,6 +7,7 @@ import com.web.api.exception.NoFindException;
 import com.web.api.exception.NoIdException;
 import com.web.api.mapper.UserMapper;
 import com.web.api.pojo.JwtData;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.service.UserService;
 import com.web.api.util.DigestsUtil;
@@ -41,6 +42,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(User user) {
+        log.info("用户'{}'注册中...", user.getUsername());
+        //检查用户名是否已存在
+        if (userMapper.findUserByName(user.getUsername()) != null) {
+            log.warn("用户名'{}'已存在，注册失败", user.getUsername());
+            throw new RuntimeException("用户名已存在");
+        }
+
         //加密密码
         Map<String,String> newPassword;
         newPassword = DigestsUtil.encryptPassword(user.getPassword());
@@ -63,11 +71,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageResult getUserList(int pageNum, int pageSize) {
+    public PageResult getUserList(PageQueryDTO pageQueryDTO) {
         //1.设置分页参数
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
         //2.执行查询,转为Page格式
-        List<User> empList = userMapper.getAllUser();
+        List<User> empList = userMapper.getAllUser(pageQueryDTO.getName());
         Page<User> p = (Page<User>) empList;
         //3.返回分页结果
         return new PageResult((long) p.getPages(),p.getResult());
