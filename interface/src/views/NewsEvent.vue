@@ -5,11 +5,38 @@ import { getEventList } from '@/api/events'
 const loading = ref(true)
 const list = ref([])
 
+// <CHANGE> 添加分页相关的状态
+const pageNum = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+
 const loadEvent = async () => {
   loading.value = true
-  const res = await getEventList()
-  if (res.code === 0) list.value = res.data
+  // <CHANGE> 传递分页参数，name设为空字符串
+  const res = await getEventList({
+    pageNum: pageNum.value,
+    pageSize: pageSize.value,
+    name: '',
+  })
+  if (res.code === 0) {
+    list.value = res.data
+    // <CHANGE> 假设接口返回total字段，如果没有则使用data.length
+    total.value = res.total || res.data.length
+  }
   loading.value = false
+}
+
+// <CHANGE> 添加页码改变处理函数
+const handleCurrentChange = (page) => {
+  pageNum.value = page
+  loadEvent()
+}
+
+// <CHANGE> 添加每页条数改变处理函数
+const handleSizeChange = (size) => {
+  pageSize.value = size
+  pageNum.value = 1 // 重置到第一页
+  loadEvent()
 }
 
 onMounted(loadEvent)
@@ -20,22 +47,34 @@ onMounted(loadEvent)
     <div v-loading="loading" class="wall-body">
       <div class="cards">
         <div v-for="e in list" :key="e.id" class="card">
-          <el-image :src="e.img" fit="cover" class="pic" lazy />
+          <el-image :src="e.image" fit="cover" class="pic" lazy />
           <div class="info">
             <div class="title">{{ e.title }}</div>
-            <div class="desc">{{ e.desc }}</div>
-            <el-tag size="small" class="tag">{{ e.date }}</el-tag>
+            <div class="desc">{{ e.detail }}</div>
+            <el-tag size="small" class="tag">{{ e.time }}</el-tag>
           </div>
         </div>
       </div>
 
       <el-empty v-if="!loading && !list.length" description="暂无活动" />
+
+      <!-- <CHANGE> 添加分页组件 -->
+      <div v-if="!loading && list.length" class="pagination">
+        <el-pagination
+          v-model:current-page="pageNum"
+          v-model:page-size="pageSize"
+          :page-sizes="[10, 20, 30, 50]"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="less">
-/* 与之前样式相同，仅去掉 .group 相关 */
 .wall {
   max-width: 1200px;
   margin: 60px auto;
@@ -88,9 +127,25 @@ onMounted(loadEvent)
   }
 }
 
+/* <CHANGE> 添加分页组件样式 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding: 20px 0;
+}
+
 @media (max-width: 768px) {
   .cards {
     grid-template-columns: 1fr;
+  }
+
+  /* <CHANGE> 移动端分页样式调整 */
+  .pagination {
+    :deep(.el-pagination) {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
   }
 }
 </style>

@@ -233,7 +233,7 @@ const submitForm = async () => {
           await mockUpdate(formData);
           ElMessage.success("更新成功");
         } else {
-          await mockAdd(formData);
+          await mockAdd({ formData: title });
           ElMessage.success("添加成功");
         }
         dialogVisible.value = false;
