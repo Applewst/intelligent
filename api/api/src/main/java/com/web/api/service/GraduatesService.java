@@ -1,6 +1,7 @@
 package com.web.api.service;
 
 import com.web.api.pojo.Graduate;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 
 import java.util.List;
@@ -13,11 +14,10 @@ public interface GraduatesService {
     /**
      * 分页查询毕业生信息
      *
-     * @param pageNum  页码
-     * @param pageSize 每页大小
-     * @return 分页结果
+     * @param pageQueryDTO 分页查询参数
+     * @return 毕业生分页结果
      */
-    PageResult pageQuery(Integer pageNum, Integer pageSize);
+    PageResult pageQuery(PageQueryDTO pageQueryDTO);
 
     /**
      * 保存毕业生信息

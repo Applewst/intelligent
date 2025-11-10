@@ -20,4 +20,14 @@
             #{id}
         </foreach>
     </delete>
+    <select id="pageQuery" resultType="com.web.api.pojo.Graduate">
+        select id,name,gender,avatar
+        from graduates
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
+
 </mapper>
