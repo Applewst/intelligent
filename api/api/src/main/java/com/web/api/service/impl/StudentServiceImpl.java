@@ -3,6 +3,7 @@ package com.web.api.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.web.api.mapper.StudentMapper;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Student;
 import com.web.api.service.StudentService;
@@ -24,16 +25,15 @@ public class StudentServiceImpl implements StudentService {
     /**
      * 分页查询在读学生信息
      *
-     * @param pageNum  当前页数
-     * @param pageSize 每页大小
-     * @return 分页结果
+     * @param pageQueryDTO 分页查询参数
+     * @return 分页查询结果
      */
     @Override
-    public PageResult pageQuery(Integer pageNum, Integer pageSize) {
+    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
         // 设置分页
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
         // 分页查询学生列表
-        Page<Student> page = studentMapper.pageQuery();
+        Page<Student> page = studentMapper.pageQuery(pageQueryDTO);
         // 返回分页结果
         return new PageResult(page.getTotal(), page.getResult());
     }
