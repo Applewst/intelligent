@@ -1,27 +1,48 @@
-<!-- NewsActivity.vue -->
 <script setup>
 import { onMounted, ref } from 'vue'
 import { getAllNews } from '@/api/news'
 
 const list = ref([])
 const loading = ref(true)
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
 
-const loadAll = async () => {
+const loadData = async () => {
   loading.value = true
   try {
-    const res = await getAllNews({ category: 'all' })
-    if (res.code === 0) list.value = res.data
+    const params = {
+      pageNum: currentPage.value,
+      pageSize: pageSize.value,
+      name: '', // Always pass empty string for name parameter
+    }
+    const res = await getAllNews(params)
+    if (res.code === 0) {
+      list.value = res.data.list || res.data
+      total.value = res.data.total || res.data.length
+    }
   } finally {
     loading.value = false
   }
 }
 
-onMounted(loadAll)
-</script>
+const handlePageChange = (page) => {
+  currentPage.value = page
+  loadData()
+}
 
+const handleSizeChange = (size) => {
+  pageSize.value = size
+  currentPage.value = 1
+  loadData()
+}
+
+onMounted(loadData)
+</script>
 
 <template>
   <div class="news-wrap">
+    <!-- 列表内容 -->
     <el-row v-loading="loading" :gutter="20">
       <el-col v-for="item in list" :key="item.id" :xs="24" :sm="12" class="mb-20">
         <el-card shadow="hover" class="news-card">
@@ -36,6 +57,19 @@ onMounted(loadAll)
         </el-card>
       </el-col>
     </el-row>
+
+    <!-- 分页组件 -->
+    <div class="pagination-wrap">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[10, 20, 50, 100]"
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handlePageChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -53,9 +87,13 @@ onMounted(loadAll)
 .news-card {
   border-radius: 8px;
   overflow: hidden;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
 }
 
-/* 左侧图片 + 右侧文字 */
 .flex-box {
   display: flex;
   align-items: flex-start;
@@ -72,7 +110,7 @@ onMounted(loadAll)
 
 .text-box {
   flex: 1;
-  min-width: 0; /* 防止 flex 子项溢出 */
+  min-width: 0;
 }
 
 .news-title {
@@ -87,11 +125,17 @@ onMounted(loadAll)
   font-size: 14px;
   color: #606266;
   line-height: 1.6;
-  white-space: pre-wrap; /* 保留换行并自动换行 */
+  white-space: pre-wrap;
 }
 
 .news-time {
   font-size: 12px;
   color: #909399;
+}
+
+.pagination-wrap {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
 }
 </style>

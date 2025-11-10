@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import TeamIntroduction from '../views/TeamIntroduction.vue';
 
 const routes = [
   {
