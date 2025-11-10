@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 研究方向
+ * @author Askr_Yggrasill
  */
 @Slf4j
 @RestController
@@ -33,10 +34,10 @@ public class ResearchDirectionController {
      * @param id 研究方向ID
      * @return 研究方向
      */
-    @GetMapping("/{id}")
-    public Result getDirectionsById(@PathVariable Integer id) {
+    @GetMapping("")
+    public Result getDirectionsById(Integer id) {
         if (id == null) {
-            log.warn("未选择任何数据，ID为空");
+            log.warn("查找研究方向:未选择任何数据，ID为空");
             throw new NoIdException();
         }
         return Result.success(researchDirectionService.getDirectionById(id));
@@ -48,7 +49,7 @@ public class ResearchDirectionController {
      * @return 操作结果
      */
     @PostMapping("")
-    public Result addDirection(ResearchDirection researchDirection) {
+    public Result addDirection(@RequestBody ResearchDirection researchDirection) {
         //调用服务添加研究方向
         researchDirectionService.addDirection(researchDirection);
         return Result.success();
@@ -59,10 +60,10 @@ public class ResearchDirectionController {
      * @param researchDirection 研究方向对象
      * @return 操作结果
      */
-    @PostMapping("/update")
-    public Result updateDirection(ResearchDirection researchDirection) {
+    @PutMapping("/project")
+    public Result updateDirection(@RequestBody ResearchDirection researchDirection) {
         if (researchDirection.getId() == null) {
-            log.warn("未选择任何数据，ID为空");
+            log.warn("修改研究方向:未选择任何数据，ID为空");
             throw new NoIdException();
         }
         researchDirectionService.updateDirection(researchDirection);
@@ -77,7 +78,7 @@ public class ResearchDirectionController {
     @DeleteMapping("")
     public Result deleteDirection(Integer id) {
         if (id == null) {
-            log.warn("未选择任何数据，ID为空");
+            log.warn("删除研究方向:未选择任何数据，ID为空");
             throw new NoIdException();
         }
         researchDirectionService.deleteDirection(id);

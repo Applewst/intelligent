@@ -1,10 +1,14 @@
 package com.web.api.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 /**
  * 散列算法(生成摘要)
  * 测试在client下
@@ -24,7 +28,9 @@ public class DigestsUtil {
      */
     private static String sha256(String input, String salt){
         //参数1：加密算法名称 参数2：要加密的内容 参数3：盐 参数4：迭代次数
-        return new SimpleHash(SHA256,input,salt,ITERATIONS).toString();
+        String e = new SimpleHash(SHA256,input,salt,ITERATIONS).toString();
+        log.error(e);
+        return e;
     }
 
     /**
@@ -34,6 +40,7 @@ public class DigestsUtil {
     private static String generateSalt() {
         SecureRandomNumberGenerator secureRandom = new SecureRandomNumberGenerator();
         return secureRandom.nextBytes().toHex();
+
     }
 
     /**

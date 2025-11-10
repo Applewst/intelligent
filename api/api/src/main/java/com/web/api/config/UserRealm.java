@@ -15,6 +15,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * @author Askr-Yggdrasill
+ */
 @Slf4j
 public class UserRealm extends AuthorizingRealm {
 
@@ -46,8 +49,10 @@ public class UserRealm extends AuthorizingRealm {
         User user = userServiceImpl.findUserByName(username);
         //添加角色和权限
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRole(user.getIdentity());   //身份
-        simpleAuthorizationInfo.addStringPermission(user.getIdentity()+":*"); //权限
+        //身份
+        simpleAuthorizationInfo.addRole(user.getIdentity());
+        //权限
+        simpleAuthorizationInfo.addStringPermission(user.getIdentity()+":*");
         //返回授权信息
         return simpleAuthorizationInfo;
     }

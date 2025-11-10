@@ -19,6 +19,7 @@ import java.util.Map;
 
 /**
  * 用户服务实现类
+ * @author Askr-Yggdrasill
  */
 @Slf4j
 @Service
@@ -50,12 +51,13 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(newPassword.get("password"));
         newUser.setSalt(newPassword.get("salt"));
         newUser.setIdentity(user.getIdentity());
-        newUser.setDisabled(false); //默认启用
+        //设置账户为启用
+        newUser.setDisabled(false);
 
         try {
             userMapper.addUser(newUser);
         } catch (Exception e) {
-            log.warn("用户" + newUser.getUsername() + "注册失败: " + e.getMessage());
+            log.error("用户{}注册失败: ", newUser.getUsername(), e);
             throw new DatabaseOperationException();
         }
     }
@@ -92,7 +94,7 @@ public class UserServiceImpl implements UserService {
         try {
             userMapper.modifyUserById(user);
         } catch (Exception e) {
-            log.warn("用户" + user.getUsername() + "信息修改失败: " + e.getMessage());
+            log.error("用户{}信息修改失败:", user.getUsername(), e);
             throw new DatabaseOperationException();
         }
     }
@@ -107,7 +109,7 @@ public class UserServiceImpl implements UserService {
             userMapper.deleteUserById(id);
             log.info("用户ID" + id + "删除成功");
         } catch (Exception e) {
-            log.warn("用户ID" + id + "删除失败: " + e.getMessage());
+            log.error("用户ID{}删除失败:", id, e);
             throw new DatabaseOperationException();
         }
     }

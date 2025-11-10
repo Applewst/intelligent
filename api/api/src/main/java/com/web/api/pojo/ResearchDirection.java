@@ -18,7 +18,7 @@ public class ResearchDirection {
     /** 标题 */
     private String title;
     /** 图片路径 */
-    private String imageUrl;
+    private String image;
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;

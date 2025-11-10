@@ -6,9 +6,9 @@
 <mapper namespace="com.web.api.mapper.ResearchDirectionMapper">
     <insert id="addDirection">
         insert into
-            research_direction (title, imageUrl, time)
+            research_direction (title, image, time)
         values
-            (#{title}, #{imageUrl}, #{time})
+            (#{title}, #{image}, #{time})
     </insert>
 
     <update id="motifyDirectionById">
@@ -17,8 +17,8 @@
             <if test="title != null and title != ''">
                 title = #{title},
             </if>
-            <if test="imageUrl != null and imageUrl != ''">
-                imageUrl = #{imageUrl},
+            <if test="image != null and image != ''">
+                image = #{image},
             </if>
         </set>
         where id = #{id}
@@ -45,10 +45,21 @@
     </select>
     <select id="getImageUrlById" resultType="java.lang.String">
         select
-            imageUrl
+            image
         from
             research_direction
         where
             id = #{id}
+    </select>
+
+    <select id="existsById" resultType="java.lang.Boolean">
+        select
+            exists(
+                select 1
+                from
+                    research_direction
+                where
+                    id = #{id}
+                )
     </select>
 </mapper>

@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author Askr-Yggdrasill
+ */
 @Configuration
 @Log4j2
 public class ShiroConfig {
@@ -78,8 +81,10 @@ public class ShiroConfig {
     private Map<String, Filter> filters(){
         Map<String, Filter> filters = new HashMap<>();
         //<标记,过滤器对象>
-        filters.put("jwt-authc",new JwtAuthcFilter(jwtTokenManager));   //jwt认证
-        filters.put("jwt-roles",new JwtRolesFilter(jwtTokenManager));   //jwt角色认证 and关系
+        //jwt认证
+        filters.put("jwt-authc",new JwtAuthcFilter(jwtTokenManager));
+        //jwt角色认证 and关系
+        filters.put("jwt-roles",new JwtRolesFilter(jwtTokenManager));
         return filters;
     }
 

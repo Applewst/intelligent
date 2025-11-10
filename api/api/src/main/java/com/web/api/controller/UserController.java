@@ -21,7 +21,7 @@ public class UserController {
      * @param pageSize 每页数量
      * @return 用户列表
      */
-    @GetMapping("")
+    @GetMapping("/list")
     public Result getUserList(int pageNum, int pageSize) {
         return Result.success(userService.getUserList(pageNum, pageSize));
     }
@@ -32,7 +32,7 @@ public class UserController {
      * @return 注册结果
      */
     @PostMapping("/register")
-    public Result register(User user) {
+    public Result register(@RequestBody User user) {
         userService.register(user);
         return Result.success("用户注册成功");
     }
@@ -43,7 +43,7 @@ public class UserController {
      * @return 修改结果
      */
     @PutMapping("")
-    public Result modifyUser(User user) {
+    public Result modifyUser(@RequestBody User user) {
         userService.modifyUserById(user);
         return Result.success("用户信息修改成功");
     }
@@ -53,8 +53,8 @@ public class UserController {
      * @param id 用户ID
      * @return 删除结果
      */
-    @DeleteMapping("{id}")
-    public Result deleteUser(@PathVariable int id) {
+    @DeleteMapping("")
+    public Result deleteUser(int id) {
         userService.deleteUserById(id);
         return Result.success("用户删除成功");
     }
