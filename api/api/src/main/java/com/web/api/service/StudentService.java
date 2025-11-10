@@ -1,5 +1,6 @@
 package com.web.api.service;
 
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Student;
 
@@ -13,11 +14,10 @@ public interface StudentService {
     /**
      * 分页查询在读学生信息
      *
-     * @param pageNum  当前页数
-     * @param pageSize 每页大小
-     * @return 分页结果
+     * @param pageQueryDTO 分页查询参数
+     * @return 分页查询结果
      */
-    PageResult pageQuery(Integer pageNum, Integer pageSize);
+    PageResult pageQuery(PageQueryDTO pageQueryDTO);
 
     /**
      * 新增在读学生信息

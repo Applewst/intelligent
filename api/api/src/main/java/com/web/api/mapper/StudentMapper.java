@@ -1,6 +1,7 @@
 package com.web.api.mapper;
 
 import com.github.pagehelper.Page;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.Student;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,9 +17,10 @@ public interface StudentMapper {
     /**
      * 分页查询在读学生信息
      *
-     * @return 在读学生列表
+     * @param pageQueryDTO 分页查询参数
+     * @return 在读学生分页列表
      */
-    Page<Student> pageQuery();
+    Page<Student> pageQuery(PageQueryDTO pageQueryDTO);
 
     /**
      * 新增在读学生信息

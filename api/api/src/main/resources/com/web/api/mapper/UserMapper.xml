@@ -45,14 +45,17 @@
     <select id="findIdNameIdentityByName" resultType="com.web.api.pojo.JwtData">
         select id, username, identity
         from user
-        where username = #{name}
+        where username = #{username}
             and is_disabled = 0
     </select>
 
     <select id="getAllUser" resultType="com.web.api.pojo.User">
         select id, username, identity
         from user
-        where is_disabled = 0
+        where
+            username like concat('%', #{name}, '%')
+            and
+            is_disabled = 0
     </select>
     <select id="findUserById" resultType="boolean">
         select exists(select 1 from user where id = #{id} and is_disabled = 0)

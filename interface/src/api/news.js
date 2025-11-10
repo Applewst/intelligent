@@ -78,7 +78,7 @@ export const getAllNews = async (params = {}) => {
 
   // 生产环境调用真实接口
   return service({
-    url: '/news/all',
+    url: '/news/list',
     method: 'get',
     params:params
   });

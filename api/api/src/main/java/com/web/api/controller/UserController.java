@@ -1,5 +1,6 @@
 package com.web.api.controller;
 
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.User;
 import com.web.api.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +18,12 @@ public class UserController {
 
     /**
      * 分页获取用户列表
-     * @param pageNum 当前页码
-     * @param pageSize 每页数量
+     * @param pageQueryDTO 分页查询参数
      * @return 用户列表
      */
     @GetMapping("/list")
-    public Result getUserList(int pageNum, int pageSize) {
-        return Result.success(userService.getUserList(pageNum, pageSize));
+    public Result getUserList(PageQueryDTO pageQueryDTO) {
+        return Result.success(userService.getUserList(pageQueryDTO));
     }
 
     /**

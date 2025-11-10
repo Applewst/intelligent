@@ -1,5 +1,6 @@
 package com.web.api.controller;
 
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Result;
 import com.web.api.pojo.Student;
@@ -24,15 +25,13 @@ public class StudentController {
     /**
      * 分页查询在读学生信息
      *
-     * @param pageNum  当前页数
-     * @param pageSize 每页大小
-     * @return 分页结果
+     * @param pageQueryDTO 分页查询参数
+     * @return 分页查询结果
      */
-    @GetMapping
-    public Result page(@RequestParam(defaultValue = "1") Integer pageNum,
-                       @RequestParam(defaultValue = "10") Integer pageSize) {
-        log.info("分页查询在读学生信息：pageNum={}, pageSize={}", pageNum, pageSize);
-        PageResult pageResult = studentService.pageQuery(pageNum, pageSize);
+    @GetMapping("/list")
+    public Result page(PageQueryDTO pageQueryDTO) {
+        log.info("分页查询在读学生信息：{}", pageQueryDTO);
+        PageResult pageResult = studentService.pageQuery(pageQueryDTO);
         return Result.success(pageResult);
     }
 
@@ -43,7 +42,7 @@ public class StudentController {
      * @return 操作结果
      */
     @PostMapping
-    public Result save(Student student) {
+    public Result save(@RequestBody Student student) {
         log.info("新增在读学生信息：{}", student);
         studentService.save(student);
         return Result.success();
@@ -55,8 +54,8 @@ public class StudentController {
      * @param student 在读学生信息
      * @return 操作结果
      */
-    @PutMapping
-    public Result updateById(Student student) {
+    @PutMapping("/{id}")
+    public Result updateById(@RequestBody Student student) {
         log.info("修改在读学生信息：{}", student);
         studentService.updateById(student);
         return Result.success();

@@ -1,6 +1,7 @@
 package com.web.api.controller;
 
 import com.web.api.exception.NoIdException;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.ResearchDirection;
 import com.web.api.pojo.Result;
 import com.web.api.service.ResearchDirectionService;
@@ -24,9 +25,9 @@ public class ResearchDirectionController {
      * 分页查询所有研究方向
      * @return 研究方向列表
      */
-    @GetMapping("/all")
-    public Result getAllDirections(int pageNum, int pageSize) {
-        return Result.success(researchDirectionService.getAllDirections(pageNum, pageSize));
+    @GetMapping("/list")
+    public Result getAllDirections(PageQueryDTO pageQuery) {
+        return Result.success(researchDirectionService.getAllDirections(pageQuery));
     }
 
     /**

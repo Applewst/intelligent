@@ -109,14 +109,14 @@ const mockRequest = (page, pageSize, keyword) => {
  * @param {string} keyword - 搜索关键字
  */
 export const getResourceList = (page, pageSize, keyword) => {
-  return request({
-    url: "/resources",
-    method: "get",
-    params: { page, pageSize, keyword },
-  })
+  // return request({
+  //   url: "/resources",
+  //   method: "get",
+  //   params: { page, pageSize, keyword },
+  // })
 
   // 模拟数据（开发调试使用，取消注释可切换）
-  // return mockRequest(page, pageSize, keyword)
+  return mockRequest(page, pageSize, keyword)
 }
 
 /**

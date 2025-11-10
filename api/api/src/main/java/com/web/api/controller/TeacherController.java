@@ -1,5 +1,6 @@
 package com.web.api.controller;
 
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Result;
 import com.web.api.pojo.Teacher;
@@ -22,17 +23,15 @@ public class TeacherController {
     private TeacherService teacherService;
 
     /**
-     * 分页查询教师
+     * 教师分页查询
      *
-     * @param pageNum  当前页码
-     * @param pageSize 分页大小
+     * @param pageQueryDTO 分页查询参数
      * @return 分页结果
      */
-    @GetMapping
-    public Result page(@RequestParam(defaultValue = "1") Integer pageNum,
-                       @RequestParam(defaultValue = "10") Integer pageSize) {
-        log.info("教师分页查询，页码：{}，每页记录数：{}", pageNum, pageSize);
-        PageResult pageResult = teacherService.page(pageNum, pageSize);
+    @GetMapping("/list")
+    public Result page(PageQueryDTO pageQueryDTO) {
+        log.info("教师分页查询:{}", pageQueryDTO);
+        PageResult pageResult = teacherService.page(pageQueryDTO);
         return Result.success(pageResult);
     }
 
@@ -42,8 +41,8 @@ public class TeacherController {
      * @param id 教师ID
      * @return 教师信息
      */
-    @GetMapping("/{id}")
-    public Result getById(@PathVariable Integer id) {
+    @GetMapping
+    public Result getById(Integer id) {
         log.info("根据ID查询教师，ID：{}", id);
         Teacher teacher = teacherService.getById(id);
         return Result.success(teacher);
@@ -56,7 +55,7 @@ public class TeacherController {
      * @return 操作结果
      */
     @PostMapping
-    public Result save(Teacher teacher) {
+    public Result save(@RequestBody Teacher teacher) {
         log.info("保存教师信息：{}", teacher);
         teacherService.save(teacher);
         return Result.success();
@@ -69,7 +68,7 @@ public class TeacherController {
      * @return 操作结果
      */
     @PutMapping
-    public Result updateById(Teacher teacher) {
+    public Result updateById(@RequestBody Teacher teacher) {
         log.info("更新教师信息：{}", teacher);
         teacherService.updateById(teacher);
         return Result.success();

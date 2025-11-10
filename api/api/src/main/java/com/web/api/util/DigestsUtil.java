@@ -3,8 +3,6 @@ package com.web.api.util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,6 +1,7 @@
 package com.web.api.controller;
 
 import com.web.api.pojo.LoginVo;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.service.impl.ResearchDirectionServiceImpl;
 import com.web.api.service.impl.ScientificDynamicServiceImpl;
 import com.web.api.service.impl.TeacherServiceImpl;
@@ -47,7 +48,8 @@ public class HomePageController {
      */
     @GetMapping("/projects")
     public Result getProject() {
-        return Result.success(researchDirectionServiceImpl.getAllDirections(1, 5));
+        PageQueryDTO pageQueryDTO = new PageQueryDTO(1, 5, null);
+        return Result.success(researchDirectionServiceImpl.getAllDirections(pageQueryDTO));
     }
 
     /**

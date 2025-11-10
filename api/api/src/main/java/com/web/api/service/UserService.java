@@ -1,6 +1,7 @@
 package com.web.api.service;
 
 import com.web.api.pojo.JwtData;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.User;
 
@@ -32,11 +33,10 @@ public interface UserService {
 
     /**
      * 获取用户列表
-     * @param pageNum 当前页码
-     * @param pageSize 每页数量
+     * @param pageQueryDTO 分页查询参数
      * @return 用户列表
      */
-    public PageResult getUserList(int pageNum, int pageSize);
+    public PageResult getUserList(PageQueryDTO pageQueryDTO);
 
     /**
      * 根据用户ID修改用户信息

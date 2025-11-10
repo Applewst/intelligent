@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.web.api.mapper.GraduatesMapper;
 import com.web.api.pojo.Graduate;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.service.GraduatesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,15 @@ public class GraduatesServiceImpl implements GraduatesService {
     /**
      * 分页查询毕业生信息
      *
-     * @param pageNum  页码
-     * @param pageSize 每页大小
-     * @return 分页结果
+     * @param pageQueryDTO 分页查询参数
+     * @return 毕业生分页结果
      */
     @Override
-    public PageResult pageQuery(Integer pageNum, Integer pageSize) {
+    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
         // 设置分页
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
         // 查询毕业生列表
-        Page<Graduate> page = graduatesMapper.pageQuery();
+        Page<Graduate> page = graduatesMapper.pageQuery(pageQueryDTO);
         // 返回分页结果
         return new PageResult(page.getTotal(), page.getResult());
     }
@@ -43,12 +43,6 @@ public class GraduatesServiceImpl implements GraduatesService {
      */
     @Override
     public void save(Graduate graduate) {
-        if (graduate.getGender() == null) {
-            graduate.setGender(0);
-        }
-        if (graduate.getName().isEmpty()) {
-            graduate.setName(null);
-        }
         graduatesMapper.insert(graduate);
     }
 
