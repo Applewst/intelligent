@@ -1,159 +1,77 @@
-<script setup>
-import { ref } from 'vue';
-    const List= ref([
-      {
-        title: '团队风采',
-        content:[
-          {
-            image: "https://example.com/team1.jpg",
-            description: "团队第一次会议",
-            timestamp: "2023-10-01",
-            width: "200px",
-            height: "300px",
-            rotate: 0,
-            top: "200px",
-            left: "600px",
-          },
-          {
-            image: "https://example.com/team2.jpg",
-            description: "团队外出活动",
-            timestamp: "2023-10-02",
-            width: "250px",
-            height: "200px",
-            rotate: 10,
-            top: "50px",
-            left: "900px",
-          },
-          {
-            image: "https://example.com/team3.jpg",
-            description: "团队技术分享会",
-            timestamp: "2023-10-03",
-            width: "300px",
-            height: "250px",
-            rotate: -5,
-            top: "150px",
-            left: "50px",
-          },
-        ]
-      },
-      {
-        title: '讲座照片',
-        content:[
-          {
-            image: "https://example.com/lecture1.jpg",
-            description: "王教授讲座：机器学习基础",
-            timestamp: "2023-10-05",
-            width: "250px",
-            height: "150px",
-            rotate: 15,
-            top: "200px",
-            left: "150px",
-          },
-          {
-            image: "https://example.com/lecture2.jpg",
-            description: "李老师讲座：数据分析实战",
-            timestamp: "2023-10-06",
-            width: "300px",
-            height: "200px",
-            rotate: -10,
-            top: "100px",
-            left: "800px",
-          },
-          {
-            image: "https://example.com/lecture3.jpg",
-            description: "张博士讲座：前沿技术探索",
-            timestamp: "2023-10-07",
-            width: "200px",
-            height: "250px",
-            rotate: 5,
-            top: "400px",
-            left: "370px",
-          },
-        ]
-      },
-      {
-        title: '学生风采',
-        content:[
-          {
-           image: "https://example.com/student1.jpg",
-            description: "校园文化节活动",
-            timestamp: "2023-10-10",
-            width: "300px",
-            height: "100px",
-            rotate: 0,
-            top: "60px",
-            left: "500px",
-          },
-          {
-            image: "https://example.com/student2.jpg",
-            description: "社团活动风采",
-            timestamp: "2023-10-11",
-            width: "200px",
-            height: "200px",
-            rotate: 80,
-            top: "300px",
-            left: "900px",
-          },
-          {
-            image: "https://example.com/student3.jpg",
-            description: "学生科研比赛",
-            timestamp: "2023-10-12",
-            width: "250px",
-            height: "150px",
-            rotate: -5,
-            top: "350px",
-            left: "50px",
-
-          },
-        ]
-      }
-    ])      
-
-</script>
 <template>
-  <div class="team-introduce" v-for="(section, sectionIndex) in List" :key="sectionIndex">
-    <!-- 团队风采 -->
-    <h2 class="title">{{ section.title }}</h2>
+  <div class="team-introduce">
+    <h2 class="title">照片墙</h2>
     <a href="" class="more">查看更多></a>
-    <div class="card-container" 
-      v-for="(item, index) in section.content"
-      :key="index">
+    <!-- 新增一个按钮用于测试添加数据 -->
+    <div class="card-container">
       <div
+        v-for="(item, index) in List"
+        :key="index"
         class="card"
         :style="{
-          width: item.width,
-          height: item.height,
-          transform: `rotate(${item.rotate}deg)`,
-          top: item.top,
-          left: item.left,
+          width: item.style.width,
+          height: item.style.height,
+          transform: `rotate(${item.style.rotate}deg)`,
+          top: item.style.top,
+          left: item.style.left,
         }"
       >
-        <el-card
-          shadow="hover"
-        >
+        <el-card shadow="hover">
           <template v-slot:header>
             <div class="card-header">
-              <el-image :src="item.image" class="image"></el-image>
+              <el-image :src="item.file" class="image"></el-image>
             </div>
           </template>
           <div class="card-body">
-            <p class="description">{{ item.description }}</p>
-            <p class="timestamp">{{ item.timestamp }}</p>
+            <p class="description">{{ item.title }}</p>
+            <p class="timestamp">{{ item.time }}</p>
           </div>
         </el-card>
       </div>
     </div>
-
-
-  
   </div>
 </template>
 
+<script setup>
+import { onMounted, ref } from "vue";
+import {getPhotoWallImages} from "@/api/photo";
+// 生成随机样式的函数
+const generateRandomStyle = () => {
+  return {
+    width: `${Math.floor(Math.random() * 400) + 100}px`, // 宽度：100-500px
+    height: `${Math.floor(Math.random() * 300) + 100}px`, // 高度：100-400px
+    rotate: Math.floor(Math.random() * 40) - 20, // 旋转角度：-20到20度
+    top: `${Math.floor(Math.random() * 1000)}px`, // 顶部距离：0-1000px
+    left: `${Math.floor(Math.random() * 1500)}px`, // 左侧距离：0-1500px
+  };
+};
+
+// 初始数据：每个项直接包含自己的样式
+const List = ref([
+]);
+// 获取照片墙数据
+const getPhotoWallData = async () => {
+  const res = await getPhotoWallImages();
+  console.log('获取照片墙数据文本处')
+  if (res.code === 1) {
+    List.value = res.data.map((item) => {
+      return {
+        ...item,
+         style: generateRandomStyle(),
+      };
+    })
+    console.log('照片墙数据', List.value)
+  }
+}
+onMounted(() => {
+  getPhotoWallData();
+})
+</script>
 
 <style scoped lang="less">
+/* 样式保持不变 */
 .team-introduce {
   text-align: center;
-  
   font-size: 24px;
   color: #333;
   position: relative;
@@ -161,11 +79,12 @@ import { ref } from 'vue';
   height: 100vh;
   overflow: hidden;
   width: 1400px;
+  height: 1000px;
   margin: 0 auto;
   margin-top: 100px;
 }
 
-.title{
+.title {
   font-size: 32px;
   margin-bottom: 20px;
   font-weight: bold;
@@ -175,25 +94,23 @@ import { ref } from 'vue';
   position: absolute;
   top: 0;
   left: 0;
-  
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%; /* 确保容器占满父元素，避免卡片溢出不可见 */
 }
 
 .card {
   position: absolute;
   background-color: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease; /* 同时监听transform和其他样式变化 */
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(0deg); /* hover时取消旋转，突出显示 */
+    z-index: 10; /* 确保hover的卡片在最上层 */
   }
 }
 
+/* 其他样式保持不变 */
 .card-header {
   text-align: center;
 }
@@ -217,12 +134,14 @@ import { ref } from 'vue';
   font-size: 14px;
   color: #666;
 }
+
 .more {
   font-size: 14px;
   position: absolute;
   right: 0;
   top: 0;
 }
+
 .more:hover {
   color: #409eff;
 }

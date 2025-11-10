@@ -1,249 +1,162 @@
 <script setup>
-import { ref } from 'vue'
-const introduceList = ref([
-  {
-    title: '推荐交流',
-    content: '这是具体的描述，这里可以写一些推荐信息，比如推荐的讲座、活动、比赛等等。',
-    card:[
-      {
-        cardTitle: '张三赴美交流',
-        img: '../assets/images/1.jpg',
-        tooltip: '张三的交流详情'
-      },
-      {
-        cardTitle: '李四赴美交流',
-        img: '../assets/images/2.jpg',
-        tooltip: '李四的交流详情'
-      },
-      
-    ],
-    id: 1
-  },
-  {
-    title: '实习实践',
-    content: '这是具体的描述，这里可以写一些实习实践的信息，比如实习单位、实习内容、实习时间等等。',
-    card:[
-      {
-        cardTitle: '王五实习',
-        img: '../assets/images/3.jpg',
-        tooltip: '王五的实习详情'
-      },
-      {
-        cardTitle: '赵六实习',
-        img: '../assets/images/4.jpg',
-        tooltip: '赵六的实习详情'
-      },
-    ],
-    id: 2
-  },
+import { onMounted, ref } from 'vue'
+import { getStudentDevelopList } from '@/api/develop.js'
+import { watch } from 'vue'
+
+const loading = ref(true)
+const list = ref([])
+
+// <CHANGE> 添加分页相关的状态
+const pageNum = ref(1)
+const pageSize = ref(6)
+const total = ref(0)
+
+const GetDevelopList = async (...params) => {
+  const response = await getStudentDevelopList(params)
+  if (response.code === 1) {
+    list.value = response.data.rows
+    total.value = response.data.total
+    loading.value = false
+  } else {
+    console.error(response.message)
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  GetDevelopList(pageNum.value, pageSize.value)
+})
+watch([pageNum, pageSize],()=>{
+  GetDevelopList(pageNum.value, pageSize.value)
+})
+// <CHANGE> 添加页码改变处理函数
+const handleCurrentChange = (page) => {
+  pageNum.value = page
   
-])
+}
 
-//会议列表
-const meetingList = ref([
-  {
-    title: '实验室论文被期刊INFORMATION SCIENCES录用',
-    description: '实验室论文 “Finding Weighted K-Truss Communities I”',
-    date: '24 八月, 2017',
-    image: '../assets/images/meetings/1.jpg'
-  },
-  {
-    title: '实验室论文被服务计算领域旗舰会议ICSOC 2017录用',
-    description: '实验室论文 “An Embedding based Factorization Machine”',
-    date: '28 七月, 2017',
-    image: '../assets/images/meetings/2.jpg'
-  },
-  {
-    title: '实验室成员获2017 CCF “大数据与计算智能大赛” 两项二等奖及一项三等奖',
-    description: '2017年12月24日，CCF第五届“大数据与计算智能大赛 (Big Data & AI 2017)',
-    date: '2017年12月22日-24日',
-    image: '../assets/images/meetings/3.jpg'
-  },
-  {
-    title: '实验室成员获“2017 IBM区块链技术黑客马拉松全国校园大赛”三等奖',
-    description: '2017年12月22日-24日，IBM区块链技术黑客马拉松全国校园大赛',
-    date: '2017年12月22日-24日',
-    image: '../assets/images/meetings/4.jpg'
-  },
-]);
+// <CHANGE> 添加每页条数改变处理函数
+const handleSizeChange = (size) => {
+  pageSize.value = size
+  pageNum.value = 1 // 重置到第一页
+  
+}
+
+
 </script>
-<template>
-  <div class="team-introduce">
-    <h1>学生发展</h1>
-    <div class="student-introduce">
-      <div class="introduce-item" v-for="item in introduceList" :key="item.id">
-        <div class="introduce-left">
-          <h3 class="introduce-title">{{item.title}}</h3>
-          <p class="introduce-content">
-           {{item.content}}
-          </p>
-        </div>
-        <div class="introduce-right" v-for="(card, index) in item.card" :key="index">
-          <!-- 第一个 el-card -->
-          <el-card
-            style="max-width: 480px; max-height: 260px;"
-            shadow="hover"
-            class="card-with-tooltip"
-          >
-            <template #header >{{card.cardTitle}}</template>
-            <img
-              class="image"
-              :src="card.img"
-              style="width: 100%"
-            />
-            <!-- 提示框 -->
-            <div class="tooltip">{{card.tooltip}}</div>
-          </el-card>
 
-        
+<template>
+  <div class="wall">
+    <h1 class="TitleTop">学生发展</h1>
+    <div v-loading="loading" class="wall-body">
+      <div class="cards">
+        <div v-for="e in list" :key="e.id" class="card">
+          <el-image :src="e.image" fit="cover" class="pic" lazy />
+          <div class="info">
+            <div class="title">{{ e.title }}</div>
+            <div class="desc">{{ e.detail }}</div>
+            <el-tag size="small" class="tag">{{ e.time }}</el-tag>
+          </div>
         </div>
       </div>
-      
+
+      <el-empty v-if="!loading && !list.length" description="暂无活动" />
+
+      <!-- <CHANGE> 添加分页组件 -->
+      <div v-if="!loading && list.length" class="pagination">
+        <el-pagination
+          v-model:current-page="pageNum"
+          v-model:page-size="pageSize"
+          :page-sizes="[6, 12, 18, 24]"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </div>
     </div>
-    
-     <div class="international-meetings">
-    <h1 class="meetings-title">参加国际会议</h1>
-    <el-row :gutter="20" class="international-row">
-      <el-col :span="6" v-for="(meeting, index) in meetingList" :key="index" class="internationnal-content">
-        <el-card :body-style="{ padding: '0px' }" shadow="hover" class="international-card">
-          <img :src="meeting.image" class="image" />
-          <div style="padding: 14px;">
-            <h3>{{ meeting.title }}</h3>
-            <p>{{ meeting.description }}</p>
-            <p class="date">{{ meeting.date }}</p>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-  </div>
   </div>
 </template>
 
 <style scoped lang="less">
-.team-introduce {
-  text-align: center;
-  margin-top: 100px;
-  font-size: 24px;
-  color: #333;
-}
-h1 {
-  margin-bottom: 40px;
-}
-.student-introduce {
-  margin-top: 50px;
+.wall {
   max-width: 1200px;
-  margin: 0 auto;
-  .introduce-item {
-    display: flex;
-    height: 300px;
-    margin-bottom: 30px;
-    justify-content: space-around;
-    padding: 20px;
-    .introduce-left {
-      width: 50%;
-      background-color: #f0f0f0;
-      margin-right: 10px;
-      .introduce-title {
-        font-size: 28px;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-    }
-  }
-  .shixi-item {
-    height: 300px;
-  }
+  margin: 60px auto;
+  padding: 40px 20px;
+  background: #fafbfc;
+  min-height: 100vh;
 }
-.introduce-content {
-  font-size: 14px;
+.TitleTop{
+  //放中间
+  text-align: center;
   margin-bottom: 10px;
-  margin: 10px auto;
+  font-size: 36px;
+  font-weight: 600;
+  color: #303133; 
 }
-.introduce-right {
-  display: flex;
-  justify-content: space-between;
-}
-
-/* el-card 添加相对定位 */
-.card-with-tooltip {
-  font-size: 20px;
-  width: 180px;
-  position: relative; /* 使 el-card 成为提示框的定位容器 */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 
-/* 图片样式 */
-.image {
-  width: 200px; /* 根据需要调整图片宽度 */
-  object-fit: cover;
-}
+.card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-4px);
+  }
 
-/* 提示框样式 */
-.tooltip {
-  visibility: hidden; /* 默认隐藏提示框 */
-  background-color: rgba(0, 0, 0, 0.8); /* 黑色背景，半透明 */
-  color: white; /* 白色文字 */
-  padding: 5px 10px; /* 内边距 */
-  border-radius: 4px; /* 圆角 */
-  position: absolute;
-  bottom: 0%; /* 初始时位置在卡片底部 */
-  left: 0%; /* 水平居中 */
-  transform: translateY(100%) scale(0.8); /* 初始时缩小并往下偏移 */
-  z-index: 1; /* 确保提示框在卡片上方 */
-  opacity: 0; /* 初始时透明度为 0 */
-  transition: opacity 0.3s, transform 0.3s; /* 动画过渡效果 */
-  pointer-events: none; /* 确保提示框不阻碍鼠标事件 */
-}
-
-/* 鼠标悬停时显示提示框（从下往上出现） */
-.card-with-tooltip:hover .tooltip {
-  visibility: visible; /* 显示提示框 */
-  transform: translateY(0) scale(1); /* 提示框回到原位并放大 */
-  opacity: 1; /* 透明度变为 1，显示完全 */
-}
-// 新增国际会议部分样式
-.international-meetings {
-  
-  max-width: 1200px;
-  margin: 0 auto;
-  margin-top: 50px;
-  padding: 20px;
-  background-color: #fff;
-  text-align: center;
-}
-
-.meetings-title {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-}
-
-.international-row {
-  margin-bottom: 20px;
-}
-
-.internationnal-content {
-  text-align: center;
-  .international-card{
-  .image {
+  .pic {
     width: 100%;
-    height: 200px;
+    height: 160px;
     display: block;
   }
 
-  h3 {
-    font-size: 16px;
-    margin: 10px 0;
-  }
-
-  p {
-    margin: 0;
-  }
-
-  .date {
-    font-size: 12px;
-    color: #999;
+  .info {
+    padding: 14px 16px 16px;
+    .title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #303133;
+      margin-bottom: 6px;
+    }
+    .desc {
+      font-size: 14px;
+      color: #606266;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .tag {
+      background: #f0f9ff;
+      border-color: #d1e9ff;
+      color: #409eff;
+    }
   }
 }
+
+/* <CHANGE> 添加分页组件样式 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding: 20px 0;
 }
 
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
 
+  /* <CHANGE> 移动端分页样式调整 */
+  .pagination {
+    :deep(.el-pagination) {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+}
 </style>

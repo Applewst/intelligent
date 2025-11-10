@@ -1,35 +1,25 @@
 <script setup>
-import {  ref } from 'vue'
-const list = ref([
-  {
-    name: '张三',
-    project: '“中国科学技术奖”',
-    time: '2025年9月7日',
-    img: '../assets/images/1.jpg',
-    id:1
-  },
-  {
-    name: '李四',
-    project: '“全国大学生数学竞赛”',
-    time: '2025年8月15日',
-    img: '../assets/images/2.jpg',
-    id:2
-  },
-  {
-    name: '王五',
-    project: '“挑战杯”全国大学生课外学术科技作品竞赛',
-    time: '2025年7月20日',
-    img: '../assets/images/3.jpg',
-    id:3
-  },
-  {
-    name: '赵六',
-    project: '“互联网+”大学生创新创业大赛',
-    time: '2025年6月10日',
-    img: '../assets/images/4.jpg',
-    id:4
+import {  ref,onMounted } from 'vue'
+import { GetAwards } from '@/api/search'
+import { ElMessage } from 'element-plus'
+const list = ref([])   //学生获奖列表
+
+//获取学生获取情况
+const GetAllAwardData = async () => {
+  console.log('获取学生获奖数据文本处')
+  const response = await GetAwards()
+  if (response.code === 1) {
+    list.value = response.data
+    ElMessage.success('获取成功')
+  }else{
+    ElMessage.error('获取失败')
   }
-])
+}
+onMounted(()=>{
+  GetAllAwardData()
+})
+
+
 
 </script>
 
@@ -43,7 +33,8 @@ const list = ref([
             <img src="../assets/images/1.jpg" alt="获奖图片" />
             <div class="item-infor">
               <h3>{{item.name}}</h3>
-              <p>获奖项目：{{item.project}}</p>
+              <p>获奖人：{{item.author}}</p>
+              <p>{{item.detail}}</p>
               <p class="make-time">{{item.time}}</p>
             </div>
             

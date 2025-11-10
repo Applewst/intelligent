@@ -2,6 +2,7 @@ import service from '../api/request';
 import { ref } from "vue";
 const papers = ref([
   {
+    id: 1,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 1',
     detail: '这是一篇关于机器学习算法优化的研究，详细探讨了深度学习模型的训练策略。',
@@ -9,6 +10,7 @@ const papers = ref([
     time: '2023-01-01',
   },
   {
+    id: 2,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 2',
     detail: '本文介绍了自然语言处理领域中的一种新型预训练模型，重点是多语言文本理解能力的提升。',
@@ -16,6 +18,7 @@ const papers = ref([
     time: '2023-02-01',
   },
   {
+    id: 3,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 3',
     detail: '研究了图像识别技术在医疗诊断中的应用，对比了卷积神经网络的不同架构对图像分类的影响。',
@@ -23,6 +26,7 @@ const papers = ref([
     time: '2023-03-01',
   },
   {
+    id: 4,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 4',
     detail: '本文探讨了区块链技术在供应链管理中的应用，分析了其在提高透明度和效率方面的潜力。',
@@ -30,6 +34,7 @@ const papers = ref([
     time: '2023-04-01',
   },
   {
+    id: 5,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 5',
     detail: '研究了人工智能在交通管理中的应用，提出了基于强化学习的智能交通信号控制系统设计。',
@@ -37,6 +42,7 @@ const papers = ref([
     time: '2023-05-01',
   },
   {
+    id: 6,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 6',
     detail: '该论文分析了生成对抗网络（GAN）在图像生成中的最新进展，提出了改进GAN稳定性的方法。',
@@ -44,6 +50,7 @@ const papers = ref([
     time: '2023-06-01',
   },
   {
+    id: 7,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 7',
     detail: '本文介绍了量子计算在密码学中的应用，探讨了量子密钥分发的安全性与效率。',
@@ -51,6 +58,7 @@ const papers = ref([
     time: '2023-07-01',
   },
   {
+    id: 8,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 8',
     detail: '研究了深度强化学习在游戏AI中的应用，分析了AlphaZero框架在策略优化中的作用。',
@@ -58,6 +66,7 @@ const papers = ref([
     time: '2023-08-01',
   },
   {
+    id: 9,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 9',
     detail: '该论文讨论了车联网（IoV）的概念，提出了基于5G技术的智能交通系统架构。',
@@ -65,6 +74,7 @@ const papers = ref([
     time: '2023-09-01',
   },
   {
+    id: 10,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 10',
     detail: '本文介绍了信息检索技术的最新进展，重点是基于深度学习的文本嵌入模型。',
@@ -72,6 +82,7 @@ const papers = ref([
     time: '2023-10-01',
   },
   {
+    id: 11,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 11',
     detail: '研究了云计算中的资源调度算法，提出了基于强化学习的动态资源分配策略。',
@@ -79,6 +90,7 @@ const papers = ref([
     time: '2023-11-01',
   },
   {
+    id: 12,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 12',
     detail: '该论文探讨了智能家居系统中的用户行为分析，提出了基于机器学习的个性化推荐算法。',
@@ -86,6 +98,7 @@ const papers = ref([
     time: '2023-12-01',
   },
   {
+    id: 13,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 13',
     detail: '本文介绍了大数据技术在金融风控中的应用，提出了基于图神经网络的风险评估模型。',
@@ -93,6 +106,7 @@ const papers = ref([
     time: '2023-12-15',
   },
   {
+    id: 14,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 14',
     detail: '研究了语音识别技术中的噪声消除算法，提出了基于深度学习的鲁棒性改进方法。',
@@ -100,6 +114,7 @@ const papers = ref([
     time: '2023-08-15',
   },
   {
+    id: 15,
     image: 'https://placeholder.com/300x200', // 替换为实际图片路径
     title: '论文标题 15',
     detail: '该论文分析了无人机在物流配送中的应用，提出了基于路径规划算法的优化方案。',
@@ -107,25 +122,25 @@ const papers = ref([
     time: '2023-05-15',
   },
 ]);
-
+const useMock = true;
 //获取论文
-export const GetsearchPapers = async ()=>{
-  const useMock = true;
+export const GetsearchPapers = async (...params)=>{
+  console.log('获取论文信息API：',params)
+  
   if(useMock){
     return {
       "code": 1,
       "message": "success",
-      "data": papers.value
+      "data": {
+        "total":papers.value.length,
+        "rows":papers.value
+      }
     }
   }
-  return service.get('/search/papers',{
-
+  return service.get('/api/search/papers/list',{
+    ...params
   })
 }
-
-
-
-
 
 //获取研究方向
 
@@ -190,7 +205,6 @@ const modules = ref([
   ]);
 
 export const GetSearchProjects = async (id)=>{
-  const useMock = true;
   if(useMock){
     return {
       "code": 1,
@@ -198,7 +212,93 @@ export const GetSearchProjects = async (id)=>{
       "data":modules.value[id-1]
     }
   }
-  return service.get('/search/project',{
+  return service.get('/api/search',{
     id
   })
+}
+
+
+//学生获奖信息
+const awardList = [
+  {
+    id: 1,
+    detail: "2022年获得国家科技进步奖二等奖，表彰在人工智能领域的突出贡献。",
+    time: "2022-12-15",
+    author: "张伟",
+    image:'https://example.com/award1.jpg',
+  },
+  {
+    id: 2,
+    detail: "2022年国际人工智能大会最佳论文奖",
+    time: "2022-11-20",
+    author: "王丽",
+    image:'https://example.com/award2.jpg',
+  },
+  {
+    id: 3,
+    detail: "2022年被评为年度杰出青年科学家",
+    time: "2022-10-25",
+    author: "张信",
+    image:'https://example.com/award3.jpg',
+  },
+  {
+    id: 4,
+    detail: "2022年被评为年度杰出青年科学家",
+    time: "2022-09-30",
+    author: "马丽",
+    image:'https://example.com/award4.jpg',
+  },
+  {
+    id: 5,
+    detail: "2022年被评为年度杰出青年科学家",
+    time: "2022-08-18",
+    author: "横跨",
+    image:'https://example.com/award5.jpg',
+  },
+  {
+    id: 6,
+    detail: "2022年被评为年度杰出青年科学家",
+    time: "2022-07-23",
+    author: "李四",
+    image:'https://example.com/award6.jpg',
+  },
+  {
+    id: 7,
+    detail: "2022年被评为年度杰出青年科学家",
+    time: "2022-06-28",
+    author: "王五",
+    image:'https://example.com/award7.jpg',
+  },
+  {
+    id: 8,
+    detail: "2022年被评为年度杰出青年科学家",
+    time: "2022-05-31",
+    author:"赵六",
+    image:'https://example.com/award8.jpg',
+  },
+  {
+    id: 9,
+    detail: "2022年被评为年度杰出青年科学家",
+    time: "2022-05-06",
+    author:"钱七",
+    image:'https://example.com/award9.jpg',
+  },
+  {
+    id: 10,
+    detail: "2022年被评为年度杰出青年科学家",
+    time: "2022-04-11",
+    author: "王麻子",
+    image:'https://example.com/award10.jpg',
+  }
+]//获奖数据
+
+export const GetAwards = async ()=>{
+  if(useMock){
+    return {
+      "code": 1,
+      "message": "success",
+      "data": awardList
+    }
+  }
+  return service.get('/api/search/awards')
 }
