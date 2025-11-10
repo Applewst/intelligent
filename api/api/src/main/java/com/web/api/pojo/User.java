@@ -1,6 +1,6 @@
 package com.web.api.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,18 +16,14 @@ public class User {
     /** 用户名 */
     private String username;
     /** 密码 */
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     /** 盐 */
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
     /** 权限 */
     private String identity;
-    /** 是否禁用 */
-    private boolean isDisabled; // true表示禁用，false表示未禁用
-
-    @JsonIgnore
-    public boolean isDisabled() {
-        return isDisabled;
-    }
+    /** 是否禁用*/
+    private boolean isDisabled;
 }
+

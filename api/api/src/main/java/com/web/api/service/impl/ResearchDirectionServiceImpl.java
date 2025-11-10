@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * 研究方向服务实现类
+ * @author Askr-Yggdrasill
  */
 @Slf4j
 @Service
@@ -71,10 +72,14 @@ public class ResearchDirectionServiceImpl implements ResearchDirectionService {
 
     @Override
     public void updateDirection(ResearchDirection direction) {
+        log.info("修改研究方向信息，ID：{}", direction.getId());
+        if (!researchDirectionMapper.existsById(direction.getId())) {
+            log.warn("未找到ID为{}的研究方向信息，无法修改", direction.getId());
+            throw new NoFindException();
+        }
         try {
-            log.info("修改研究方向信息，ID：{}", direction.getId());
             //如果有新图片
-            if (!direction.getImageUrl().isEmpty()) {
+            if (!direction.getImage().isEmpty()) {
                 //删除旧图片
                 String oldUrl = researchDirectionMapper.getImageUrlById(direction.getId());
                 imageService.deleteImage(oldUrl);
@@ -89,10 +94,14 @@ public class ResearchDirectionServiceImpl implements ResearchDirectionService {
 
     @Override
     public void deleteDirection(int id) {
+        log.info("删除研究方向信息，ID：{}", id);
+        if (!researchDirectionMapper.existsById(id)) {
+            log.warn("未找到ID为{}的研究方向信息，无法删除", id);
+            throw new NoFindException();
+        }
         String url = researchDirectionMapper.getImageUrlById(id);
         //删除研究方向信息
         try {
-            log.info("删除研究方向信息，ID：{}", id);
             researchDirectionMapper.deleteDirectionById(id);
         } catch (Exception e) {
             log.error("删除研究方向信息时发生异常，ID：{}", id, e);

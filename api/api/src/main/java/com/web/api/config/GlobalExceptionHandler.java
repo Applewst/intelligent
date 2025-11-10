@@ -10,6 +10,7 @@ import java.nio.file.AccessDeniedException;
 
 /**
  * 全局异常处理器
+ * @author Askr-Yggdrasill
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -36,8 +37,8 @@ public class GlobalExceptionHandler {
      * 未找到账号异常: NoFindAccountException
      */
     @ExceptionHandler(NoFindAccountException.class)
-    public ResponseEntity<Result> handleNoFindAccountException(DatabaseOperationException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Result> handleNoFindAccountException(NoFindAccountException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Result.error(e.getMessage()));
     }
 
@@ -60,11 +61,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 未找到对象异常: NoFindException
+     */
+    @ExceptionHandler(NoFindException.class)
+    public ResponseEntity<Result> handleNoFindException(NoFindException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Result.error(e.getMessage()));
+    }
+
+    /**
      * 其他运行时异常: RuntimeException
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Result> handleException(RuntimeException e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Result.error("服务器异常: " + e.getMessage()));
+                .body(Result.error("错误: " + e.getMessage()));
     }
 }

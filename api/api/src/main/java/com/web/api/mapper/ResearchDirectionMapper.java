@@ -6,9 +6,17 @@ import java.util.List;
 
 /**
  * 研究方向数据交互
+ * @author Askr-Yggdrasill
  */
 @Mapper
 public interface ResearchDirectionMapper {
+
+    /**
+     * 根据ID检查研究方向是否存在
+     * @param id 研究方向ID
+     * @return 是否存在
+     */
+    Boolean existsById(int id);
 
     /**
      * 查询所有研究方向
