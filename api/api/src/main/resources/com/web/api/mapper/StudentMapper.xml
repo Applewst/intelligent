@@ -20,7 +20,7 @@
                 gender = #{gender},
             </if>
             <if test="avatar != null and avatar != ''">
-                avator = #{avatar}
+                avatar = #{avatar}
             </if>
         </set>
         where id = #{id}

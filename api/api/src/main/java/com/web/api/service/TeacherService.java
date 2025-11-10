@@ -1,5 +1,6 @@
 package com.web.api.service;
 
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Teacher;
 
@@ -11,13 +12,12 @@ import java.util.List;
 public interface TeacherService {
 
     /**
-     * 分页查询教师
+     * 教师分页查询
      *
-     * @param pageNum  当前页码
-     * @param pageSize 分页大小
+     * @param pageQueryDTO 分页查询参数
      * @return 分页结果
      */
-    PageResult page(Integer pageNum, Integer pageSize);
+    PageResult page(PageQueryDTO pageQueryDTO);
 
     /**
      * 根据ID查询教师

@@ -2,6 +2,7 @@ package com.web.api.mapper;
 
 import com.github.pagehelper.Page;
 import com.web.api.pojo.Graduate;
+import com.web.api.pojo.PageQueryDTO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -18,8 +19,7 @@ public interface GraduatesMapper {
      *
      * @return 毕业生列表
      */
-    @Select("select id,name,gender,avatar from graduates")
-    Page<Graduate> pageQuery();
+    Page<Graduate> pageQuery(PageQueryDTO pageQueryDTO);
 
     /**
      * 插入毕业生信息

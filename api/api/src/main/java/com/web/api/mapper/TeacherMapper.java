@@ -1,6 +1,7 @@
 package com.web.api.mapper;
 
 import com.github.pagehelper.Page;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.Teacher;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -14,11 +15,12 @@ import java.util.List;
 public interface TeacherMapper {
 
     /**
-     * 分页查询教师
+     * 教师分页查询
      *
-     * @return 教师分页数据
+     * @param pageQueryDTO 分页查询参数
+     * @return 教师分页结果
      */
-    Page<Teacher> page();
+    Page<Teacher> page(PageQueryDTO pageQueryDTO);
 
     /**
      * 根据ID查询教师

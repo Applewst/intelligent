@@ -1,6 +1,7 @@
 package com.web.api.controller;
 
 import com.web.api.pojo.Graduate;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Result;
 import com.web.api.service.GraduatesService;
@@ -24,15 +25,13 @@ public class GraduateController {
     /**
      * 分页查询毕业生信息
      *
-     * @param pageNum  分页页码
-     * @param pageSize 每页大小
-     * @return 分页结果
+     * @param pageQueryDTO 分页查询参数
+     * @return 毕业生分页结果
      */
-    @GetMapping
-    public Result page(@RequestParam(defaultValue = "1") Integer pageNum,
-                       @RequestParam(defaultValue = "10") Integer pageSize) {
-        log.info("分页查询毕业生信息：pageNum={}, pageSize={}", pageNum, pageSize);
-        PageResult pageResult = graduatesService.pageQuery(pageNum, pageSize);
+    @GetMapping("/list")
+    public Result page(PageQueryDTO pageQueryDTO) {
+        log.info("分页查询毕业生信息：{}", pageQueryDTO);
+        PageResult pageResult = graduatesService.pageQuery(pageQueryDTO);
         return Result.success(pageResult);
     }
 
@@ -43,7 +42,7 @@ public class GraduateController {
      * @return 操作结果
      */
     @PostMapping
-    public Result save(Graduate graduate) {
+    public Result save(@RequestBody Graduate graduate) {
         log.info("保存毕业生信息：{}", graduate);
         graduatesService.save(graduate);
         return Result.success();
@@ -56,7 +55,7 @@ public class GraduateController {
      * @return 操作结果
      */
     @PutMapping
-    public Result updateById(Graduate graduate) {
+    public Result updateById(@RequestBody Graduate graduate) {
         log.info("根据ID更新毕业生信息：{}", graduate);
         graduatesService.updateById(graduate);
         return Result.success();
