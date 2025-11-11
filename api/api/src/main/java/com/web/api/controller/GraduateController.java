@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/graduates")
+@RequestMapping({"/graduates", "/graduate"})
 public class GraduateController {
 
     @Autowired
