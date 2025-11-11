@@ -6,18 +6,32 @@
 <mapper namespace="com.web.api.mapper.TeamDynamicMapper">
     <select id="getAllDynamics" resultType="com.web.api.pojo.TeamDynamic">
         select *
-        from team_dynamic
+        from web.team_dynamic
     </select>
     <select id="getNewDynamic" resultType="com.web.api.pojo.TeamDynamic">
         select *
-        from team_dynamic
+        from web.team_dynamic
         order by time DESC
         limit #{num}
     </select>
-    <select id="getNewImgs" resultType="java.lang.String">
-        select img
-        from team_dynamic
-        order by time DESC
-        limit #{num}
+    <delete id="deleteDynamics" >
+        delete  from web.scientific_dynamic where id = #{id}
+    </delete>
+    <update id="updateTeamDynamics">
+        UPDATE scientific_dynamic
+        <set>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="detail != null and detail != ''">detail = #{detail},</if>
+        </set>
+        Where id =#{id}
+    </update>
+    <select id="pageQuery" resultType="com.web.api.pojo.TeamDynamic">
+        select * from web.scientific_dynamic
+        <where>
+            <if test="title != null and tile !='' ">
+                and title like concat('%',#{title},'%')
+            </if>
+        </where>
     </select>
 </mapper>

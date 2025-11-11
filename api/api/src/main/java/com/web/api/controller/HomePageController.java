@@ -40,7 +40,7 @@ public class HomePageController {
     @GetMapping("/news")
     public Result news() {
         //返回最新4条动态
-        return Result.success(scientificDynamicServiceImpl.NewDynamics(4));
+        return Result.success(scientificDynamicServiceImpl.newDynamics(4));
     }
 
     /**
