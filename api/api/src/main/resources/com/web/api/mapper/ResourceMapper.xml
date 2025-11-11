@@ -4,6 +4,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.web.api.mapper.ResourceMapper">
+    <update id="updateByID">
+        update resource
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="size != null">
+                size = #{size},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
     <select id="pageQuery" resultType="com.web.api.pojo.Resource">
         select id,name,size,type,update_time,downloads from resource
         <where>

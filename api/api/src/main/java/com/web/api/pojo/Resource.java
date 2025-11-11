@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,6 +17,6 @@ public class Resource {
     private String size;
     private String type;
     private String url;
-    private String updateTime;
+    private LocalDateTime updateTime;
     private String downloads;
 }

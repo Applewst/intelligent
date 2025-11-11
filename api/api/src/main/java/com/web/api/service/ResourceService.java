@@ -2,6 +2,9 @@ package com.web.api.service;
 
 import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
+import com.web.api.pojo.Resource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -20,9 +23,31 @@ public interface ResourceService {
     /**
      * 上传文件
      *
-     * @param file        文件
-     * @param resourceDTO 资源信息
+     * @param file     文件
+     * @param resource 资源信息
      * @return 文件访问URL
      */
-    String uploadFile(MultipartFile file, ResourceDTO resourceDTO);
+    String uploadFile(MultipartFile file, Resource resource);
+
+    /**
+     * 更新资源信息
+     *
+     * @param resource 资源信息
+     */
+    void updateResource(Resource resource);
+
+    /**
+     * 根据ID获取资源信息
+     *
+     * @param id 资源ID
+     * @return 资源信息
+     */
+    Resource getResourceById(String id);
+
+    /**
+     * 根据ID删除资源
+     *
+     * @param id 资源ID
+     */
+    void deleteResourceById(String id);
 }
