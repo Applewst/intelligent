@@ -1,47 +1,110 @@
 package com.web.api.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class FileUtil {
 
-    /**
-     * 获取文件扩展名
-     * @param fileName 文件名
-     * @return 文件扩展名(小写)
-     */
-    public static String getExtension(String fileName) {
-        // 获取文件扩展名
-        int lastDotIndex = fileName.lastIndexOf(".");
-        // 当前点存在且不是最后一个字符时，返回扩展名
-        if (lastDotIndex > 0 && lastDotIndex < fileName.length() - 1) {
-            return fileName.substring(lastDotIndex + 1).toLowerCase();
-        } else {
-            //返回空字符串: xx.
-            return "";
-        }
-    }
+    // 文件上传根目录，可根据系统修改
+    private static final String RESOURCE_DIR = "D:/resources/";
 
     /**
-     * 获取文件名(不含扩展名)
+     * 获取文件扩展名
+     *
      * @param fileName 文件名
-     * @return 不含扩展名的文件名
+     * @return 扩展名
      */
-    public static String getFileName(String fileName) {
-        int lastDotIndex = fileName.lastIndexOf(".");
-        return  fileName.substring(0, lastDotIndex);
+    public static String getExtension(String fileName) {
+        if (fileName == null || fileName.trim().isEmpty()) {
+            return "";
+        }
+
+        int lastIndex = fileName.lastIndexOf('.');
+        // 点不存在或在最后一位，说明没有扩展名
+        if (lastIndex <= 0 || lastIndex == fileName.length() - 1) {
+            return "";
+        }
+
+        return fileName.substring(lastIndex + 1);
     }
 
     /**
      * 生成新的文件名
+     *
      * @param fileName 原始文件名
      * @return 新文件名
      */
     public static String getNewName(String fileName) {
-        // 获取文件扩展名
+        // 生成新的文件名，使用UUID避免重名
         String extension = getExtension(fileName);
-        // 获取不含扩展名的文件名
-        String fileNameWithoutExt = getFileName(fileName);
-        // 生成新的文件名(UUID + 扩展名)
-        return fileNameWithoutExt + "__" +  UUID.randomUUID() + "." + extension;
+        // 拼接新的文件名
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        return uuid + "." + extension;
+    }
+
+
+    /**
+     * 上传文件
+     *
+     * @param file MultipartFile对象
+     * @return 保存路径
+     * @throws IOException 文件上传异常
+     */
+    public static String uploadFile(MultipartFile file) throws java.io.IOException {
+
+        if (file == null || file.isEmpty()) {
+            throw new IOException("上传失败：文件为空");
+        }
+
+        // 创建日期子目录，如 20251111
+        String dateDir = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        File dir = new File(RESOURCE_DIR + dateDir);
+        if (!dir.exists() && !dir.mkdirs()) {
+            throw new IOException("无法创建上传目录：" + dir.getAbsolutePath());
+        }
+        // 新文件名
+        String newName = getNewName(file.getOriginalFilename());
+        // 保存路径
+        String savePath = dir.getAbsolutePath() + File.separator + newName;
+        // 保存文件
+        file.transferTo(new File(savePath));
+
+        // 返回保存路径
+        return savePath;
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param filePath 文件路径
+     * @return ResponseEntity包含文件流
+     * @throws IOException 文件读取异常
+     */
+    public static ResponseEntity<InputStreamResource> downloadFile(String filePath) throws IOException {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new FileNotFoundException("文件不存在：" + filePath);
+        }
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        String fileName = file.getName();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }
