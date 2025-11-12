@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.api.mapper.PictureWallMapper">
+    <insert id="addPictureWall">
+        insert into picture_wall (title, file, time)
+        values (#{title}, #{file}, #{time})
+    </insert>
+    <update id="updatePictureWall">
+        update picture_wall
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="file != null and file != ''">
+                file = #{file},
+            </if>
+            <if test="time != null and time != ''">
+                time = #{time},
+            </if>
+        </set>
+    </update>
+    <delete id="deletePictureWall">
+        delete from picture_wall
+        where id = #{id}
+    </delete>
+
+    <select id="getPictureWall" resultType="com.web.api.pojo.PictureWall">
+        select *
+        from picture_wall
+        <if test="title != null and title != ''">
+            where title like concat('%', #{title}, '%')
+        </if>
+        order by id desc
+    </select>
+</mapper>

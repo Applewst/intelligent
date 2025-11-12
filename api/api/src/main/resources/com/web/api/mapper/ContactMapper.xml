@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.api.mapper.ContactMapper">
+    <update id="updateContactInfo">
+        update contact
+        <set>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="location != null and location != ''">
+                location = #{location},
+            </if>
+            <if test="locationImage != null and locationImage != ''">
+                location_image = #{locationImage},
+            </if>
+            <if test="wechatAccount != null and wechatAccount != ''">
+                wechat_account = #{wechatAccount},
+            </if>
+            <if test="wechatQrCode != null and wechatQrCode != ''">
+                wechat_qr_code = #{wechatQrCode},
+            </if>
+        </set>
+        where id = 1
+    </update>
+
+    <select id="getContactInfo" resultType="com.web.api.pojo.Contact">
+        select *
+        from contact
+        where id = 1
+    </select>
+</mapper>
