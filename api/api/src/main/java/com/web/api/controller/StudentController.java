@@ -55,7 +55,7 @@ public class StudentController {
      * @return 操作结果
      */
     @PutMapping("/{id}")
-    public Result updateById(@RequestBody Student student) {
+    public Result updateById(@PathVariable Integer id, @RequestBody Student student) {
         log.info("修改在读学生信息：{}", student);
         studentService.updateById(student);
         return Result.success();
