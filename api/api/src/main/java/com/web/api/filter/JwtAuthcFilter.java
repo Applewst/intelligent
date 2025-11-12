@@ -20,8 +20,7 @@ import org.apache.shiro.web.util.WebUtils;
 import java.io.IOException;
 
 /**
- * 自定义Jwt认证过滤器: 重写原有过滤器 authc(必须认证了才能访问)
- * 原来过滤器失败跳转网页 -> 返回json数据
+ * 过滤器: 必须登录才能访问
  */
 @Slf4j
 public class JwtAuthcFilter extends AccessControlFilter {
@@ -64,7 +63,8 @@ public class JwtAuthcFilter extends AccessControlFilter {
                 }
                 return true;
             } else {
-                httpRequest.setAttribute("authFailReason", "invalid_token");    //登陆失败
+                //登陆失败
+                httpRequest.setAttribute("authFailReason", "invalid_token");
                 return false;
             }
         } catch (Exception e) {

@@ -38,7 +38,8 @@ public class LoginServiceimpl implements LoginService {
             Subject subject = SecurityUtils.getSubject();
             subject.login(token);
             //登陆成功后颁发jwt令牌
-            String username = (String) subject.getPrincipal();  //在realm中SimpleAuthenticationInfo设置principal为用户名
+            //在realm中SimpleAuthenticationInfo设置principal为用户名
+            String username = (String) subject.getPrincipal();
             String sessionId = (String) subject.getSession().getId();
 
             Map<String,Object> claim = new HashMap<>();

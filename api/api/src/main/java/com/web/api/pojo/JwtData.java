@@ -19,6 +19,7 @@ public class JwtData {
 
     /**
      * 角色
+     * 0:普通用户 1:管理员
      */
-    private int role; //0:普通用户 1:管理员
+    private String identity;
 }

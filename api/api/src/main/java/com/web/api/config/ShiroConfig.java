@@ -2,6 +2,7 @@ package com.web.api.config;
 
 import com.web.api.config.impl.JwtTokenManager;
 import com.web.api.config.impl.ShiroSessionManager;
+import com.web.api.filter.HttpMethodFilter;
 import com.web.api.filter.JwtAuthcFilter;
 import com.web.api.filter.JwtRolesFilter;
 import jakarta.servlet.Filter;
@@ -79,12 +80,27 @@ public class ShiroConfig {
      * @return Map<String, Filter>过滤器集合
      */
     private Map<String, Filter> filters(){
-        Map<String, Filter> filters = new HashMap<>();
         //<标记,过滤器对象>
-        //jwt认证
+        Map<String, Filter> filters = new HashMap<>();
+
+        //创建自定义过滤器对象
+        //管理员,所有权
+        HttpMethodFilter admin_all = new HttpMethodFilter();
+        admin_all.setAllowedMethod("GET,POST,PUT,DELETE",jwtTokenManager);
+        admin_all.setAllowedRole("admin,user",jwtTokenManager);
+        //用户,get请求
+        HttpMethodFilter user_get = new HttpMethodFilter();
+        user_get.setAllowedMethod("GET",jwtTokenManager);
+        user_get.setAllowedRole("user",jwtTokenManager);
+
+        //注册过滤器
+        //jwt需要认证
         filters.put("jwt-authc",new JwtAuthcFilter(jwtTokenManager));
         //jwt角色认证 and关系
         filters.put("jwt-roles",new JwtRolesFilter(jwtTokenManager));
+        //http方法与角色复合认证
+        filters.put("http-method",user_get);
+        filters.put("http-method-admin",admin_all);
         return filters;
     }
 

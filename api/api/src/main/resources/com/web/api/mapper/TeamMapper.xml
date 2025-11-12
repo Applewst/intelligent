@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.api.mapper.TeamMapper">
+    <update id="updateTeam">
+        update team
+        <set>
+            <if test="teamName != null">
+                team_name = #{teamName},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction},
+            </if>
+            <if test="imageUrl != null">
+            image_url = #{imageUrl},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectAll" resultType="com.web.api.pojo.Team">
+        select *
+        from team
+    </select>
+</mapper>

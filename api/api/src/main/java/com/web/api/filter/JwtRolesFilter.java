@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
- * 自定义权限过滤器: 重写原有过滤器 roles(必须拥有某个角色权限才能访问)
+ * 过滤器: 权限认证
+ * @author Askr-Yggdrasill
  */
 @Slf4j
 public class JwtRolesFilter extends RolesAuthorizationFilter {
@@ -43,26 +44,33 @@ public class JwtRolesFilter extends RolesAuthorizationFilter {
         String reason = (String) httpRequest.getAttribute("authFailReason");
 
         String msg;
+        int code;
         if ("invalid_token".equals(reason)) {
             msg = com.web.api.error.Error.NOACCOUNT.toString();
+            code = HttpServletResponse.SC_UNAUTHORIZED;
         } else if ("account_baned".equals(reason)) {
             msg = com.web.api.error.Error.ACCOUNTBAN.toString();
+            code = HttpServletResponse.SC_FORBIDDEN;
         } else if ("missing_token".equals(reason)) {
             msg = Error.NOTOKEN.toString();
+            code = HttpServletResponse.SC_UNAUTHORIZED;
         } else {
             msg = "认证失败";
+            code = HttpServletResponse.SC_UNAUTHORIZED;
         }
         //如果没有，返回响应
         Result result = Result.error(msg);
-        writeJsonResponse(response, result, HttpServletResponse.SC_UNAUTHORIZED);
+        writeJsonResponse(response, result, code);
         return false;
     }
 
+    /**
+     * 访问控制方法
+     */
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
         //判断当前请求头中是否带有jwtToken的字符串
         String jwtToken = WebUtils.toHttp(request).getHeader("token");
-
         HttpServletRequest httpRequest = WebUtils.toHttp(request);
         // 1. 没有 token
         if (jwtToken == null || jwtToken.isEmpty()) {
