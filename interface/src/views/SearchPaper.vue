@@ -71,7 +71,7 @@ watch([pageSize,pageNum], () => {
         >
           <div class="paper-info">
             <div class="paper-image">
-              <img v-if="item.image" :src="item.image" alt="Paper Image" />
+              <img v-if="item.file" :src="item.file" alt="Paper Image" />
             </div>
             <div class="paper-content">
               <div class="paper-title">{{ item.title }}</div>
