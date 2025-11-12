@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.api.mapper.StudentPrizeMapper">
+    <insert id="addStudentPrize">
+        insert into student_prize (author, file, time, total, detail)
+        values (#{author}, #{file}, #{time}, #{total}, #{detail})
+    </insert>
+    <update id="motifyStudentPrizeById">
+        update student_prize
+        <set>
+            <if test="author != null and author != ''">
+                author = #{author},
+            </if>
+            <if test="file != null and file != ''">
+                file = #{file},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="total != null">
+                total = #{total},
+            </if>
+            <if test="detail != null and detail != ''">
+                detail = #{detail}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteStudentPrizeById">
+        delete
+        from
+            student_prize
+        where
+            id = #{id}
+    </delete>
+
+    <select id="getAllStudentPrizes" resultType="com.web.api.pojo.StudentPrize">
+        select *
+        from student_prize
+    </select>
+
+</mapper>
