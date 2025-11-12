@@ -5,8 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.web.api.mapper.ScientificDynamicMapper;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.ScientificDynamic;
-import com.web.api.pojo.Student;
-import com.web.api.service.DynamicService;
+import com.web.api.service.ScientificDynamicService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class ScientificDynamicServiceImpl implements DynamicService<ScientificDynamic> {
+public class ScientificDynamicServiceImpl implements ScientificDynamicService {
 
     @Autowired
     private ScientificDynamicMapper scientificDynamicMapper;

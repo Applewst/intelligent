@@ -4,9 +4,8 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.web.api.mapper.TeamDynamicMapper;
 import com.web.api.pojo.PageResult;
-import com.web.api.pojo.Student;
 import com.web.api.pojo.TeamDynamic;
-import com.web.api.service.DynamicService;
+import com.web.api.service.TeamDynamicService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class TeamDynamicServiceImpl implements DynamicService<TeamDynamic> {
+public class TeamDynamicServiceImpl implements TeamDynamicService {
 
     @Autowired
     private TeamDynamicMapper teamDynamicMapper;
