@@ -1,11 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import * as echarts from 'echarts'
+import { getStudentList } from '@/api/student'
+import { getGraduateList } from '@/api/graduate'
+import { GetPaperList } from '@/api/SearchApi'
 
 const currentDate = ref(new Date())
 const studentChart = ref(null)
 const paperChart = ref(null)
 const activityChart = ref(null)
+const studentDate = ref([])
+const paperData = ref({ years: [], counts: [] })
 
 const isToday = (date) => {
   const today = new Date()
@@ -13,14 +18,59 @@ const isToday = (date) => {
   return today.toDateString() === checkDate.toDateString()
 }
 
+const GetStudentDate = async () => {
+  const res1 = await getStudentList()
+  // const res2 = await getGraduateList()
+  studentDate.value = [100, res1.data.data.total]
+  console.log(studentDate.value)
+}
+
+const GetPaperData = async () => {
+  try {
+    const res = await GetPaperList()
+    if (res.code === 1 && res.data && res.data.rows) {
+      const papers = res.data.rows
+      
+      // 按年份统计论文数量
+      const yearMap = {}
+      papers.forEach(paper => {
+        const year = paper.time.substring(0, 4) // 提取年份
+        yearMap[year] = (yearMap[year] || 0) + 1
+      })
+      
+      // 将结果转换为数组并排序
+      const years = Object.keys(yearMap).sort()
+      const counts = years.map(year => yearMap[year])
+      
+      paperData.value = { years, counts }
+      console.log('论文按年份统计:', { years, counts })
+    }
+  } catch (error) {
+    console.error('获取论文数据失败:', error)
+  }
+}
+
 onMounted(() => {
-  initStudentChart()
-  initPaperChart()
-  initActivityChart()
+  GetStudentDate()
+  GetPaperData()
 })
+
+// 监听 studentDate 的变化，数据获取完成后初始化或更新图表
+watch(studentDate, (newData) => {
+  if (newData.length > 0) {
+    initStudentChart()
+  }
+})
+
+watch(paperData, (newData) => {
+  if (newData.years.length > 0) {
+    initPaperChart()
+  }
+}, { deep: true })
 
 // 初始化学生图表 - 条形图
 const initStudentChart = () => {
+  if (!studentChart.value) return
   const chart = echarts.init(studentChart.value)
   const option = {
     tooltip: {
@@ -39,13 +89,13 @@ const initStudentChart = () => {
     },
     yAxis: {
       type: 'category',
-      data: ['毕业生','在校生']
+      data: ['毕业生', '在校生']
     },
     series: [
       {
         name: '人数',
         type: 'bar',
-        data: [8, 15, 5, 3],
+        data: studentDate.value,
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
             { offset: 0, color: '#409EFF' },
@@ -60,15 +110,15 @@ const initStudentChart = () => {
   window.addEventListener('resize', () => chart.resize())
 }
 
-// 初始化论文图表 - 折线图
 const initPaperChart = () => {
+  if (!paperChart.value) return
   const chart = echarts.init(paperChart.value)
   const option = {
     tooltip: {
       trigger: 'axis'
     },
     legend: {
-      data: ['SCI论文', 'EI论文', '核心期刊'],
+      data: ['数量'],
       top: '0%',
       left: 'center'
     },
@@ -82,32 +132,25 @@ const initPaperChart = () => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['1月', '2月', '3月', '4月', '5月', '6月']
+      data: paperData.value.years.map(year => year + '年')
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+      minInterval: 1
     },
     series: [
       {
-        name: 'SCI论文',
+        name: '数量',
         type: 'line',
-        data: [3, 5, 4, 7, 6, 8],
+        data: paperData.value.counts,
         smooth: true,
-        itemStyle: { color: '#67C23A' }
-      },
-      {
-        name: 'EI论文',
-        type: 'line',
-        data: [2, 3, 4, 3, 5, 6],
-        smooth: true,
-        itemStyle: { color: '#409EFF' }
-      },
-      {
-        name: '核心期刊',
-        type: 'line',
-        data: [4, 4, 5, 6, 7, 5],
-        smooth: true,
-        itemStyle: { color: '#E6A23C' }
+        itemStyle: { color: '#66C23A' },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(102, 194, 58, 0.3)' },
+            { offset: 1, color: 'rgba(102, 194, 58, 0.05)' }
+          ])
+        }
       }
     ]
   }
@@ -169,6 +212,11 @@ const initActivityChart = () => {
   chart.setOption(option)
   window.addEventListener('resize', () => chart.resize())
 }
+
+// 在组件挂载时初始化其他图表
+onMounted(() => {
+  initActivityChart()
+})
 </script>
 
 <template>
@@ -216,7 +264,8 @@ const initActivityChart = () => {
         <template #header>
           <div class="card-header">
             <span class="card-title">论文发表趋势</span>
-            <el-tag type="success">近6个月</el-tag>
+            <!-- 更新标签文本为按年份 -->
+            <el-tag type="success">按年份统计</el-tag>
           </div>
         </template>
         <div ref="paperChart" class="chart"></div>
@@ -248,7 +297,6 @@ const initActivityChart = () => {
     </div>
   </div>
 </template>
-
 
 <style scoped lang="less">
 .dashboard-container {
@@ -354,65 +402,5 @@ const initActivityChart = () => {
   top: 20px;
   height: fit-content;
   max-height: 420px;
-}
-
-.sidebar-calendar :deep(.el-card__body) {
-  padding: 8px;
-}
-
-.calendar-day {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  font-size: 12px;
-}
-
-.calendar-day.is-today {
-  background: #409EFF;
-  color: white;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  margin: 0 auto;
-  font-weight: bold;
-}
-
-:deep(.el-calendar-table .el-calendar-day) {
-  padding: 4px;
-  height: 45px;
-}
-
-:deep(.el-calendar__header) {
-  padding: 8px 12px;
-  border-bottom: 1px solid #ebeef5;
-  font-size: 14px;
-}
-
-:deep(.el-calendar__title) {
-  font-size: 14px;
-}
-
-:deep(.el-calendar-table thead th) {
-  padding: 6px 0;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-:deep(.el-calendar__button-group) {
-  display: flex;
-  gap: 4px;
-}
-
-@media (max-width: 1200px) {
-  .dashboard-container {
-    flex-direction: column;
-  }
-  
-  .sidebar-calendar {
-    width: 100%;
-    position: static;
-    max-height: none;
-  }
 }
 </style>
