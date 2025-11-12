@@ -17,6 +17,13 @@ const list = ref([
     url: "TeamIntroduction",
   },
   {
+    path: "/user",
+    name: "AdminUser",
+    label: "管理人员",
+    icon: "house",
+    url: "AdminUser",
+  },
+  {
     path: "/contact",
     name: "ContactUs",
     label: "联系我们",
