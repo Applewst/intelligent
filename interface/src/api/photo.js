@@ -69,7 +69,7 @@ const List = ref([
   {
     id: 11,
     file: "https://example.com/team3.jpg",
-    title: "团队技术分享会",    
+    title: "团队技术分享会",
     time: "2023-10-03"
   },
   {
@@ -90,8 +90,8 @@ const List = ref([
     title: "团队技术分享会",
     time: "2023-10-03"
   },
- 
-]); 
+
+]);
 
 
 export const getPhotoWallImages = async () => {
@@ -104,5 +104,5 @@ export const getPhotoWallImages = async () => {
       "data":List.value
     }
   }
-  return service.get('/api/team/shoots')
+  // return service.get('/team/shoots')
 }

@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { getAllNews } from '@/api/news'
+// 1. 修改导入的函数名
+import { getNewsList } from '@/api/news'
 
 const list = ref([])
 const loading = ref(true)
@@ -14,18 +15,21 @@ const loadData = async () => {
     const params = {
       pageNum: currentPage.value,
       pageSize: pageSize.value,
-      name: '', // Always pass empty string for name parameter
+      name: '', // 如果接口支持按名称搜索，可以保留
     }
-    const res = await getAllNews(params)
+    // 2. 调用统一的函数
+    const res = await getNewsList(params)
     if (res.code === 0) {
-      list.value = res.data.list || res.data
-      total.value = res.data.total || res.data.length
+      // 注意：现在 res.data 是一个分页对象
+      list.value = res.data.list || []
+      total.value = res.data.total || 0
     }
   } finally {
     loading.value = false
   }
 }
 
+// ... (handlePageChange, handleSizeChange, onMounted 等逻辑不变)
 const handlePageChange = (page) => {
   currentPage.value = page
   loadData()
@@ -44,13 +48,16 @@ onMounted(loadData)
   <div class="news-wrap">
     <!-- 列表内容 -->
     <el-row v-loading="loading" :gutter="20">
+      <!-- 注意：这里的 v-for 遍历的是 list，而不是 list.data -->
       <el-col v-for="item in list" :key="item.id" :xs="24" :sm="12" class="mb-20">
         <el-card shadow="hover" class="news-card">
           <div class="flex-box">
-            <img :src="item.qrCode.match(/https?:\/\/[^\s]+/)[0]" class="news-img" />
+            <!-- 这里的图片路径也需要统一，假设 mock 和真实接口都用 image 字段 -->
+            <img :src="item.image" class="news-img" :alt="item.title" />
             <div class="text-box">
               <h3 class="news-title">{{ item.title }}</h3>
-              <p class="news-desc">{{ item.desc }}</p>
+              <p class="news-desc">{{ item.desc || item.detail }}</p>
+              <!-- 兼容 desc 和 detail -->
               <div class="news-time">{{ item.time }}</div>
             </div>
           </div>
@@ -72,6 +79,8 @@ onMounted(loadData)
     </div>
   </div>
 </template>
+
+<!-- style 部分不变 -->
 
 <style scoped lang="less">
 .news-wrap {

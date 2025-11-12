@@ -76,7 +76,7 @@ export const getTeacherList = async (params = {}) => {
       });
     } else {
       // 真实接口请求：调用service发送POST请求
-      const response = await service.get('/api/teachers', {params});
+      const response = await service.get('/teacher/list', {params});
       return response; // 返回真实接口响应
     }
   } catch (error) {

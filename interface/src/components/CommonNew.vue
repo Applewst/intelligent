@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getnewList } from '@/api/news.js'
+import { getNewsList } from '@/api/news.js'
+import { ElMessage } from 'element-plus'
 
 // 新闻列表数据
 const newList = ref([])
@@ -20,11 +21,20 @@ const handleViewMore = () => {
 onMounted(async () => {
   try {
     loading.value = true
-    // 调用 API 获取数据（可传递参数，如分类筛选）
-    const response = await getnewList({ category: 'all' })
+    // 2. 调用统一的函数，并指定只获取第1页的4条数据
+    const response = await getNewsList({
+      pageNum: 1,
+      pageSize: 4,
+      category: 'all', // 或者根据需要指定分类，如 'tech'
+    })
 
-    // 关键：从 response 中提取 data 字段
-    newList.value = response.data || []
+    // 3. 正确处理分页格式的返回数据
+    if (response.code === 0) {
+      newList.value = response.data.list || []
+    } else {
+      newList.value = []
+      ElMessage.warning(response.message || '获取动态列表失败')
+    }
 
     // 空数据提示
     if (newList.value.length === 0) {
@@ -40,53 +50,44 @@ onMounted(async () => {
 </script>
 
 <template>
+  <!-- 模板部分无需改动 -->
   <div class="new-container">
-    <!-- 标题栏：标题居中 + 查看更多按钮 -->
     <div class="new-header">
       <div class="header-content">
         <h2>最新科研动态</h2>
         <el-button type="text" class="view-more-btn" @click="handleViewMore">
           查看更多
-          <el-icon class="btn-icon">
-            <ArrowRight />
-          </el-icon>
+          <el-icon class="btn-icon"><ArrowRight /></el-icon>
         </el-button>
       </div>
     </div>
 
-    <!-- 动态网格 -->
     <div class="new-grid">
-      <!-- 加载状态：显示骨架屏 -->
       <div v-if="loading" class="skeleton-container">
         <el-skeleton v-for="i in 4" :key="i" :rows="3" width="100%" class="skeleton-item" />
       </div>
 
-      <!-- 动态卡片 -->
+      <!-- v-for 遍历的仍然是 newList -->
       <el-card v-for="item in newList" :key="item.id" v-else class="new-card" hoverable>
-        <!-- 动态图片 -->
         <el-image
-          :src="item.qrCode"
+          :src="item.image"
           :alt="`${item.title}的图片`"
           class="new-image"
           fit="contain"
           lazy
           :error="errorImage"
         />
-
         <div class="new-info">
           <h3 class="new-title">{{ item.title }}</h3>
-          <p class="new-desc">{{ item.desc }}</p>
+          <p class="new-detail">{{ item.detail }}</p>
           <p class="new-time">
-            <el-icon size="14">
-              <Clock />
-            </el-icon>
+            <el-icon size="14"><Clock /></el-icon>
             {{ item.time }}
           </p>
         </div>
       </el-card>
     </div>
 
-    <!-- 空状态 -->
     <el-empty
       v-if="!loading && newList.length === 0"
       description="暂无动态数据"
@@ -94,6 +95,8 @@ onMounted(async () => {
     />
   </div>
 </template>
+
+<!-- style 部分不变 -->
 
 <style scoped>
 .new-container {
@@ -210,7 +213,7 @@ onMounted(async () => {
   white-space: nowrap;
 }
 
-.new-desc {
+.new-detail {
   font-size: 14px;
   color: #666;
   margin-bottom: 12px;

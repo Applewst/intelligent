@@ -49,11 +49,14 @@ const loadPhotos = async () => {
     errorMessage.value = ''
 
     // 调用API获取数据（核心：使用JS传过来的数据）
-    const apiData = await getPhotoWallImages() // 从JS/API获取数据
-
+    const apiData = await getPhotoWallImages({
+      pageNum: 1,
+      pageSize: 6,
+      name: '',
+    }) // 从JS/API获取数据
     // 验证API返回格式
-    if (Array.isArray(apiData)) {
-      displayedPhotos.value = apiData // 将API数据赋值给显示列表
+    if (Array.isArray(apiData.data)) {
+      displayedPhotos.value = apiData.data // 将API数据赋值给显示列表
     } else {
       throw new Error('API返回数据格式错误')
     }
