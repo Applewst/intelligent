@@ -2,6 +2,8 @@ package com.web.api.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 /**
@@ -9,14 +11,15 @@ import java.time.LocalDateTime;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ScientificDynamic {
     private int id;
     /** 图片路径*/
-    private String qrCode;
+    private String image;
     /** 标题 */
     private String title;
     /** 详情介绍 */
-    private String desc;
+    private String detail;
     /** 发布时间 */
     private LocalDateTime time;
 }

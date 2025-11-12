@@ -1,6 +1,9 @@
 package com.web.api.mapper;
 
+import com.github.pagehelper.Page;
+import com.web.api.pojo.Student;
 import com.web.api.pojo.TeamDynamic;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,4 +29,29 @@ public interface TeamDynamicMapper {
      * 获取最新num图片链接
      */
     List<String> getNewImgs(@Param("num") int num);
+
+    /**
+     * 新增活动动态列表
+     */
+    @Insert("insert into web.team_dynamic(image, title, detail)"+
+            "values(#{image},#{title},#{detail})")
+    void saveTeamDynamics(@Param("image") String image,
+                      @Param("title") String title,
+                      @Param("detail") String detail);
+
+    /**
+     * 删除团队动态
+     */
+    void deleteTeamDynamic(int id);
+
+    /**
+     *修改团队动态
+     */
+    void updateTeamDynamic(int id,String title,String image,String detail,String time);
+
+    /**
+     * 返回列表数据
+     * @return
+     */
+    Page<TeamDynamic> pageQuery();
 }

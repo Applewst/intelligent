@@ -409,7 +409,7 @@ const handleSubmit = async () => {
         } else {
           // 使用真实API
           if (formData.id) {
-            await realUpdateTeacher(formData.id, formData);
+            await realUpdateTeacher(formData);
             ElMessage.success("更新成功");
           } else {
             await realAddTeacher(formData);
