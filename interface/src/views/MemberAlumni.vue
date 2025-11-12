@@ -13,8 +13,6 @@
         <!-- 信息 -->
         <div class="info">
           <h3>{{ s.name }}</h3>
-          <p>{{ s.grade }} 级</p>
-          <p>专业：{{ s.major }}</p>
         </div>
       </div>
     </div>

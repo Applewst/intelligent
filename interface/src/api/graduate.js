@@ -2,14 +2,14 @@ import service from "./request"
 
 /* ------------- 零后端模拟数据 ------------- */
 const mockGraduateData = [
-  { id: 1, name: "1张三", grade: "2022", major: "计算机视觉", avatar: "https://picsum.photos/id/1005/260/330" },
-  { id: 2, name: "1李四", grade: "2022", major: "自然语言处理", avatar: "https://picsum.photos/id/1012/260/330" },
-  { id: 3, name: "1王五", grade: "2023", major: "强化学习", avatar: "https://picsum.photos/id/1027/260/330" },
-  { id: 4, name: "1赵六", grade: "2023", major: "图神经网络", avatar: "https://picsum.photos/id/1025/260/330" },
-  { id: 5, name: "1孙七", grade: "2021", major: "边缘计算", avatar: "https://picsum.photos/id/1074/260/330" },
-  { id: 6, name: "1周八", grade: "2021", major: "联邦学习", avatar: "https://picsum.photos/id/1062/260/330" },
-  { id: 7, name: "1吴九", grade: "2022", major: "计算机图形学", avatar: "https://picsum.photos/id/1083/260/330" },
-  { id: 8, name: "1郑十", grade: "2023", major: "数据挖掘", avatar: "https://picsum.photos/id/1084/260/330" },
+  { id: 1, name: "1张三", avatar: "https://picsum.photos/id/1005/260/330" },
+  { id: 2, name: "1李四", avatar: "https://picsum.photos/id/1012/260/330" },
+  { id: 3, name: "1王五", avatar: "https://picsum.photos/id/1027/260/330" },
+  { id: 4, name: "1赵六", avatar: "https://picsum.photos/id/1025/260/330" },
+  { id: 5, name: "1孙七", avatar: "https://picsum.photos/id/1074/260/330" },
+  { id: 6, name: "1周八", avatar: "https://picsum.photos/id/1062/260/330" },
+  { id: 7, name: "1吴九", avatar:  "https://picsum.photos/id/1083/260/330"},
+  { id: 8, name: "1郑十", avatar: "https://picsum.photos/id/1084/260/330" },
 ]
 
 /* ------------- API 封装 ------------- */
