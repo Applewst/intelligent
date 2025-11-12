@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getProjectList } from '@/api/project'
+import { ElMessage, ElAvatar, ElEmpty, ElButton, ElSkeleton, ElIcon } from 'element-plus'
 
 // 路由实例
 const router = useRouter()
@@ -12,16 +13,20 @@ const loading = ref(true) // 加载状态
 const error = ref('') // 错误信息
 const errorImage = 'https://picsum.photos/error/200/200' // 图片加载失败占位图
 
-const fetchDirections = async (params = {}) => {
+const fetchDirections = async () => {
   loading.value = true
   error.value = ''
   directions.value = []
 
   try {
-    const response = await getProjectList(params)
+    // 传递固定参数：pageNum=1, pageSize=3, name=''
+    const response = await getProjectList({
+      pageNum: 1,
+      pageSize: 3,
+      name: '',
+    })
     if (response.code === 0 && Array.isArray(response.data)) {
-      // 只取前3个项目
-      directions.value = response.data.slice(0, 3)
+      directions.value = response.data
       if (directions.value.length === 0) {
         ElMessage.info('当前没有项目数据')
       }
@@ -97,6 +102,7 @@ const handleCardClick = (projectId) => {
 </template>
 
 <style scoped>
+/* 样式部分保持不变 */
 .research-directions-container {
   padding: 5rem;
   max-width: 1000px;
@@ -107,7 +113,6 @@ const handleCardClick = (projectId) => {
   background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
 }
 
-/* 标题样式 */
 .section-title {
   text-align: center;
   margin-bottom: 3rem;
@@ -119,7 +124,6 @@ const handleCardClick = (projectId) => {
   width: 100%;
 }
 
-/* 网格布局 - 3个项目 */
 .directions-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -127,7 +131,6 @@ const handleCardClick = (projectId) => {
   justify-items: center;
 }
 
-/* 骨架屏样式 */
 .skeleton-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -142,7 +145,6 @@ const handleCardClick = (projectId) => {
   align-items: center;
 }
 
-/* 卡片核心样式 */
 .direction-card {
   width: 100%;
   max-width: 200px;
@@ -155,7 +157,6 @@ const handleCardClick = (projectId) => {
   padding: 1rem;
 }
 
-/* 头像样式 */
 .avatar-container {
   position: relative;
   width: 140px;
@@ -188,7 +189,6 @@ const handleCardClick = (projectId) => {
   transition: all 0.3s ease;
 }
 
-/* 标题样式（默认隐藏，悬浮显示） */
 .direction-title {
   font-size: 1.1rem;
   font-weight: 600;
@@ -214,7 +214,6 @@ const handleCardClick = (projectId) => {
   z-index: 3;
 }
 
-/* 悬浮交互效果 */
 .direction-card:hover {
   transform: translateY(-5px);
 }
@@ -228,20 +227,17 @@ const handleCardClick = (projectId) => {
   transform: scale(1.05);
 }
 
-/* 悬浮时显示标题 */
 .direction-card:hover .direction-title {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
-/* 空状态样式 */
 .empty-state {
   margin: 60px 0;
   width: 100%;
 }
 
-/* 错误状态样式 */
 .error-state {
   margin: 60px 0;
   text-align: center;
@@ -258,7 +254,6 @@ const handleCardClick = (projectId) => {
   margin-bottom: 1rem;
 }
 
-/* 响应式调整 */
 @media (max-width: 768px) {
   .directions-grid,
   .skeleton-container {

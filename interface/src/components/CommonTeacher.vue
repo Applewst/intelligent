@@ -27,7 +27,12 @@ const goToDetail = (person) => {
 const fetchTeacherData = async () => {
   try {
     loading.value = true
-    const res = await getTeacherList()
+
+    const res = await getTeacherList({
+      pageNum: 1,
+      pageSize: 10,
+      name: '',
+    })
 
     if (res.data.code === 0) {
       personnelList.value = res.data.data.list

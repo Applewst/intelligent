@@ -46,8 +46,8 @@
             <el-upload
               class="image-uploader"
               :show-file-list="false"
-              :before-upload="beforeLocationImageUpload"
-              :http-request="handleLocationImageUpload"
+              :auto-upload="false"
+              :on-change="handleLocationImageChange"
               accept="image/*"
             >
               <img
@@ -85,8 +85,8 @@
             <el-upload
               class="qrcode-uploader"
               :show-file-list="false"
-              :before-upload="beforeQrCodeUpload"
-              :http-request="handleQrCodeUpload"
+              :auto-upload="false"
+              :on-change="handleQrCodeChange"
               accept="image/*"
             >
               <img
@@ -120,11 +120,7 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import { ElMessage } from "element-plus";
-import {
-  getContactInfo,
-  updateContactInfo,
-  uploadImage,
-} from "@/api/contact.js";
+import { getContactInfo, updateContactInfo } from "@/api/contact.js";
 
 // 表单引用
 const formRef = ref(null);
@@ -137,9 +133,9 @@ const submitting = ref(false);
 const formData = reactive({
   email: "",
   location: "",
-  locationImage: "",
+  locationImage: "", // 存储图片Base64字符串或URL
   wechatAccount: "",
-  wechatQrCode: "",
+  wechatQrCode: "", // 存储图片Base64字符串或URL
 });
 
 // 原始数据备份（用于重置）
@@ -185,67 +181,63 @@ const fetchContactInfo = async () => {
   }
 };
 
-// 科研地点图片上传前验证
-const beforeLocationImageUpload = (file) => {
+// 将图片文件转换为Base64字符串
+const imageToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+};
+
+// 验证图片大小和类型
+const validateImage = (file, maxSizeMB = 5) => {
   const isImage = file.type.startsWith("image/");
-  const isLt5M = file.size / 1024 / 1024 < 5;
+  const isLtMaxSize = file.size / 1024 / 1024 < maxSizeMB;
 
   if (!isImage) {
     ElMessage.error("只能上传图片文件!");
     return false;
   }
-  if (!isLt5M) {
-    ElMessage.error("图片大小不能超过 5MB!");
+  if (!isLtMaxSize) {
+    ElMessage.error(`图片大小不能超过 ${maxSizeMB}MB!`);
     return false;
   }
   return true;
 };
 
-// 处理科研地点图片上传
-const handleLocationImageUpload = async (options) => {
+// 处理科研地点图片选择
+const handleLocationImageChange = async (uploadFile) => {
+  const file = uploadFile.raw;
+  if (!file) return;
+
+  if (!validateImage(file, 5)) {
+    return;
+  }
+
   try {
-    const response = await uploadImage(options.file);
-    if (response.code === 200) {
-      formData.locationImage = response.data.url;
-      ElMessage.success("图片上传成功");
-    } else {
-      ElMessage.error(response.message || "图片上传失败");
-    }
+    formData.locationImage = await imageToBase64(file);
   } catch (error) {
-    console.error("图片上传失败：", error);
-    ElMessage.error("图片上传失败，请稍后重试");
+    console.error("图片转换失败：", error);
+    ElMessage.error("图片处理失败，请重试");
   }
 };
 
-// 二维码上传前验证
-const beforeQrCodeUpload = (file) => {
-  const isImage = file.type.startsWith("image/");
-  const isLt2M = file.size / 1024 / 1024 < 2;
+// 处理微信二维码图片选择
+const handleQrCodeChange = async (uploadFile) => {
+  const file = uploadFile.raw;
+  if (!file) return;
 
-  if (!isImage) {
-    ElMessage.error("只能上传图片文件!");
-    return false;
+  if (!validateImage(file, 2)) {
+    return;
   }
-  if (!isLt2M) {
-    ElMessage.error("图片大小不能超过 2MB!");
-    return false;
-  }
-  return true;
-};
 
-// 处理二维码上传
-const handleQrCodeUpload = async (options) => {
   try {
-    const response = await uploadImage(options.file);
-    if (response.code === 200) {
-      formData.wechatQrCode = response.data.url;
-      ElMessage.success("二维码上传成功");
-    } else {
-      ElMessage.error(response.message || "二维码上传失败");
-    }
+    formData.wechatQrCode = await imageToBase64(file);
   } catch (error) {
-    console.error("二维码上传失败：", error);
-    ElMessage.error("二维码上传失败，请稍后重试");
+    console.error("图片转换失败：", error);
+    ElMessage.error("图片处理失败，请重试");
   }
 };
 
@@ -257,9 +249,12 @@ const handleSubmit = async () => {
     if (valid) {
       submitting.value = true;
       try {
+        // 直接提交formData，其中包含了Base64字符串
         const response = await updateContactInfo(formData);
         if (response.code === 200) {
           ElMessage.success("保存成功");
+          // 注意：这里假设后端返回了更新后的完整数据，包括图片的URL
+          // 如果后端只返回成功状态，我们需要手动更新originalData
           Object.assign(originalData, formData);
         } else {
           ElMessage.error(response.message || "保存失败");
@@ -290,6 +285,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 样式部分保持不变 */
 .contact-info-container {
   padding: 20px;
   max-width: 800px;

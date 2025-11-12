@@ -31,7 +31,7 @@
           />
         </el-form-item>
 
-        <el-form-item label="团队图片">
+        <el-form-item label="团队图片" prop="imageUrl">
           <div class="image-upload-container">
             <el-upload
               class="image-uploader"
@@ -69,12 +69,12 @@ import { getTeamIntroduction, updateTeamIntroduction } from "@/api/introduce";
 const formRef = ref(null);
 const loading = ref(false);
 const submitting = ref(false);
-const imageUrl = ref("");
-const imageFile = ref(null);
+const imageUrl = ref(""); // 存储图片的 Base64 或 URL
 
 const formData = reactive({
   teamName: "",
   introduction: "",
+  imageUrl: "", // 存储图片 Base64 字符串
 });
 
 const rules = {
@@ -82,6 +82,7 @@ const rules = {
   introduction: [
     { required: true, message: "请输入团队简介", trigger: "blur" },
   ],
+  imageUrl: [{ required: true, message: "请上传团队图片", trigger: "change" }],
 };
 
 // 获取团队介绍信息
@@ -92,8 +93,8 @@ const fetchTeamData = async () => {
     if (response.code === 200) {
       formData.teamName = response.data.teamName;
       formData.introduction = response.data.introduction;
-      imageUrl.value = response.data.imageUrl;
-      ElMessage.success("数据加载成功");
+      imageUrl.value = response.data.imageUrl; // 后端返回的图片 URL
+      formData.imageUrl = response.data.imageUrl; // 赋值给表单
     } else {
       ElMessage.error(response.message || "获取数据失败");
     }
@@ -105,7 +106,7 @@ const fetchTeamData = async () => {
   }
 };
 
-// 处理图片变化
+// 处理图片变化（转换为 Base64）
 const handleImageChange = (file) => {
   const isImage = file.raw.type.startsWith("image/");
   const isLt5M = file.raw.size / 1024 / 1024 < 5;
@@ -119,8 +120,13 @@ const handleImageChange = (file) => {
     return;
   }
 
-  imageFile.value = file.raw;
-  imageUrl.value = URL.createObjectURL(file.raw);
+  // 转换为 Base64
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imageUrl.value = e.target.result; // 预览用
+    formData.imageUrl = e.target.result; // 存储到表单
+  };
+  reader.readAsDataURL(file.raw);
 };
 
 // 提交表单
@@ -131,15 +137,8 @@ const handleSubmit = async () => {
     if (valid) {
       submitting.value = true;
       try {
-        const formDataToSubmit = new FormData();
-        formDataToSubmit.append("teamName", formData.teamName);
-        formDataToSubmit.append("introduction", formData.introduction);
-
-        if (imageFile.value) {
-          formDataToSubmit.append("image", imageFile.value);
-        }
-
-        const response = await updateTeamIntroduction(formDataToSubmit);
+        // 直接传递 JSON 格式，包含 Base64 字符串
+        const response = await updateTeamIntroduction(formData);
 
         if (response.code === 200) {
           ElMessage.success("保存成功");
@@ -160,7 +159,6 @@ const handleSubmit = async () => {
 // 取消操作
 const handleCancel = () => {
   formRef.value?.resetFields();
-  imageFile.value = null;
   fetchTeamData(); // 重新加载原始数据
 };
 
@@ -171,6 +169,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 样式不变 */
 .team-introduction {
   padding: 20px;
   max-width: 900px;
