@@ -31,10 +31,10 @@
 
     <!-- 数据表格 -->
     <el-table :data="tableData" border class="data-table">
-      <el-table-column prop="id" label="ID" width="40" align="center" />
+      <el-table-column prop="id" label="ID" width="60" align="center" />
       <el-table-column prop="title" label="论文名称" width="240" />
       <el-table-column prop="author" label="论文作者" width="150" />
-      <el-table-column prop="detail" label="论文内容" width="670" />
+      <el-table-column prop="detail" label="论文内容" width="650" />
       <el-table-column prop="time" label="上传时间" width="150" sortable />
       <el-table-column label="操作" width="180" align="center">
         <template #default="{ row }">

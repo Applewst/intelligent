@@ -4,9 +4,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { GetsearchPapers } from '@/api/search'
 import { ElMessage } from 'element-plus';
 // 模拟数据
-const module = {
-  title: '论文搜索结果',
-};
+
 const papers = ref([
 ]);
 const total = ref(0); // 总数

@@ -68,10 +68,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 export function getGraduateList(params) {
   if (useMock) {
     return delay(500).then(() => {
+      
       let filteredData = [...mockGraduates]
 
       // 按姓名筛选
-      if (params.name) {
+      if (params.name ) {
         filteredData = filteredData.filter((item) => item.name.includes(params.name))
       }
 
