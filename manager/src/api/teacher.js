@@ -24,9 +24,9 @@ export function addTeacher(data) {
 /**
  * 更新教师信息
  */
-export function updateTeacher(id, data) {
+export function updateTeacher(data) {
   return request({
-    url: `/teacher/${id}`,
+    url: "/teacher",
     method: "put",
     data,
   })
@@ -37,7 +37,8 @@ export function updateTeacher(id, data) {
  */
 export function deleteTeacher(id) {
   return request({
-    url: `/teacher/${id}`,
-    method: "delete",
+    url: '/teacher',
+    method: 'delete',
+    params: { id } 
   })
 }
