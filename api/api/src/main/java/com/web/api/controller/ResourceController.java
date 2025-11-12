@@ -12,7 +12,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,27 +42,16 @@ public class ResourceController {
     }
 
     /**
-     * 上传文件
+     * 保存资源信息
      *
-     * @param file 文件
-     * @param name 文件名
-     * @param type 文件类型
-     * @param size 文件大小
-     * @return 文件访问URL
+     * @param resource 资源信息
+     * @return 操作结果
      */
     @PostMapping
-    public Result uploadFile(@RequestPart MultipartFile file,
-                             @RequestPart String name,
-                             @RequestPart String type,
-                             @RequestPart String size) {
-        log.info("上传文件，name={}, type={}, size={}", name, type, size);
-        Resource resource = Resource.builder()
-                .name(name)
-                .type(type)
-                .size(size)
-                .build();
-        String url = resourceService.uploadFile(file, resource);
-        return Result.success(url);
+    public Result saveResource(@RequestBody Resource resource) {
+        log.info("保存资源信息，resource={}", resource);
+        resourceService.saveResource(resource);
+        return Result.success();
     }
 
     /**
@@ -96,9 +84,12 @@ public class ResourceController {
         }
         // 2. 获取文件路径
         String filePath = resource.getUrl();
+        // 3. 更新下载次数
+        resource.setDownloads(resource.getDownloads() + 1);
+        resourceService.updateResource(resource);
 
         try {
-            // 3. 调用工具类下载方法
+            // 4. 调用工具类下载方法
             return FileUtil.downloadFile(filePath);
         } catch (FileNotFoundException e) {
             log.error("文件未找到: {}", filePath, e);
@@ -119,9 +110,14 @@ public class ResourceController {
     @DeleteMapping("/{id}")
     public Result deleteFile(@PathVariable String id) {
         log.info("删除文件，id={}", id);
-        // 1. 根据ID查询数据库中的资源记录
-        resourceService.deleteResourceById(id);
-        // TODO 2. 删除文件
-        return Result.success();
+        // 1. 根据ID查找资源
+        Resource resource = resourceService.getResourceById(id);
+        // 2. 删除文件
+        if (FileUtil.deleteFile(resource.getUrl())) {
+            resourceService.deleteResourceById(id);
+            return Result.success();
+        } else {
+            return Result.error("文件删除失败");
+        }
     }
 }

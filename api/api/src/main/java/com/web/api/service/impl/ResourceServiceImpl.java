@@ -7,12 +7,10 @@ import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Resource;
 import com.web.api.service.ResourceService;
-import com.web.api.util.FileUtil;
 import com.web.api.util.ShortIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -39,33 +37,6 @@ public class ResourceServiceImpl implements ResourceService {
         Page<Resource> page = resourceMapper.pageQuery(pageQueryDTO);
         // 返回分页结果
         return new PageResult(page.getTotal(), page.getResult());
-    }
-
-    /**
-     * 上传文件
-     *
-     * @param file 文件
-     * @return 文件访问URL
-     */
-    @Override
-    public String uploadFile(MultipartFile file, Resource resource) {
-        // 文件存储逻辑
-        String fileUrl;
-        try {
-            fileUrl = FileUtil.uploadFile(file);
-        } catch (Exception e) {
-            throw new RuntimeException("文件上传失败", e);
-        }
-        // 保存资源信息到数据库
-        // 生成文件唯一ID
-        String shortID = ShortIDUtil.getShortID();
-        resource.setId(shortID);
-        // 设置文件URL
-        resource.setUrl(fileUrl);
-        // 设置更新时间
-        resource.setUpdateTime(LocalDateTime.now());
-        resourceMapper.save(resource);
-        return fileUrl;
     }
 
     /**
@@ -100,5 +71,20 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void deleteResourceById(String id) {
         resourceMapper.deleteByID(id);
+    }
+
+    /**
+     * 保存资源信息
+     *
+     * @param resource 资源信息
+     */
+    @Override
+    public void saveResource(Resource resource) {
+        // 生成文件唯一ID
+        String shortID = ShortIDUtil.getShortID();
+        resource.setId(shortID);
+        // 设置更新时间
+        resource.setUpdateTime(LocalDateTime.now());
+        resourceMapper.save(resource);
     }
 }

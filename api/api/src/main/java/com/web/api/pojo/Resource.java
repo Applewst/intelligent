@@ -18,5 +18,5 @@ public class Resource {
     private String type;
     private String url;
     private LocalDateTime updateTime;
-    private String downloads;
+    private Integer downloads;
 }

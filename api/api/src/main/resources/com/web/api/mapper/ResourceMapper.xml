@@ -7,17 +7,20 @@
     <update id="updateByID">
         update resource
         <set>
-            <if test="name != null">
+            <if test="name != null and name != ''">
                 name = #{name},
             </if>
-            <if test="size != null">
+            <if test="size != null and size != ''">
                 size = #{size},
             </if>
-            <if test="type != null">
+            <if test="type != null and type != ''">
                 type = #{type},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime},
+            </if>
+            <if test="downloads != null">
+                downloads = #{downloads},
             </if>
         </set>
         where id = #{id}

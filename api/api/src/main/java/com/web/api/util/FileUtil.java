@@ -107,4 +107,27 @@ public class FileUtil {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
+
+    /**
+     * 删除文件
+     *
+     * @param filePath 文件路径
+     * @return 是否删除成功
+     */
+    public static boolean deleteFile(String filePath) {
+        File file = new File(filePath);
+
+        // 判断文件是否存在或者不是文件
+        if (!file.exists() || !file.isFile()) {
+            return false;
+        }
+
+        // 尝试删除文件
+        try {
+            return file.delete();
+        } catch (SecurityException e) {
+            return false;
+        }
+    }
+
 }
