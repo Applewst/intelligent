@@ -77,7 +77,7 @@ public class PaperServiceImpl implements PaperService {
         }
         if (!paperMapper.existsById(id)) {
             log.warn("尝试删除不存在的论文，ID：{}", id);
-            throw new NoIdException();
+            throw new NoFindException();
         }
         try {
             paperMapper.deletePaper(id);

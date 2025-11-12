@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.api.mapper.StudentDevelopmentMapper">
+    <insert id="addStudentDevelopment">
+        insert into student_development (name, file, time, detail)
+        values (#{name}, #{file}, #{time}, #{detail})
+    </insert>
+
+    <update id="motifyStudentDevelopmentById">
+        update student_development
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="file != null and file != ''">
+                file = #{file},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="detail != null and detail != ''">
+                detail = #{detail}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteStudentDevelopmentById">
+        delete
+        from
+            student_development
+        where
+            id = #{id}
+    </delete>
+
+    <select id="selectAllStudentDevelopment" resultType="com.web.api.pojo.StudentDevelopment">
+        select *
+        from student_development
+        where
+            name like concat('%', #{name}, '%')
+    </select>
+</mapper>
