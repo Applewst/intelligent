@@ -11,11 +11,11 @@ import lombok.Data;
 public class TeamDynamic {
     private int id;
     /** 标题 */
-    private String title;
+    private String image;
     /** 详情介绍 */
-    private String desc;
+    private String title;
     /** 发布时间 */
-    private String time;
+    private String detail;
     /** 图片路径 */
-    private String img;
+    private String time;
 }

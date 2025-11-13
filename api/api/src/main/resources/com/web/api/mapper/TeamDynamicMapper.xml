@@ -14,11 +14,11 @@
         order by time DESC
         limit #{num}
     </select>
-    <delete id="deleteDynamics" >
-        delete  from web.scientific_dynamic where id = #{id}
+    <delete id="deleteTeamDynamic" >
+        delete  from web.team_dynamic where id = #{id}
     </delete>
-    <update id="updateTeamDynamics">
-        UPDATE scientific_dynamic
+    <update id="updateTeamDynamic">
+        UPDATE web.team_dynamic
         <set>
             <if test="image != null and image != ''">image = #{image},</if>
             <if test="title != null and title != ''">title = #{title},</if>
@@ -27,7 +27,7 @@
         Where id =#{id}
     </update>
     <select id="pageQuery" resultType="com.web.api.pojo.TeamDynamic">
-        select * from web.scientific_dynamic
+        select * from web.team_dynamic
         <where>
             <if test="title != null and tile !='' ">
                 and title like concat('%',#{title},'%')

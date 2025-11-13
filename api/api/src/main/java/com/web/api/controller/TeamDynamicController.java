@@ -41,7 +41,7 @@ public class TeamDynamicController {
     public Result addScientificDynamic(@RequestParam("title") String title,
                                        @RequestParam("image") String image ,
                                        @RequestParam("detail") String detail) {
-        log.info("新增科研动态 image :{},title :{},detail :{}", image, title, detail);
+        log.info("新增团队动态 image :{},title :{},detail :{}", image, title, detail);
         teamDynamicServiceImpl.saveDynamics(image, title, detail);
         return Result.success();
     }
@@ -51,7 +51,7 @@ public class TeamDynamicController {
      */
     @DeleteMapping("/events")
     public Result deleteScientificDynamic(@RequestParam("id") int id) {
-        log.info("删除科研动态 id:{}",id);
+        log.info("删除团队动态 id:{}",id);
         teamDynamicServiceImpl.deleteDynamics(id);
         return Result.success();
     }
@@ -65,7 +65,7 @@ public class TeamDynamicController {
                                           @RequestParam String image,
                                           @RequestParam String detail,
                                           @RequestParam String time) {
-        log.info("修改科研动态");
+        log.info("修改团队动态");
         teamDynamicServiceImpl.updateDynamics(id,title,image,detail,time);
         return Result.success();
     }
