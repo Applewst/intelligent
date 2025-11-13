@@ -4,7 +4,6 @@ import com.web.api.pojo.LoginVo;
 import com.web.api.pojo.PageQueryDTO;
 import com.web.api.service.impl.ResearchDirectionServiceImpl;
 import com.web.api.service.impl.ScientificDynamicServiceImpl;
-import com.web.api.service.impl.TeacherServiceImpl;
 import com.web.api.service.impl.TeamDynamicServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public class HomePageController {
 
     @Autowired
     private ScientificDynamicServiceImpl scientificDynamicServiceImpl;
-
-    @Autowired
-    private TeacherServiceImpl teacherServiceImpl;
 
     @Autowired
     private ResearchDirectionServiceImpl researchDirectionServiceImpl;
@@ -58,15 +54,6 @@ public class HomePageController {
     @GetMapping("/user/login")
     public Result login(LoginVo loginVo) {
         return loginServiceimpl.login(loginVo);
-    }
-
-    /**
-     *
-     *教师队伍
-     */
-    @GetMapping("/teachers")
-    public Result getTeacher(){
-        return Result.success(teacherServiceImpl.getAllTeachers());
     }
 
     /**

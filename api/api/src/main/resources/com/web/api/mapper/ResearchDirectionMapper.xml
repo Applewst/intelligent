@@ -34,8 +34,9 @@
     <select id="getAllDirections" resultType="com.web.api.pojo.ResearchDirection">
         select *
         from research_direction
-        where
-            title like concat('%', #{name}, '%')
+        <if test="name != null and name != ''">
+            where title like concat('%', #{name}, '%')
+        </if>
     </select>
 
     <select id="getDirectionById" resultType="com.web.api.pojo.ResearchDirection">

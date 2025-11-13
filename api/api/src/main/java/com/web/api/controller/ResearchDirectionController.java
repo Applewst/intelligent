@@ -25,7 +25,7 @@ public class ResearchDirectionController {
      * 分页查询所有研究方向
      * @return 研究方向列表
      */
-    @GetMapping("/list")
+    @GetMapping("list")
     public Result getAllDirections(PageQueryDTO pageQuery) {
         return Result.success(researchDirectionService.getAllDirections(pageQuery));
     }
