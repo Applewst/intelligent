@@ -13,6 +13,8 @@ import com.web.api.service.PaperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -41,9 +43,11 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public void addPaper(Paper paper) {
+        paper.setTime(LocalDate.now());
         try {
             paperMapper.addPaper(paper);
         } catch (Exception e) {
+            log.error("添加论文信息时发生异常，title：{}", paper.getTitle(), e);
             throw new DatabaseOperationException();
         }
     }

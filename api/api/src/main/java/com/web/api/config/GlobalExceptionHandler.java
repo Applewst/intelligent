@@ -69,12 +69,12 @@ public class GlobalExceptionHandler {
                 .body(Result.error(e.getMessage()));
     }
 
-    /**
-     * 其他运行时异常: RuntimeException
-     */
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Result> handleException(RuntimeException e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Result.error("错误: " + e.getMessage()));
-    }
+//    /**
+//     * 其他运行时异常: RuntimeException
+//     */
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<Result> handleException(RuntimeException e){
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body(Result.error("错误: " + e.getMessage()));
+//    }
 }

@@ -23,8 +23,8 @@ public class PictureWallController {
      */
     @GetMapping("")
     public Result getPictureWallList(PageQueryDTO pageQueryDTO,
-                                     @RequestParam(value = "name", required = false) String name) {
-        pageQueryDTO.setName(name);
+                                     @RequestParam String title) {
+        pageQueryDTO.setName(title);
         return Result.success(pictureWallService.getPictureWallList(pageQueryDTO));
     }
 

@@ -16,7 +16,7 @@ public interface StudentPrizeMapper {
      * 查询所有学生获奖信息
      * @return 学生获奖列表
      */
-    List<StudentPrize> getAllStudentPrizes(String name);
+    List<StudentPrize> getAllStudentPrizes(String author);
 
     /**
      * 添加学生获奖信息

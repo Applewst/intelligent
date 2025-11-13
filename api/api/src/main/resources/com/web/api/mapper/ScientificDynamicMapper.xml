@@ -6,21 +6,21 @@
 <mapper namespace="com.web.api.mapper.ScientificDynamicMapper">
     <select id="selectNewDynamics" resultType="com.web.api.pojo.ScientificDynamic">
         select *
-        from web.scientific_dynamic
+        from scientific_dynamic
         order by time DESC
         limit #{num}
     </select>
 
     <select id="getAllDynamics" resultType="com.web.api.pojo.ScientificDynamic">
-        select * from web.scientific_dynamic
+        select * from scientific_dynamic
     </select>
     <select id="getDynamicslist" resultType="com.web.api.pojo.ScientificDynamic">
-       select * FROM web.scientific_dynamic
+       select * FROM scientific_dynamic
         ORDER BY time DESC limit #{start}, #{pageSize}
     </select>
     <delete id="deleteDynamics" >
 
-        delete  from web.scientific_dynamic where id = #{id}
+        delete  from scientific_dynamic where id = #{id}
     </delete>
     <update id="updateDynamics">
         UPDATE scientific_dynamic
@@ -32,7 +32,7 @@
         WHERE id = #{id}
     </update>
     <select id="pageQuery" resultType="com.web.api.pojo.ScientificDynamic">
-        select * from web.scientific_dynamic
+        select * from scientific_dynamic
         <where>
             <if test="title != null and title !='' ">
                 and title like concat('%',#{title},'%')
