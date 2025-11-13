@@ -8,14 +8,7 @@
 
     <!-- 搜索表单 -->
     <div class="search-form">
-      <div class="search-item">
-        <label>名称</label>
-        <el-input
-          v-model="searchForm.detail"
-          placeholder="请输入获奖名称"
-          clearable
-        />
-      </div>
+   
       <div class="search-item">
         <label>作者</label>
         <el-input
@@ -24,16 +17,7 @@
           clearable
         />
       </div>
-      <div class="search-item">
-        <label>获奖时间</label>
-        <el-date-picker
-          v-model="searchForm.time"
-          type="date"
-          placeholder="选择日期"
-          value-format="yyyy-MM-dd"
-          clearable
-        />
-      </div>
+
       <el-button type="primary" @click="handleSearch" class="search-btn">
         搜索
       </el-button>
@@ -44,11 +28,11 @@
       <el-table-column prop="id" label="ID" width="80" align="center" />
       <el-table-column prop="detail" label="获奖内容" min-width="200" />
       <el-table-column prop="author" label="论文作者" width="150" />
-      <el-table-column prop="image" label="照片" width="120">
+      <el-table-column prop="file" label="照片" width="120">
         <template #default="{ row }">
           <el-image
-            :src="row.image"
-            :preview-src-list="[row.image]"
+            :src="row.file"
+            :preview-src-list="[row.file]"
             fit="cover"
             style="width: 60px; height: 60px; border-radius: 4px"
           />
@@ -110,9 +94,9 @@
         </el-form-item>
         <el-form-item label="照片" prop="image">
           <el-input v-model="form.image" placeholder="请输入照片URL" />
-          <div v-if="form.image" style="margin-top: 10px">
+          <div v-if="form.file" style="margin-top: 10px">
             <el-image
-              :src="form.image"
+              :src="form.file"
               fit="cover"
               style="width: 100px; height: 100px; border-radius: 4px"
             />
@@ -150,10 +134,10 @@ const total = ref(5)
 const tableData = ref([])
 
 // 获取表格数据
-const GetAllAwardData = async () => {
-  console.log('获取获奖列表文本处:', pageNum.value, pageSize.value, searchForm.detail, searchForm.author, searchForm.time)
-  const response = await GetAwardList(pageNum.value, pageSize.value, searchForm.detail, searchForm.author, searchForm.time)
-  tableData.value = response.data.rows
+const GetAllAwardData = async (pageNum, pageSize, author) => {
+  console.log('获取获奖列表文本处:', pageNum, pageSize, author)
+  const response = await GetAwardList(pageNum, pageSize, author)
+  tableData.value = response.data.data  
   total.value = response.data.total  // 假设返回的总条数在 total 字段中
   if (response.code === 1) {
     ElMessage.success('获取获奖列表成功')
@@ -163,9 +147,9 @@ const GetAllAwardData = async () => {
 }
 
 // 新增获奖
-const AddAwardData = async (detail, author, image, time) => {
-  console.log("获取新增获奖文本处:", detail, author, image, time)
-  const response = await AddAward(detail, author, image, time)
+const AddAwardData = async (detail, author, file, time) => {
+  console.log("获取新增获奖文本处:", detail, author, file, time)
+  const response = await AddAward(detail, author, file, time)
   if (response.code === 1) {
     ElMessage.success('新增获奖成功')
     GetAllAwardData() // 刷新表格数据
@@ -175,9 +159,9 @@ const AddAwardData = async (detail, author, image, time) => {
 }
 
 // 编辑获奖
-const EditAwardData = async (id, detail, author, image, time) => {
-  console.log("获取编辑获奖文本处:", id, detail, author, image, time)
-  const response = await UpdateAward(id, detail, author, image, time)
+const EditAwardData = async (id, detail, author, file, time) => {
+  console.log("获取编辑获奖文本处:", id, detail, author, file, time)
+  const response = await UpdateAward(id, detail, author, file, time)
   if (response.code === 1) {
     ElMessage.success('编辑获奖成功')
     GetAllAwardData() // 刷新表格数据
@@ -199,11 +183,11 @@ const DeleteAwardData = async (id) => {
 }
 
 onMounted(() => {
-  GetAllAwardData()
+  GetAllAwardData(pageNum.value, pageSize.value, searchForm.author)
 })
 
-watch([pageNum, pageSize, searchForm.detail, searchForm.author, searchForm.time], () => {
-  GetAllAwardData()
+watch([pageNum, pageSize], () => {
+  GetAllAwardData(pageNum.value, pageSize.value, searchForm.author)
 })
 
 const dialogVisible = ref(false)
@@ -216,7 +200,7 @@ let quillInstance = null
 const form = reactive({
   detail: '',
   author: '',
-  image: '',
+  file: '',
   time: ''
 })
 
@@ -259,7 +243,7 @@ const initQuillEditor = () => {
 // 搜索
 const handleSearch = () => {
   pageNum.value = 1
-  GetAllAwardData()
+  GetAllAwardData(pageNum.value, pageSize.value, searchForm.author)
   // 清空
   searchForm.detail = ''
   searchForm.author = ''
@@ -288,7 +272,7 @@ const handleEdit = (row) => {
   editId.value = row.id
   form.detail = row.detail
   form.author = row.author
-  form.image = row.image || ''
+  form.image = row.file || ''
   form.time = row.time || ''  // 添加这行代码
   dialogVisible.value = true
   initQuillEditor()
@@ -318,7 +302,7 @@ const handleDialogClose = () => {
   // Reset form
   form.detail = ''
   form.author = ''
-  form.image = ''
+  form.file = ''
   form.time = ''  // 添加这行代码
 }
 
@@ -333,9 +317,9 @@ const handleSubmit = () => {
   }
   
   if (isEdit.value) {
-    EditAwardData(editId.value, form.detail, form.author, form.image, form.time)
+    EditAwardData(editId.value, form.detail, form.author, form.file, form.time)
   } else {
-    AddAwardData(form.detail, form.author, form.image, form.time)
+    AddAwardData(form.detail, form.author, form.file, form.time)
   }
   
   dialogVisible.value = false

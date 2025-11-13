@@ -141,16 +141,16 @@ const formData = reactive({
 const DevelopData = ref([]);
 
 //获取学生发展列表
-const getDevelopList = async (...params) => {
-  console.log('获取学生发展文本处',params)
-  const response = await GetDevelopList(...params)
-  DevelopData.value = response.data.rows;  
+const getDevelopList = async (pageNum,pageSize,name) => {
+  console.log('获取学生发展文本处',pageNum,pageSize,name)
+  const response = await GetDevelopList(pageNum,pageSize,name)
+  DevelopData.value = response.data.data;  
   total.value = response.data.total;
 };
 //新增学生发展
-const AddDevelopData = async (...data) => {
-  console.log('新增学生发展文本处',data)
-  const response = await AddDevelop(...data)
+const AddDevelopData = async (name,detail,file) => {
+  console.log('新增学生发展文本处',name,detail,file)
+  const response = await AddDevelop(name,detail,file)
   getDevelopList(pageNum.value,pageSize.value,searchForm.name)
   if(response.code === 1){
     ElMessage.success('新增成功')
@@ -159,9 +159,9 @@ const AddDevelopData = async (...data) => {
   }
 }
 //编辑学生发展
-const UpdateDevelopData = async (...data) => {
-  console.log('编辑学生发展文本处',data)
-  const response = await UpdateDevelop(...data)
+const UpdateDevelopData = async (id,name,detail,file) => {
+  console.log('编辑学生发展文本处',id,name,detail,file)
+  const response = await UpdateDevelop(id,name,detail,file)
   getDevelopList(pageNum.value,pageSize.value,searchForm.name)
   if(response.code === 1){
     ElMessage.success('编辑成功')

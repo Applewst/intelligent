@@ -161,9 +161,10 @@ const tableData = ref([
 ])
 
 //获取项目列表
-const GetAllSearchProject = async (...params)=>{
-  const response = await GetSearchProject(params);
-  tableData.value = response.data
+const GetAllSearchProject = async (pageNum, pageSize,name)=>{
+  const response = await GetSearchProject(pageNum, pageSize,name);
+  console.log('获取项目列表文本处',pageNum, pageSize,name)
+  tableData.value = response.data.data
   var num = 1
   tableData.value.filter(item=>{
     item.num = num++;
@@ -177,9 +178,9 @@ const GetAllSearchProject = async (...params)=>{
   })
 }
 //新增项目
-const AddAllSearchProject = async (...params)=>{
-  const response = await AddSearchProject(params);
-  console.log("新增项目文本处",params)
+const AddAllSearchProject = async (title,sort,image)=>{
+  const response = await AddSearchProject(title,sort,image);
+  console.log("新增项目文本处",title,sort,image)
   if(response.code===1){
     ElMessage.success('新增成功');
   }else{
@@ -187,8 +188,9 @@ const AddAllSearchProject = async (...params)=>{
   }
 }
 //编辑项目
-const EditAllSearchProject = async (...params)=>{
-  const response = await EditSearchProject(params);
+const EditAllSearchProject = async (id,title,sort,image)=>{
+  const response = await EditSearchProject(id,title,sort,image);
+  console.log("编辑项目文本处",id,title,sort,image)
   if(response.code===1){
     ElMessage.success('编辑成功');
   }else{
@@ -198,6 +200,8 @@ const EditAllSearchProject = async (...params)=>{
 //删除项目
 const DeleteAllSearchProject = async (id)=>{
   const response = await DeleteSearchProject(id);
+  console.log('删除项目文本处',id)
+  
   if(response.code===1){
     ElMessage.success('删除成功');
   }else{
@@ -337,7 +341,7 @@ const handleSubmit = () => {
     EditAllSearchProject(editId.value,form.title,form.sort,form.image);
   } else {
     console.log('新增论文文本处:', form)
-    AddAllSearchProject(form.title,form.sort);
+    AddAllSearchProject(form.title,form.sort,form.image);
   }
   
   dialogVisible.value = false

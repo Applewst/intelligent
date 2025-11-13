@@ -154,17 +154,17 @@ const photoList = ref([
 
 
 //获取照片数据
-const GetAllhotoList = async (...params) => {
-  console.log('获取照片数据文本处：',params)
+const GetAllhotoList = async (pageNum, pageSize, title) => {
+  console.log('获取照片数据文本处：',pageNum, pageSize, title)
   
-  const response = await GetShootList(...params)
+  const response = await GetShootList(pageNum, pageSize, title)
   total.value = response.data.total
-  photoList.value = response.data.rows
+  photoList.value = response.data.data
 }
 //新增照片数据
-const AddPhotoList = async () => {
-  console.log('新增照片数据文本处：',formData.value)
-  const response = await AddShoot(formData.value)
+const AddPhotoList = async (title,file,detail) => {
+  console.log('新增照片数据文本处：',title,file,detail)
+  const response = await AddShoot(title,file,detail)
   if (response.code === 1) {
     ElMessage.success('新增成功')
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
@@ -173,9 +173,9 @@ const AddPhotoList = async () => {
   }
 }
 //编辑照片数据
-const UpdatePhotoList = async () => {
-  console.log('编辑照片数据文本处：',formData.value)
-  const response = await UpdateShoot(formData.value)
+const UpdatePhotoList = async (id,title,file,detail) => {
+  console.log('编辑照片数据文本处：',id,title,file,detail)
+  const response = await UpdateShoot(id,title,file,detail)
   if (response.code === 1) {
     ElMessage.success('编辑成功')
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
@@ -221,6 +221,8 @@ const handleSizeChange = (size) => {
 const handleSearch = () => {
   pageNum.value = 1 // 搜索后重置到第一页
   GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
+  //重置
+  searchTitle.value = ''
 }
 
 // 新增
@@ -264,10 +266,10 @@ const handleSave = () => {
 
   if (isEdit.value) {
     // 编辑
-    UpdatePhotoList()
+    UpdatePhotoList(formData.value.id, formData.value.title, formData.value.file, formData.value.detail)
   } else {
     // 新增
-    AddPhotoList()
+    AddPhotoList(formData.value.title, formData.value.file, formData.value.detail)
   }
 
   dialogVisible.value = false

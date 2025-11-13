@@ -33,9 +33,19 @@
     <el-table :data="tableData" border class="data-table">
       <el-table-column prop="id" label="ID" width="60" align="center" />
       <el-table-column prop="title" label="论文名称" width="240" />
-      <el-table-column prop="author" label="论文作者" width="150" />
+      <el-table-column prop="author" label="论文作者" width="100" />
       <el-table-column prop="detail" label="论文内容" width="650" />
-      <el-table-column prop="time" label="上传时间" width="150" sortable />
+      <el-table-column prop="file" label="照片" width="120">
+        <template #default="{ row }">
+          <el-image
+            :src="row.file"
+            :preview-src-list="[row.file]"
+            fit="cover"
+            style="width: 60px; height: 60px; border-radius: 4px"
+          />
+        </template>
+      </el-table-column> 
+      <el-table-column prop="time" label="上传时间" width="100" sortable />
       <el-table-column label="操作" width="180" align="center">
         <template #default="{ row }">
           <el-button type="primary" size="small" @click="handleEdit(row)">
@@ -80,9 +90,20 @@
         <el-form-item label="论文作者">
           <el-input v-model="form.author" placeholder="请输入作者名称" />
         </el-form-item>
+         <el-form-item label="照片" prop="image">
+          <el-input v-model="form.file" placeholder="请输入照片URL" />
+          <div v-if="form.file" style="margin-top: 10px">
+            <el-image
+              :src="form.image"
+              fit="cover"
+              style="width: 100px; height: 100px; border-radius: 4px"
+            />
+          </div>
+        </el-form-item>
         <el-form-item label="论文内容" v-model="form.detail" class="editor-form-item">
           <div ref="quillEditor" class="quill-editor"></div>
         </el-form-item>
+      
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -113,16 +134,15 @@ const total = ref(5)
 // 表格数据
 const tableData = ref([])
 //获取论文列表
-const GetAllSearchProject = async ()=>{
-    
-  const response = await GetPaperList(pageNum.value,pageSize.value,searchForm.title,searchForm.author)
-  tableData.value = response.data.rows;
-  total.value = response.data.total;
+const GetAllSearchProject = async (pageNum, pageSize, author, title)=>{
+  const response = await GetPaperList(pageNum, pageSize, author, title)
+  tableData.value = response.data.data
+  total.value = response.data.total
 }
 //新增论文
-const AddSearchPaper = async (...data)=>{
-  console.log('新增论文:',data)
-  const response = await AddPaper(data)
+const AddSearchPaper = async (title,author,detail,file)=>{
+  console.log('新增论文:',title,author,detail,file)
+  const response = await AddPaper(title,author,detail,file)
   if(response.code === 1){
     ElMessage.success('新增成功')
   }else{
@@ -130,9 +150,9 @@ const AddSearchPaper = async (...data)=>{
   }
 }
 //修改论文
-const EditSearchPaper = async (...data)=>{
-  console.log('修改论文文本中:',data)
-  const response = await UpdatePaper(data)
+const EditSearchPaper = async (id,title,author,detail,file)=>{
+  console.log('修改论文文本中:',id,title,author,detail,file)
+  const response = await UpdatePaper(id,title,author,detail,file)
   if(response.code === 1){
     ElMessage.success('修改成功')
   }else{
@@ -151,12 +171,16 @@ const DeleteSearchPaper = async (id)=>{
 }
 
 
-onMounted( ()=>{
-  GetAllSearchProject()
+onMounted(()=>{
+  console.log('每次进入论文管理页面都会执行一次',pageNum.value, pageSize.value,searchForm.author, searchForm.title,)
+  
+  GetAllSearchProject(pageNum.value, pageSize.value, searchForm.author, searchForm.title)
 })
 //监视每页页数和当前页数
 watch([pageNum, pageSize], () => {
-  GetAllSearchProject();
+  console.log('获取每次分页参数',pageNum.value, pageSize.value,searchForm.author, searchForm.title);
+  
+  GetAllSearchProject(pageNum.value, pageSize.value, searchForm.author, searchForm.title);
 })
 
 
@@ -170,7 +194,8 @@ let quillInstance = null
 const form = reactive({
   title: '',
   author: '',
-  detail: ''
+  detail: '',
+  file: ''
 })
 
 const initQuillEditor = () => {
@@ -211,7 +236,9 @@ const initQuillEditor = () => {
 
 // 搜索
 const handleSearch = () => {
-  GetAllSearchProject();
+  console.log('搜索获取到的数据', searchForm.author, searchForm.title)
+  
+  GetAllSearchProject(pageNum.value, pageSize.value, searchForm.author, searchForm.title);
 }
 
 const handleAdd = () => {
@@ -219,6 +246,7 @@ const handleAdd = () => {
   isEdit.value = false
   form.title = ''
   form.author = ''
+  form.file = ''
   form.detail = ''
   dialogVisible.value = true
   initQuillEditor()
@@ -234,6 +262,7 @@ const handleEdit = (row) => {
   isEdit.value = true
   editId.value = row.id
   form.title = row.title
+  form.file = row.file
   form.author = row.author
   form.detail = row.detail || ''
   dialogVisible.value = true
@@ -281,7 +310,7 @@ const handleSubmit = () => {
   if (quillInstance) {
     form.detail = quillInstance.root.innerHTML
   }
-  console.log("新增论文参数",form)
+
   //清除form.detail的HTML标签，保留文本内容a
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = form.detail;
@@ -289,9 +318,9 @@ const handleSubmit = () => {
   //如果是编辑则调用修改接口
   if(isEdit.value){
     //编辑接口
-    EditSearchPaper(editId.value,form.title,form.author,form.detail)
+    EditSearchPaper(editId.value,form.title,form.author,form.detail,form.file)
   }else{
-    AddSearchPaper(form.title,form.author,form.detail);
+    AddSearchPaper(form.title,form.author,form.detail,form.file);
   }
   
 

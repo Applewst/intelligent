@@ -28,8 +28,9 @@ const GetStudentDate = async () => {
 const GetPaperData = async () => {
   try {
     const res = await GetPaperList()
-    if (res.code === 1 && res.data && res.data.rows) {
-      const papers = res.data.rows
+      console.log(res)
+      
+      const papers = res.data.data
       
       // 按年份统计论文数量
       const yearMap = {}
@@ -44,7 +45,7 @@ const GetPaperData = async () => {
       
       paperData.value = { years, counts }
       console.log('论文按年份统计:', { years, counts })
-    }
+    
   } catch (error) {
     console.error('获取论文数据失败:', error)
   }
