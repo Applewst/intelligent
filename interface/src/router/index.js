@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import UserRegister from '../views/UserRegister.vue'
 import TeamIntroduce from '../views/TeamIntroduce.vue'
-
+import NewPhotos from '@/components/NewPhotos.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -101,6 +101,12 @@ const router = createRouter({
       name: 'login',
       component: UserRegister
     },
+    {
+      path: '/new/photos',
+      name: 'newPhotos',
+      component: NewPhotos
+    }
+   
 
 
 

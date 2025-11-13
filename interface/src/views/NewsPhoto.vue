@@ -1,7 +1,7 @@
 <template>
+  
   <div class="team-introduce">
     <h2 class="title">照片墙</h2>
-    <a href="" class="more">查看更多></a>
     <!-- 新增一个按钮用于测试添加数据 -->
     <div class="card-container">
       <div
@@ -29,12 +29,16 @@
         </el-card>
       </div>
     </div>
+   <a href="" class="more" @click="toPhotoWall">查看更多</a>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 import {getPhotoWallImages} from "@/api/photo";
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 // 生成随机样式的函数
 const generateRandomStyle = () => {
   return {
@@ -45,6 +49,11 @@ const generateRandomStyle = () => {
     left: `${Math.floor(Math.random() * 1500)}px`, // 左侧距离：0-1500px
   };
 };
+//跳转
+const toPhotoWall = () => {
+  router.push('/new/photos');
+}
+
 
 // 初始数据：每个项直接包含自己的样式
 const List = ref([
@@ -141,6 +150,11 @@ onMounted(() => {
   right: 0;
   top: 0;
 }
+.more:hover {
+  //鼠标变为手型
+  cursor: pointer;
+}
+
 
 .more:hover {
   color: #409eff;
