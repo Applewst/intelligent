@@ -24,6 +24,16 @@
           clearable
         />
       </div>
+      <div class="search-item">
+        <label>获奖时间</label>
+        <el-date-picker
+          v-model="searchForm.time"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd"
+          clearable
+        />
+      </div>
       <el-button type="primary" @click="handleSearch" class="search-btn">
         搜索
       </el-button>
@@ -84,10 +94,19 @@
     >
       <el-form :model="form" label-width="80px">
         <el-form-item label="获奖内容">
-          <el-input v-model="form.detail" placeholder="请输入论文名称" />
+          <el-input v-model="form.detail" placeholder="请输入获奖内容" />
         </el-form-item>
         <el-form-item label="获奖人">
-          <el-input v-model="form.author" placeholder="请输入作者名称" />
+          <el-input v-model="form.author" placeholder="请输入获奖人名称" />
+        </el-form-item>
+        <el-form-item label="获奖时间">
+          <el-date-picker
+            v-model="form.time"
+            type="date"
+            placeholder="选择日期"
+            value-format="yyyy-MM-dd"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="照片" prop="image">
           <el-input v-model="form.image" placeholder="请输入照片URL" />
@@ -109,16 +128,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, onMounted,watch } from 'vue'
+import { ref, reactive, nextTick, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { GetAwardList, AddAward, UpdateAward, DeleteAward  } from '@/api/SearchApi.js'
+import { GetAwardList, AddAward, UpdateAward, DeleteAward } from '@/api/SearchApi.js'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 
 // 搜索表单
 const searchForm = reactive({
   detail: '',
-  author: ''
+  author: '',
+  time: ''
 })
 
 // 分页参数
@@ -127,47 +147,53 @@ const pageSize = ref(3)
 const total = ref(5)
 
 // 表格数据
-const tableData = ref([
-])
+const tableData = ref([])
 
 // 获取表格数据
 const GetAllAwardData = async () => {
-  console.log('获取获奖列表文本处:', pageNum.value,pageSize.value,searchForm.detail,searchForm.author)
-  const response = await GetAwardList(pageNum.value,pageSize.value,searchForm.detail,searchForm.author)
+  console.log('获取获奖列表文本处:', pageNum.value, pageSize.value, searchForm.detail, searchForm.author, searchForm.time)
+  const response = await GetAwardList(pageNum.value, pageSize.value, searchForm.detail, searchForm.author, searchForm.time)
   tableData.value = response.data.rows
+  total.value = response.data.total  // 假设返回的总条数在 total 字段中
   if (response.code === 1) {
     ElMessage.success('获取获奖列表成功')
-  }else{
+  } else {
     ElMessage.error('获取获奖列表失败')
   }
 }
-//新增获奖
-const AddAwardData = async (...data) => {
-  console.log("获取新增获奖文本处:", ...data)
-  const response = await AddAward(...data)
+
+// 新增获奖
+const AddAwardData = async (detail, author, image, time) => {
+  console.log("获取新增获奖文本处:", detail, author, image, time)
+  const response = await AddAward(detail, author, image, time)
   if (response.code === 1) {
     ElMessage.success('新增获奖成功')
-  }else{
+    GetAllAwardData() // 刷新表格数据
+  } else {
     ElMessage.error('新增获奖失败')
   }
 }
-//编辑获奖
-const EditAwardData = async (...data) => {
-  console.log("获取编辑获奖文本处:", ...data)
-  const response = await UpdateAward(...data)
+
+// 编辑获奖
+const EditAwardData = async (id, detail, author, image, time) => {
+  console.log("获取编辑获奖文本处:", id, detail, author, image, time)
+  const response = await UpdateAward(id, detail, author, image, time)
   if (response.code === 1) {
     ElMessage.success('编辑获奖成功')
-  }else{
+    GetAllAwardData() // 刷新表格数据
+  } else {
     ElMessage.error('编辑获奖失败')
   }
 }
-//删除获奖
+
+// 删除获奖
 const DeleteAwardData = async (id) => {
   console.log("获取删除获奖文本处:", id)
   const response = await DeleteAward(id)
   if (response.code === 1) {
     ElMessage.success('删除获奖成功')
-  }else{
+    GetAllAwardData() // 刷新表格数据
+  } else {
     ElMessage.error('删除获奖失败')
   }
 }
@@ -175,10 +201,10 @@ const DeleteAwardData = async (id) => {
 onMounted(() => {
   GetAllAwardData()
 })
-watch([pageNum,pageSize],()=>{
+
+watch([pageNum, pageSize, searchForm.detail, searchForm.author, searchForm.time], () => {
   GetAllAwardData()
 })
-
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
@@ -190,7 +216,8 @@ let quillInstance = null
 const form = reactive({
   detail: '',
   author: '',
-  image: ''
+  image: '',
+  time: ''
 })
 
 const initQuillEditor = () => {
@@ -233,11 +260,11 @@ const initQuillEditor = () => {
 const handleSearch = () => {
   pageNum.value = 1
   GetAllAwardData()
-  //清空
+  // 清空
   searchForm.detail = ''
   searchForm.author = ''
+  searchForm.time = ''
 }
-
 
 const handleAdd = () => {
   dialogTitle.value = '新增获奖'
@@ -245,6 +272,7 @@ const handleAdd = () => {
   form.detail = ''
   form.author = ''
   form.image = ''
+  form.time = ''  // 添加这行代码
   dialogVisible.value = true
   initQuillEditor()
   nextTick(() => {
@@ -257,15 +285,16 @@ const handleAdd = () => {
 const handleEdit = (row) => {
   dialogTitle.value = '编辑获奖'
   isEdit.value = true
-  editId.id = row.id
+  editId.value = row.id
   form.detail = row.detail
   form.author = row.author
   form.image = row.image || ''
+  form.time = row.time || ''  // 添加这行代码
   dialogVisible.value = true
   initQuillEditor()
   nextTick(() => {
     if (quillInstance) {
-      quillInstance.clipboard.dangerouslyPasteHTML(form.content)
+      quillInstance.clipboard.dangerouslyPasteHTML(row.content || '')  // 确保这里使用正确的字段
     }
   })
 }
@@ -290,24 +319,23 @@ const handleDialogClose = () => {
   form.detail = ''
   form.author = ''
   form.image = ''
+  form.time = ''  // 添加这行代码
 }
 
 const handleSubmit = () => {
-  if (!form.detail || !form.author) {
-    ElMessage.warning('请填写获奖名称和获奖人')
+  if (!form.detail || !form.author || !form.time) {
+    ElMessage.warning('请填写获奖名称、获奖人和获奖时间')
     return
   }
   
   if (quillInstance) {
-    
+    form.content = quillInstance.root.innerHTML
   }
   
   if (isEdit.value) {
-   
-    EditAwardData(editId.id, form.detail, form.author, form.image)
+    EditAwardData(editId.value, form.detail, form.author, form.image, form.time)
   } else {
-    console.log("新增Bug");
-    AddAwardData(form.detail, form.author, form.image)
+    AddAwardData(form.detail, form.author, form.image, form.time)
   }
   
   dialogVisible.value = false
@@ -330,15 +358,11 @@ const handleDelete = (row) => {
   })
 }
 
-// 分页变化
-const handlePageChange = (page) => {
-  console.log('当前页:', page)
-}
 
 // 每页条数变化
 const handlePageSizeChange = (size) => {
   console.log('每页条数:', size)
-  currentPage.value = 1
+  pageNum.value = 1  // 修正这里，应该是 pageNum 而不是 currentPage
 }
 </script>
 
