@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = 'http://3a62aa4b.r1.cpolar.top' //后面再改
+const baseURL = 'http://localhost:8080' //后面再改
 const service = axios.create({
   baseURL,
   timeout:10000
