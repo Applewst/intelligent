@@ -6,7 +6,8 @@ CREATE TABLE student
     stucode VARCHAR(20) UNIQUE NOT NULL COMMENT '学号',
     gender  TINYINT(1) COMMENT '性别，1表示男，0表示女',
     avatar  VARCHAR(255) COMMENT '头像URL'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='在读学生信息表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='在读学生信息表';
 
 
 INSERT INTO student (name, grade, stucode, gender, avatar)
