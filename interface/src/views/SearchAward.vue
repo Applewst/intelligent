@@ -5,9 +5,9 @@ import { ElMessage } from 'element-plus'
 const list = ref([])   //学生获奖列表
 
 //获取学生获取情况
-const GetAllAwardData = async () => {
-  console.log('获取学生获奖数据文本处')
-  const response = await GetAwards()
+const GetAllAwardData = async (pageNum,pageSize,author) => {
+  console.log('获取学生获奖数据文本处',pageNum,pageSize,author)
+  const response = await GetAwards(pageNum,pageSize,author)
   if (response.code === 1) {
     list.value = response.data
     ElMessage.success('获取成功')
@@ -16,7 +16,7 @@ const GetAllAwardData = async () => {
   }
 }
 onMounted(()=>{
-  GetAllAwardData()
+  GetAllAwardData('','','')
 })
 
 
