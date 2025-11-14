@@ -66,6 +66,14 @@ const mockStudentData = [
     gender: 2,
     avatar: "https://picsum.photos/id/1011/200/200",
   },
+  {
+    id: 9,
+    name: "孙美美",
+    grade: "大四",
+    stucode: "2021156",
+    gender: 2,
+    avatar: "https://picsum.photos/id/1011/200/200",
+  },
 ]
 
 /**
