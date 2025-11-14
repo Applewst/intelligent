@@ -147,8 +147,5 @@ export const DeleteShoot = (id) => {
   }
   return service.delete('/api/team/shoots', {
     id,
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
   })
 }
