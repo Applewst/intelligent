@@ -1,7 +1,13 @@
 package com.web.api.error;
 
+/**
+ * 错误枚举类
+ * @author Askr-Yggdrasill
+ */
 public enum Error {
 
+    //用户名已存在 SameUserNameException
+    SAMEUSERNAME("用户名已存在，请更换后重试"),
     //权限不足 PermissionException
     NOPERMISSION("权限不足，请联系管理员"),
     //登录失败 NoFindAccountException
