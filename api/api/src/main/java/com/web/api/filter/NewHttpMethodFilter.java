@@ -159,7 +159,7 @@ public class NewHttpMethodFilter extends AccessControlFilter {
         int code;
         //token无效
         if ("invalid_token".equals(reason)) {
-            msg = Error.NOACCOUNT.toString();
+            msg = Error.NOTOKEN.toString();
             code = HttpServletResponse.SC_UNAUTHORIZED;
             //账号不存在或已被禁用
         } else if ("account_baned".equals(reason)) {
