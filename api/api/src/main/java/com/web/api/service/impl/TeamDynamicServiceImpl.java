@@ -3,6 +3,7 @@ package com.web.api.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.web.api.mapper.TeamDynamicMapper;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.TeamDynamic;
 import com.web.api.service.TeamDynamicService;
@@ -60,9 +61,9 @@ public class TeamDynamicServiceImpl implements TeamDynamicService {
     }
 
     @Override
-    public PageResult pageQuery(Integer pageNum, Integer pageSize,String title) {
-        PageHelper.startPage(pageNum, pageSize);
-        Page<TeamDynamic> page = teamDynamicMapper.pageQuery();
+    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
+        PageHelper.startPage(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
+        Page<TeamDynamic> page = teamDynamicMapper.pageQuery(pageQueryDTO);
         log.info("返回分页结果");
         return new PageResult(page.getTotal(), page.getResult());
     }

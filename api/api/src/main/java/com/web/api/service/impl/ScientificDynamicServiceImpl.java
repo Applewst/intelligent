@@ -3,6 +3,7 @@ package com.web.api.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.web.api.mapper.ScientificDynamicMapper;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.ScientificDynamic;
 import com.web.api.service.ScientificDynamicService;
@@ -53,11 +54,10 @@ public class ScientificDynamicServiceImpl implements ScientificDynamicService {
     }
 
     @Override
-    public PageResult pageQuery(Integer pageNum, Integer pageSize,String title) {
-        PageHelper.startPage(pageNum, pageSize);
-        Page<ScientificDynamic> page = scientificDynamicMapper.pageQuery(title);
-        log.info("分页查询结果，标题条件：{}", title);
-        log.info("分页查询结果");
+    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
+        PageHelper.startPage(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
+        Page<ScientificDynamic> page = scientificDynamicMapper.pageQuery(pageQueryDTO.getName());
+        log.info("分页查询结果，name：{}",pageQueryDTO.getName() );
         return new PageResult(page.getTotal(), page.getResult());
     }
 }

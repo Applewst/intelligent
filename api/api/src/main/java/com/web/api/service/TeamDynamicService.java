@@ -1,5 +1,6 @@
 package com.web.api.service;
 
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.TeamDynamic;
 
@@ -39,9 +40,7 @@ public interface TeamDynamicService {
 
     /**
      * 分页查询
-     * @param pageNum
-     * @param pageSize
      * @return
      */
-    PageResult pageQuery(Integer pageNum, Integer pageSize, String title);
+    PageResult pageQuery(PageQueryDTO pageQueryDTO);
 }

@@ -1,6 +1,7 @@
 package com.web.api.mapper;
 
 import com.github.pagehelper.Page;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.Student;
 import com.web.api.pojo.TeamDynamic;
 import org.apache.ibatis.annotations.Insert;
@@ -53,5 +54,5 @@ public interface TeamDynamicMapper {
      * 返回列表数据
      * @return
      */
-    Page<TeamDynamic> pageQuery();
+    Page<TeamDynamic> pageQuery(PageQueryDTO pageQueryDTO);
 }
