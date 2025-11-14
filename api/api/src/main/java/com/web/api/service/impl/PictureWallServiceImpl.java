@@ -35,7 +35,7 @@ public class PictureWallServiceImpl implements PictureWallService {
         List<PictureWall> empList = pictureWallMapper.getPictureWall(pageQuery.getName());
         Page<PictureWall> p = (Page<PictureWall>) empList;
         //3.返回分页结果
-        return new PageResult((long) p.getPages(),p.getResult());
+        return new PageResult(p.getTotal(),p.getResult());
     }
 
     @Override

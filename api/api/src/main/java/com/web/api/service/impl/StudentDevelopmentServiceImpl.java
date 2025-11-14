@@ -39,7 +39,7 @@ public class StudentDevelopmentServiceImpl implements StudentDevelopmentService 
         List<StudentDevelopment> empList = studentDevelopmentMapper.selectAllStudentDevelopment(pageQuery.getName());
         Page<StudentDevelopment> p = (Page<StudentDevelopment>) empList;
         //3.返回分页结果
-        return new PageResult((long) p.getPages(),p.getResult());
+        return new PageResult(p.getTotal(),p.getResult());
     }
 
     @Override

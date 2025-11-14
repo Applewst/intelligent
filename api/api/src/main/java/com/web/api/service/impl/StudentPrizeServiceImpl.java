@@ -34,7 +34,7 @@ public class StudentPrizeServiceImpl implements StudentPrizeService {
         List<StudentPrize> empList = studentPrizeMapper.getAllStudentPrizes(pageQuery.getName());
         Page<StudentPrize> p = (Page<StudentPrize>) empList;
         //3.返回分页结果
-        return new PageResult((long) p.getPages(),p.getResult());
+        return new PageResult(p.getTotal(),p.getResult());
     }
 
     @Override
