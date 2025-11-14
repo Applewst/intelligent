@@ -14,12 +14,12 @@ const pageOptions = [3, 6, 9, 12]; // 可选的每页展示数量
 const pageNum = ref(1); // 当前页码
 
 //获取论文数据
-const GetAllSearchPapers = async (...params) => {
-  console.log('获取论文数据文本处：',params);
-  const response = await GetsearchPapers(...params);
+const GetAllSearchPapers = async (pageNum, pageSize, author, title) => {
+  console.log('获取论文数据文本处：',pageNum, pageSize, author, title);
+  const response = await GetsearchPapers(pageNum, pageSize, author, title);
   if(response.code === 1){
     ElMessage.success('获取论文数据成功');
-    papers.value = response.data.rows;
+    papers.value = response.data.data;
     console.log('获取到的数据：',papers);
     
     total.value = response.data.total;
@@ -30,7 +30,7 @@ const GetAllSearchPapers = async (...params) => {
 
 onMounted(() => {
   // 页面加载时，获取数据
-  GetAllSearchPapers(pageNum.value, pageSize.value);
+  GetAllSearchPapers(pageNum.value, pageSize.value, '', '');
 })
 
 
@@ -47,7 +47,7 @@ watch(pageSize,()=>{
 // 监听每页展示数量的变化
 watch([pageSize,pageNum], () => {
   // 重新获取数据
-  GetAllSearchPapers(pageNum.value, pageSize.value);
+  GetAllSearchPapers(pageNum.value, pageSize.value, '', '');
 });
 
 
