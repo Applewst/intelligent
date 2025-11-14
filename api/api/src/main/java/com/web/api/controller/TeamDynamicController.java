@@ -1,5 +1,6 @@
 package com.web.api.controller;
 
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Result;
 import com.web.api.service.impl.TeamDynamicServiceImpl;
@@ -25,12 +26,10 @@ public class TeamDynamicController {
      * 获取科研动态列表
      */
     @GetMapping("/event/list")
-    public Result getAllDynamics(@RequestParam(defaultValue =" 1") int pageNum,
-                                 @RequestParam(defaultValue =" 10")int pageSize,
-                                 @RequestParam(name="name") String title)
+    public Result getAllDynamics(PageQueryDTO pageQueryDTO)
     {
-        log.info("分页查询默认值pageNum:{},pageSize:{},title:{}", pageNum, pageSize, title);
-        PageResult pageResult =teamDynamicServiceImpl.pageQuery(pageNum, pageSize,title);
+        log.info("分页查询默认值pageQueryDTO:{}", pageQueryDTO);
+        PageResult pageResult =teamDynamicServiceImpl.pageQuery(pageQueryDTO);
         return Result.success(pageResult);
     }
 

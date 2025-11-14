@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         List<User> empList = userMapper.getAllUser(pageQueryDTO.getName());
         Page<User> p = (Page<User>) empList;
         //3.返回分页结果
-        return new PageResult((long) p.getPages(),p.getResult());
+        return new PageResult(p.getTotal(),p.getResult());
     }
 
     @Override

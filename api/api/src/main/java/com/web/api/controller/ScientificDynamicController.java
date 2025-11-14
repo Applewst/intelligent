@@ -1,6 +1,7 @@
 package com.web.api.controller;
 
 import com.web.api.mapper.ScientificDynamicMapper;
+import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Result;
 import com.web.api.pojo.ScientificDynamic;
@@ -32,12 +33,10 @@ public class ScientificDynamicController {
      * 获取科研动态列表
      */
     @GetMapping("/new/list")
-    public Result getAllDynamics(@RequestParam(defaultValue =" 1") int pageNum,
-                                 @RequestParam(defaultValue =" 10")int pageSize,
-                                 @RequestParam(name ="name") String title)
+    public Result getAllDynamics(PageQueryDTO pageQueryDTO)
     {
-    log.info("分页查询默认值pageNum:{},pageSize:{},title:{}", pageNum, pageSize, title);
-        PageResult pageResult =scientificDynamicServiceImpl.pageQuery(pageNum, pageSize,title);
+    log.info("分页查询默认值PageQuretDTO:{}",pageQueryDTO );
+        PageResult pageResult =scientificDynamicServiceImpl.pageQuery(pageQueryDTO);
     return Result.success(pageResult);
     }
 

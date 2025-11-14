@@ -38,7 +38,7 @@ public class PaperServiceImpl implements PaperService {
         List<Paper> empList = paperMapper.getAllPapers(pageQuery.getName(), author);
         Page<Paper> p = (Page<Paper>) empList;
         //3.返回分页结果
-        return new PageResult((long) p.getPages(),p.getResult());
+        return new PageResult(p.getTotal(),p.getResult());
     }
 
     @Override
