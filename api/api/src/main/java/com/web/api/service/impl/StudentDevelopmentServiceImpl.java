@@ -3,20 +3,15 @@ package com.web.api.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.web.api.exception.DatabaseOperationException;
-import com.web.api.exception.NoFindException;
 import com.web.api.exception.NoIdException;
 import com.web.api.mapper.StudentDevelopmentMapper;
 import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
-import com.web.api.pojo.ResearchDirection;
 import com.web.api.pojo.StudentDevelopment;
 import com.web.api.service.StudentDevelopmentService;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
