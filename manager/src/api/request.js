@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = 'http://7b9f8ffb.r3.cpolar.cn' //后面再改
+const baseURL = 'http://3a62aa4b.r1.cpolar.top' //后面再改
 const service = axios.create({
   baseURL,
   timeout:10000

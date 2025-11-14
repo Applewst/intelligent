@@ -231,7 +231,7 @@ const awardList = [
   }
 ]//获奖数据
 
-const useMock = true;
+const useMock = true
 
 //-----------------------------------------------------------
 //获取项目
