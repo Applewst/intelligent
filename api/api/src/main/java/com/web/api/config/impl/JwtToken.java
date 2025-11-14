@@ -4,6 +4,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 
 /**
  * JwtToken 用于封装 JWT 令牌信息
+ * @author Askr-Yggdrasill
  */
 public class JwtToken implements AuthenticationToken {
     private final String username;
@@ -17,8 +18,9 @@ public class JwtToken implements AuthenticationToken {
         return username;
     }
 
+    // JWT 不需要密码
     @Override
     public Object getCredentials() {
-        return ""; // JWT 不需要密码
+        return "";
     }
 }

@@ -70,9 +70,9 @@ public class HttpMethodFilter extends AccessControlFilter {
      * 检查请求的HTTP方法是否被允许
      */
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
 
-        //判断 当前用户身份是否拥有允许的角色
+        //判断 1.当前用户身份是否拥有允许的角色
 
         //判断当前请求头中是否带有jwtToken的字符串
         String jwtToken = WebUtils.toHttp(request).getHeader("token");
@@ -103,9 +103,7 @@ public class HttpMethodFilter extends AccessControlFilter {
                 if (roles != null && roles.length != 0) {
                     Set<String> role = CollectionUtils.asSet(roles);
                     boolean hasRole = subject.hasAllRoles(role);
-                    if (hasRole) {
-                        return true;
-                    } else {
+                    if (!hasRole) {
                         httpRequest.setAttribute("authFailReason", "no_role");
                         return false;
                     }
@@ -168,7 +166,6 @@ public class HttpMethodFilter extends AccessControlFilter {
         return false;
     }
 
-    // 封装响应方法
     // 封装响应方法
     private void writeJsonResponse(ServletResponse response, Result result, int statusCode) throws IOException {
         HttpServletResponse httpResponse = WebUtils.toHttp(response);

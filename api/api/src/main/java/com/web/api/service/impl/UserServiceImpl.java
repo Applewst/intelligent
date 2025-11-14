@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.web.api.exception.DatabaseOperationException;
 import com.web.api.exception.NoFindException;
 import com.web.api.exception.NoIdException;
+import com.web.api.exception.SameUserNameException;
 import com.web.api.mapper.UserMapper;
 import com.web.api.pojo.JwtData;
 import com.web.api.pojo.PageQueryDTO;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
         //检查用户名是否已存在
         if (userMapper.findUserByName(user.getUsername()) != null) {
             log.warn("用户名'{}'已存在，注册失败", user.getUsername());
-            throw new RuntimeException("用户名已存在");
+            throw new SameUserNameException();
         }
 
         //加密密码

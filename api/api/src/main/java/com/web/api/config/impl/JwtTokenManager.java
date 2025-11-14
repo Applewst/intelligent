@@ -1,10 +1,12 @@
 package com.web.api.config.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.web.api.config.JwtProperties;
+import com.web.api.pojo.JwtData;
 import com.web.api.util.EncodesUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -21,6 +23,7 @@ import java.util.Map;
 
 /**
  * JWT令牌管理类
+ * @author Askr-Yggdrasill
  */
 @Slf4j
 @Service
@@ -49,7 +52,7 @@ public class JwtTokenManager {
      * @param ttlMillis 过期时间
      * @param sessionId 唯一标识
      * @param claims jwt存储的一些非隐私信息
-     * @return
+     * @return String jwt令牌
      */
     public String issuedToken(String iss, Long ttlMillis, String sessionId, Map<String, Object> claims) {
 
@@ -136,6 +139,18 @@ public class JwtTokenManager {
             log.warn(e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * 获取当前用户角色
+     * @param jwtToken jwt令牌
+     * @return 角色
+     */
+    public String getCurrentUserRole(String jwtToken) {
+        Claims claims = decodeToken(jwtToken);
+        String userJson = (String) claims.get("user");
+        JwtData jwtData = JSONObject.parseObject(userJson, JwtData.class);
+        return jwtData.getIdentity();
     }
 }
 

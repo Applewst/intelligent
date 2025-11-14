@@ -69,6 +69,24 @@ public class GlobalExceptionHandler {
                 .body(Result.error(e.getMessage()));
     }
 
+    /**
+     * 数据库操作异常: DatabaseOperationException
+     */
+    @ExceptionHandler(DatabaseOperationException.class)
+    public ResponseEntity<Result> handleDatabaseOperationException(DatabaseOperationException e){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Result.error(e.getMessage()));
+    }
+
+    /**
+     * 用户名已存在异常: SameUserNameException
+     */
+    @ExceptionHandler(SameUserNameException.class)
+    public ResponseEntity<Result> handleSameUserNameException(SameUserNameException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Result.error(e.getMessage()));
+    }
+
 //    /**
 //     * 其他运行时异常: RuntimeException
 //     */
