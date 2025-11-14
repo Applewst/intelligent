@@ -16,7 +16,7 @@ service.interceptors.request.use(function (config) {
 // 添加响应拦截器
 service.interceptors.response.use(function (res) {
     // 2xx 范围内的状态码都会触发该函数。
-   if(res.data.code===0){
+   if(res.data.code===1){
       return res
     }
     ElMessage.error(res.data.message || '服务异常')
