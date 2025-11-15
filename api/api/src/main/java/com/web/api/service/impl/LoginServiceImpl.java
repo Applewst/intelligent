@@ -17,10 +17,11 @@ import java.util.Map;
 
 /**
  * 登录服务实现类
+ * @author Askr-Yggdrasill
  */
 @Slf4j
 @Service
-public class LoginServiceimpl implements LoginService {
+public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private JwtTokenManager jwtTokenManager;
@@ -31,7 +32,7 @@ public class LoginServiceimpl implements LoginService {
     @Override
     public Result login(LoginVo loginVo) {
 
-        String jwtToken = null;
+        String jwtToken;
         try {
             //登录
             UsernamePasswordToken token = new UsernamePasswordToken(loginVo.getUsername(), loginVo.getPassword());
@@ -46,7 +47,8 @@ public class LoginServiceimpl implements LoginService {
             //转换json cxe3d4
             JwtData jwtData = userServiceImpl.findIdUserNameRoleByName(username);
             claim.put("user", JSONObject.toJSONString(jwtData));
-            jwtToken = jwtTokenManager.issuedToken("system", subject.getSession().getTimeout(), sessionId, claim);
+            //签发时间(过期时间2小时)
+            jwtToken = jwtTokenManager.issuedToken("system", 7200000L, sessionId, claim);
         } catch (Exception e) {
             log.warn("用户{}登录失败: {}",loginVo.getUsername(), e.getMessage());
             return Result.error("登录失败,账号或密码错误");
