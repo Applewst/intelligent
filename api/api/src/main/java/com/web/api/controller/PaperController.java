@@ -27,9 +27,9 @@ public class PaperController {
      * @return 论文列表
      */
     @GetMapping("/papers/list")
-    public Result getPaperList(PageQueryDTO pageQuery, String author) {
+    public Result getPaperList(PageQueryDTO pageQuery,@RequestParam String author, @RequestParam String title) {
         log.info("获取论文列表");
-        return Result.success(paperService.getAllPaper(pageQuery, author));
+        return Result.success(paperService.getAllPaper(pageQuery, author, title));
     }
 
     /**

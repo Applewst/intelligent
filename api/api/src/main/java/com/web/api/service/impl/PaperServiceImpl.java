@@ -30,8 +30,9 @@ public class PaperServiceImpl implements PaperService {
     private PaperMapper paperMapper;
 
     @Override
-    public PageResult getAllPaper(PageQueryDTO pageQuery, String author) {
-        log.info("查询论文列表, num: {}, size: {}, name: {}, author: {}", pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getName(), author);
+    public PageResult getAllPaper(PageQueryDTO pageQuery, String author, String title) {
+        log.info("查询论文列表, num: {}, size: {}, name: {}, author: {}", pageQuery.getPageNum(), pageQuery.getPageSize(), title, author);
+        pageQuery.setName(title);
         //1.设置分页参数
         PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize());
         //2.执行查询,转为Page格式
