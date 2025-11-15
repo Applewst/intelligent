@@ -20,9 +20,6 @@ export const UserLogin = async (username,password) =>{
   )
   }
 
-
-
-
 //注册请求
 export const UserRegister = async (username,password,identify) =>{
   return service.post('/api/user/register',{

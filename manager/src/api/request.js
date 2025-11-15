@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = 'http://localhost:8080' //后面再改
+const baseURL = 'http://3a62aa4b.r1.cpolar.top' //后面再改
 const service = axios.create({
   baseURL,
   timeout:10000
@@ -7,6 +7,10 @@ const service = axios.create({
 // 添加请求拦截器
 service.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
+    const token = localStorage.getItem('token')
+    if (token && ['post','put','delete'].includes(config.method)) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config;
   }, function (error) {
     // 对请求错误做些什么

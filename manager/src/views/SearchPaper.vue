@@ -106,7 +106,7 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="论文文件" prop="files">
+        <!-- <el-form-item label="论文文件" prop="files">
           <el-upload
             class="upload-demo"
             action=""
@@ -126,7 +126,7 @@
               </div>
             </template>
           </el-upload>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="论文内容" prop="detail" class="editor-form-form">
           <div ref="quillEditor" class="quill-editor"></div>
         </el-form-item>

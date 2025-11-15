@@ -74,6 +74,7 @@ const shootList = [
   }
 ]
 const useMock = true
+const token = localStorage.getItem('token')
 //获取照片墙列表
 export const GetShootList = (pageNum, pageSize, title) => {
   console.log('获取照片墙列表API', pageNum, pageSize, title)
@@ -108,7 +109,10 @@ export const AddShoot = (title,file,detail) => {
   return service.post('/api/team/shoots', {
     title,
     file,
-    detail
+    detail,
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   })
 }
 //修改照片墙
@@ -125,7 +129,10 @@ export const UpdateShoot = async (id,title,file,detail) => {
     id,
     title,
     file,
-    detail
+    detail,
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   })
 }
 //删除照片墙
@@ -138,5 +145,7 @@ export const DeleteShoot = (id) => {
       "data":null
     }
   }
-  return service.delete('/api/team/shoots', {id})
+  return service.delete('/api/team/shoots', {
+    id,
+  })
 }
