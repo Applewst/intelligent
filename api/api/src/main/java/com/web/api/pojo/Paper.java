@@ -17,10 +17,10 @@ public class Paper {
     private String title;
     /** 论文作者 */
     private String author;
-    /** 时间时间 */
-    private LocalDate time;
     /** 文件URL */
     private String file;
+    /** 时间 */
+    private LocalDate time;
     /** 论文描述 */
     private String detail;
 }

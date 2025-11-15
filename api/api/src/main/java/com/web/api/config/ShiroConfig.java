@@ -2,7 +2,6 @@ package com.web.api.config;
 
 import com.web.api.config.impl.JwtTokenManager;
 import com.web.api.config.impl.ShiroSessionManager;
-import com.web.api.filter.JwtRolesFilter;
 import com.web.api.filter.NewHttpMethodFilter;
 import jakarta.servlet.Filter;
 import lombok.extern.log4j.Log4j2;
@@ -55,8 +54,8 @@ public class ShiroConfig {
         sessionManager.setSessionValidationSchedulerEnabled(false);
         //取消cookie
         sessionManager.setSessionIdCookieEnabled(false);
-        //设置全局会话超时时间(ms -> 1h)
-        sessionManager.setGlobalSessionTimeout(60*60*1000);
+        //设置全局会话超时时间(ms)，默认 2 小时
+        sessionManager.setGlobalSessionTimeout(7200000);
         return sessionManager;
     }
 
@@ -86,20 +85,18 @@ public class ShiroConfig {
         //管理员所有权:
         NewHttpMethodFilter adminAll = new NewHttpMethodFilter();
         adminAll.setAllowedRole("admin","admin","admin","admin",jwtTokenManager);
-        JwtRolesFilter admin = new JwtRolesFilter(jwtTokenManager);
 
         //游客仅get
-        NewHttpMethodFilter userGet = new NewHttpMethodFilter();
-        userGet.setAllowedRole("","admin","admin","admin",jwtTokenManager);
+        NewHttpMethodFilter allGet = new NewHttpMethodFilter();
+        allGet.setAllowedRole("","admin","admin","admin",jwtTokenManager);
         //仅用户get
         NewHttpMethodFilter onlyUserGet = new NewHttpMethodFilter();
         onlyUserGet.setAllowedRole("user,admin","admin","admin","admin",jwtTokenManager);
 
         //载入自定义过滤器
         filters.put("admin-all",adminAll);
-        filters.put("all-get",userGet);
+        filters.put("all-get",allGet);
         filters.put("user-get",onlyUserGet);
-        filters.put("jwt-admin",admin);
         return filters;
     }
 
@@ -127,7 +124,7 @@ public class ShiroConfig {
         //教师信息
         filterChainDefinitionMap.put("/teacher/**","all-get");
         //科研动态信息
-        filterChainDefinitionMap.put("/research/**","all-get");
+        filterChainDefinitionMap.put("/news/**","all-get");
         //团队活动信息
         filterChainDefinitionMap.put("/events/**","all-get");
         //研究方向信息
@@ -137,15 +134,15 @@ public class ShiroConfig {
         //论文管理
         filterChainDefinitionMap.put("/papers/**","all-get");
         //学生获奖
-        filterChainDefinitionMap.put("/awards/**","all-get");
+        filterChainDefinitionMap.put("/search/awards/**","all-get");
         //团队介绍
         filterChainDefinitionMap.put("/introduce/**","all-get");
         //联系我们
         filterChainDefinitionMap.put("/contact/**","all-get");
         //照片墙
-        filterChainDefinitionMap.put("/shoots/**","all-get");
+        filterChainDefinitionMap.put("/team/shoots/**","all-get");
         //学生发展
-        filterChainDefinitionMap.put("/development/**","all-get");
+        filterChainDefinitionMap.put("/team/developments/**","all-get");
         //上传接口
         filterChainDefinitionMap.put("/upload/**","admin-all");
 
@@ -156,14 +153,3 @@ public class ShiroConfig {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-

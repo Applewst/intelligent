@@ -48,21 +48,24 @@ VALUES (1, '洋熙成', 1, 'https://avatars.githubusercontent.com/u/31575119'),
 -- 论文表
 CREATE TABLE `paper`
 (
-    `id`     INT         NOT NULL AUTO_INCREMENT COMMENT 'id编号',
-    `title`  VARCHAR(35) NOT NULL COMMENT '标题',
-    `author` VARCHAR(30) DEFAULT NULL COMMENT '作者',
-    `file`   VARCHAR(60) DEFAULT NULL COMMENT '文件URL',
-    `detail` TEXT COMMENT '描述',
+    `id`     int         NOT NULL AUTO_INCREMENT COMMENT 'id编号',
+    `title`  varchar(35) NOT NULL COMMENT '标题',
+    `author` varchar(30) DEFAULT NULL COMMENT '作者',
+    `file`   varchar(60) DEFAULT NULL COMMENT '文件URL',
+    `time`   date comment '发表时间',
+    `detail` text COMMENT '描述',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci
-    COMMENT ='论文';
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='论文';
 
 -- 示例数据
-INSERT INTO `paper` (`title`, `author`, `file`, `detail`)
-VALUES ('人工智能综述', '王志鹏', 'C:/papers/AI_review.pdf', '关于人工智能的发展综述'),
-       ('机器学习应用', '李明轩', 'C:/papers/ML_app.pdf', '机器学习在各领域的应用案例');
+INSERT INTO `paper` (`title`, `author`, `file`, `time`, `detail`)
+VALUES ('人工智能综述', '王志鹏', 'C:/papers/AI_review.pdf', '2025-03-12', '关于人工智能的发展综述与展望'),
+       ('机器学习应用', '李明轩', 'C:/papers/ML_app.pdf', '2025-06-01', '机器学习在实际工程中的应用案例'),
+       ('深度学习优化', '祁婷婷', 'C:/papers/DL_optimization.pdf', '2024-11-20', '模型训练与推理性能优化方法研究'),
+       ('自然语言处理进展', '林思雨', 'C:/papers/NLP_progress.pdf', '2025-01-15', '语言理解与生成最新进展综述'),
+       ('计算机视觉新技术', '陈俊豪', 'C:/papers/CV_newtech.pdf', '2025-07-30', '目标检测与分割的改进方法');
 
 -- 照片墙
 CREATE TABLE `picture_wall`

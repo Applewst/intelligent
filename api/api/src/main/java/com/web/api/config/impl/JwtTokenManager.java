@@ -38,11 +38,12 @@ public class JwtTokenManager {
 
     /**
      * 解析密钥
-     * @return
+     * @return byte[] 原始密钥字节
      */
     private byte[] getSecretKeyBytes() {
         String base64Secret = jwtProperties.getBase64EncodeSecretKey();
-        return Base64.getDecoder().decode(base64Secret); // 解码一次，得到原始密钥字节
+        // 解码一次，得到原始密钥字节
+        return Base64.getDecoder().decode(base64Secret);
     }
 
 
@@ -71,22 +72,29 @@ public class JwtTokenManager {
         byte[] secretBytes = getSecretKeyBytes();
 
         //创建SecretKey
-        SecretKey key = Keys.hmacShaKeyFor(secretBytes); // JJWT 需要 SecretKey
+        // JJWT 需要 SecretKey
+        SecretKey key = Keys.hmacShaKeyFor(secretBytes);
 
         //生成令牌
         JwtBuilder token = Jwts.builder()
-                .id(sessionId) //唯一标识
-                .claims(claims) //存储信息
-                .issuer(iss) //签发者
-                .issuedAt(new Date(nowMillis)) //签发时间
-                .signWith(key,Jwts.SIG.HS256); //加密方式
+                //唯一标识
+                .id(sessionId)
+                //存储信息
+                .claims(claims)
+                //签发者
+                .issuer(iss)
+                //签发时间
+                .issuedAt(new Date(nowMillis))
+                //加密方式
+                .signWith(key,Jwts.SIG.HS256);
 
         //设置过期时间
         if(ttlMillis > 0){
             //有效期 = 现在时间 + 过期时间
             long expMillis = nowMillis + ttlMillis;
             Date exp = new Date(expMillis);
-            token.expiration(exp); //过期时间
+            //过期时间
+            token.expiration(exp);
         }
 
         //转成字符串
@@ -106,14 +114,18 @@ public class JwtTokenManager {
         byte[] secretBytes = getSecretKeyBytes();
 
         //创建SecretKey
-        SecretKey key = Keys.hmacShaKeyFor(secretBytes); // JJWT 需要 SecretKey
+        // JJWT 需要 SecretKey
+        SecretKey key = Keys.hmacShaKeyFor(secretBytes);
 
         //带着密码去解析
         return Jwts.parser()
-                .verifyWith(key)    //设置签名密码
+                //设置签名密码
+                .verifyWith(key)
                 .build()
-                .parseSignedClaims(token)  //解析token
-                .getPayload();      //获取载荷
+                //解析token
+                .parseSignedClaims(token)
+                //获取载荷
+                .getPayload();
     }
 
     /**
