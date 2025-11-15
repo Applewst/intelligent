@@ -25,7 +25,7 @@ public class StudentPrizeController {
      * @param pageQueryDTO 分页查询参数
      *                     author 作者姓名
      */
-    @GetMapping("")
+    @GetMapping("/list")
     public Result getStudentPrizeList(PageQueryDTO pageQueryDTO, @RequestParam String author) {
         pageQueryDTO.setName(author);
         return Result.success(studentPrizeService.getAllStudentPrizes(pageQueryDTO));

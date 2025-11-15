@@ -54,8 +54,8 @@ public class ShiroConfig {
         sessionManager.setSessionValidationSchedulerEnabled(false);
         //取消cookie
         sessionManager.setSessionIdCookieEnabled(false);
-        //设置全局会话超时时间(ms -> 1h)
-        sessionManager.setGlobalSessionTimeout(60*60*1000);
+        //设置全局会话超时时间(ms)，默认 2 小时
+        sessionManager.setGlobalSessionTimeout(7200000);
         return sessionManager;
     }
 
@@ -153,14 +153,3 @@ public class ShiroConfig {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-

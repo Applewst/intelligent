@@ -47,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
             //转换json cxe3d4
             JwtData jwtData = userServiceImpl.findIdUserNameRoleByName(username);
             claim.put("user", JSONObject.toJSONString(jwtData));
-            //签发时间(过期时间2小时)
+            //签发令牌(过期时间2小时)
             jwtToken = jwtTokenManager.issuedToken("system", 7200000L, sessionId, claim);
         } catch (Exception e) {
             log.warn("用户{}登录失败: {}",loginVo.getUsername(), e.getMessage());
