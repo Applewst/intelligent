@@ -60,8 +60,8 @@ const developList = [
   }
 ]
 const useMock = true
-export const getStudentDevelopList = (...params) => {
-  console.log('获取学生发展列表：', params)
+export const getStudentDevelopList = (pageNum,pageSize,name) => {
+  console.log('获取学生发展列表：', pageNum, pageSize, name)
   
     if(useMock){
       return {
@@ -73,5 +73,11 @@ export const getStudentDevelopList = (...params) => {
         }
       }
     }
-    return service.get('/api/team/developments',{params})
+    return service.get('/api/team/developments',{
+      params:{
+        pageNum,
+        pageSize,
+        name
+      }
+    })
 }

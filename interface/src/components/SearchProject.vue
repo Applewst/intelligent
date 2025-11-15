@@ -69,11 +69,14 @@ console.log(props.projectId)
 
 const tables = ref([])
 
-onMounted(async () => {
-  const response = await GetSearchProjects(props.projectId);
-  console.log(response)
-  
-  tables.value = response.data;
+const GetAllSearchProjects = async (id) => {
+  const response = await GetSearchProjects(id);
+  console.log('获取研究项目response',response)
+  tables.value = response.data.data;
+}
+
+onMounted(() => {
+  GetAllSearchProjects(props.projectId);
 })
 
 function showDetails(index, imageIndex) {

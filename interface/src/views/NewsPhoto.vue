@@ -59,11 +59,12 @@ const toPhotoWall = () => {
 const List = ref([
 ]);
 // 获取照片墙数据
-const getPhotoWallData = async () => {
-  const res = await getPhotoWallImages();
-  console.log('获取照片墙数据文本处')
-  if (res.code === 1) {
-    List.value = res.data.map((item) => {
+const getPhotoWallData = async (pageNum,pageSize,title='') => {
+  // console.log('获取照片墙数据文本处', pageNum,pageSize,title)
+  const res = await getPhotoWallImages(pageNum,pageSize,title);
+  console.log('获取照片墙数据文本处',res )
+  if (res.data.code === 1) {
+    List.value = res.data.data.data.map((item) => {
       return {
         ...item,
          style: generateRandomStyle(),
@@ -72,8 +73,9 @@ const getPhotoWallData = async () => {
     console.log('照片墙数据', List.value)
   }
 }
+const title = ref('')
 onMounted(() => {
-  getPhotoWallData();
+  getPhotoWallData(1,'',title.value);
 })
 </script>
 

@@ -78,7 +78,6 @@ const token = localStorage.getItem('token')
 //获取照片墙列表
 export const GetShootList = (pageNum, pageSize, title) => {
   console.log('获取照片墙列表API', pageNum, pageSize, title)
-  
   if(useMock){
     return {
       "code":1,
