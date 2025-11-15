@@ -73,11 +73,12 @@ const shootList = [
     detail: '医学图像分析中的深度学习技术'
   }
 ]
-const useMock = true
+const useMock = false
 const token = localStorage.getItem('token')
 //获取照片墙列表
 export const GetShootList = (pageNum, pageSize, title) => {
   console.log('获取照片墙列表API', pageNum, pageSize, title)
+  
   if(useMock){
     return {
       "code":1,
@@ -109,9 +110,8 @@ export const AddShoot = (title,file,detail) => {
   return service.post('/api/team/shoots', {
     title,
     file,
-    detail,
     headers: {
-      Authorization: `Bearer ${token}`
+        'Authorization': `Bearer ${token}`
     }
   })
 }
@@ -129,10 +129,8 @@ export const UpdateShoot = async (id,title,file,detail) => {
     id,
     title,
     file,
-    detail,
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    
+    
   })
 }
 //删除照片墙
@@ -146,6 +144,8 @@ export const DeleteShoot = (id) => {
     }
   }
   return service.delete('/api/team/shoots', {
-    id,
+    params: {
+      id
+    }
   })
 }

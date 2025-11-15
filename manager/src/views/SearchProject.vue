@@ -26,7 +26,7 @@
 
     <!-- 数据表格 -->
     <el-table :data="tableData" border class="data-table">
-      <el-table-column prop="num" label="编号" width="80" align="center" />
+      <el-table-column prop="id" label="编号" width="80" align="center" />
       <el-table-column prop="title" label="项目名称" min-width="300" />
       <el-table-column prop="sort" label="项目类别" width="150" />
       <el-table-column prop="time" label="上传时间" width="150" sortable />
@@ -162,17 +162,18 @@ const tableData = ref([
 
 //获取项目列表
 const GetAllSearchProject = async (pageNum, pageSize,name)=>{
-  const response = await GetSearchProject(pageNum, pageSize,name);
+  const response = await GetSearchProject(pageNum, pageSize,name)
+  console.log('response',response);
+  
   console.log('获取项目列表文本处',pageNum, pageSize,name)
-  tableData.value = response.data.data
+  tableData.value = response.data.data.data
   var num = 1
   tableData.value.filter(item=>{
-    item.num = num++;
-    if(item.id===1){
+    if(item.num===1){
       return item.sort = "服务推荐"
-    }else if(item.id===2){
+    }else if(item.num===2){
       return item.sort = "自然语言大模型"
-    }else if(item.id===3){
+    }else if(item.num===3){
       return item.sort = "图像处理"
     }
   })

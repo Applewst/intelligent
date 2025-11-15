@@ -71,6 +71,8 @@ const tables = ref([])
 
 onMounted(async () => {
   const response = await GetSearchProjects(props.projectId);
+  console.log(response)
+  
   tables.value = response.data;
 })
 

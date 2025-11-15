@@ -17,6 +17,8 @@ const pageNum = ref(1); // 当前页码
 const GetAllSearchPapers = async (pageNum, pageSize, author, title) => {
   console.log('获取论文数据文本处：',pageNum, pageSize, author, title);
   const response = await GetsearchPapers(pageNum, pageSize, author, title);
+  console.log('response:',response)
+  
   if(response.code === 1){
     ElMessage.success('获取论文数据成功');
     papers.value = response.data.data;

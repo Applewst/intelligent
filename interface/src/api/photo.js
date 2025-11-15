@@ -104,5 +104,5 @@ export const getPhotoWallImages = async () => {
       "data":List.value
     }
   }
-  // return service.get('/team/shoots')
+  return service.get('/team/shoots')
 }

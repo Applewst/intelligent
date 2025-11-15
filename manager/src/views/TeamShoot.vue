@@ -46,7 +46,7 @@
           
           <div class="card-info">
             <h3 class="title">{{ item.title }}</h3>
-            <p class="detail">{{ item.detail }}</p>
+            <!-- <p class="detail">{{ item.detail }}</p> -->
             <div class="time">
               <el-icon><Clock /></el-icon>
               <span>{{ item.time }}</span>
@@ -141,9 +141,10 @@ const total = ref(0)  // 总数
 const dialogVisible = ref(false)
 const isEdit = ref(false)
 const formData = ref({
-  id: null,
+  id: '',
   title: '',
   file: '',
+  time:'',
   detail: ''
 })
 
@@ -158,14 +159,18 @@ const GetAllhotoList = async (pageNum, pageSize, title) => {
   console.log('获取照片数据文本处：',pageNum, pageSize, title)
   
   const response = await GetShootList(pageNum, pageSize, title)
-  total.value = response.data.total
-  photoList.value = response.data.data
+  console.log('后端传回的数据',response.data.data);
+  
+  total.value = response.data.data.total
+  photoList.value = response.data.data.data
 }
 //新增照片数据
 const AddPhotoList = async (title,file,detail) => {
   console.log('新增照片数据文本处：',title,file,detail)
   const response = await AddShoot(title,file,detail)
-  if (response.code === 1) {
+  console.log(response)
+  
+  if (response.data.code === 1) {
     ElMessage.success('新增成功')
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
   } else {
@@ -175,8 +180,8 @@ const AddPhotoList = async (title,file,detail) => {
 //编辑照片数据
 const UpdatePhotoList = async (id,title,file,detail) => {
   console.log('编辑照片数据文本处：',id,title,file,detail)
-  const response = await UpdateShoot(id,title,file,detail)
-  if (response.code === 1) {
+  const response = await UpdateShoot(id,title,file)
+  if (response.data.code === 1) {
     ElMessage.success('编辑成功')
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
   } else {
@@ -185,9 +190,9 @@ const UpdatePhotoList = async (id,title,file,detail) => {
 }
 //删除照片数据
 const DeletePhotoList = async (id) => {
-  console.log('删除照片数据文本处：',id)
+  console.log('删除照片数据文本处：',typeof id)
   const response = await DeleteShoot(id)
-  if (response.code === 1) {
+  if (response.data.code === 1) {
     ElMessage.success('删除成功')
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
   } else {
@@ -241,8 +246,7 @@ const handleAdd = () => {
 // 编辑
 const handleEdit = (item) => {
   isEdit.value = true
-  console.log('出现给time',item);
-  formData.value = { ...item }
+  formData.value = {...item}
   dialogVisible.value = true
 }
 
@@ -256,6 +260,7 @@ const handleDelete = (id) => {
     DeletePhotoList(id)
   }).catch(() => {})
 }
+
 
 // 保存
 const handleSave = () => {

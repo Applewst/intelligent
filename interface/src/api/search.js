@@ -122,7 +122,7 @@ const papers = ref([
     time: '2023-05-15',
   },
 ]);
-const useMock = true;
+const useMock = false;
 //获取论文
 export const GetsearchPapers = async (pageNum,pageSize,author,title)=>{
   console.log('获取论文信息API：',pageNum,pageSize,author,title)
@@ -138,10 +138,12 @@ export const GetsearchPapers = async (pageNum,pageSize,author,title)=>{
     }
   }
   return service.get('/api/search/papers/list',{
-    pageNum,
-    pageSize,
-    author,
-    title
+    params:{
+      pageNum,
+      pageSize,
+      author,
+      title
+    }
   })
 }
 
@@ -216,7 +218,9 @@ export const GetSearchProjects = async (id)=>{
     }
   }
   return service.get('/api/search',{
-    id
+    params:{
+      id
+    }
   })
 }
 
@@ -306,8 +310,10 @@ export const GetAwards = async (pageNum, pageSize,author)=>{
     }
   }
   return service.get('/api/search/awards',{
-    pageNum,
-    pageSize,
-    author
+    params:{
+      pageNum,
+      pageSize,
+      author
+    }
   })
 }

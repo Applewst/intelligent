@@ -144,8 +144,8 @@ const DevelopData = ref([]);
 const getDevelopList = async (pageNum,pageSize,name) => {
   console.log('获取学生发展文本处',pageNum,pageSize,name)
   const response = await GetDevelopList(pageNum,pageSize,name)
-  DevelopData.value = response.data.data;  
-  total.value = response.data.total;
+  DevelopData.value = response.data.data.data;  
+  total.value = response.data.data.total;
 };
 //新增学生发展
 const AddDevelopData = async (name,detail,file) => {
