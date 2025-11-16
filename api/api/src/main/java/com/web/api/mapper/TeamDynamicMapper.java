@@ -54,5 +54,5 @@ public interface TeamDynamicMapper {
      * 返回列表数据
      * @return
      */
-    Page<TeamDynamic> pageQuery(PageQueryDTO pageQueryDTO);
+    Page<TeamDynamic> pageQuery(String title);
 }

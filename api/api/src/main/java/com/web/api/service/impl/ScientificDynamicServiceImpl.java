@@ -54,10 +54,10 @@ public class ScientificDynamicServiceImpl implements ScientificDynamicService {
     }
 
     @Override
-    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
-        PageHelper.startPage(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
-        Page<ScientificDynamic> page = scientificDynamicMapper.pageQuery(pageQueryDTO.getName());
-        log.info("分页查询结果，name：{}",pageQueryDTO.getName() );
+    public PageResult pageQuery(int pageNum,int pageSize,String title) {
+        PageHelper.startPage(pageNum,pageSize);
+        Page<ScientificDynamic> page = scientificDynamicMapper.pageQuery(title);
+        log.info("分页查询结果，title：{}",title);
         return new PageResult(page.getTotal(), page.getResult());
     }
 }

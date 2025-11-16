@@ -33,10 +33,12 @@ public class ScientificDynamicController {
      * 获取科研动态列表
      */
     @GetMapping("/new/list")
-    public Result getAllDynamics(PageQueryDTO pageQueryDTO)
+    public Result getAllDynamics(@RequestParam(defaultValue = "1") int pageNum,
+                                 @RequestParam(defaultValue = "10") int pageSize,
+                                 @RequestParam String title)
     {
-    log.info("分页查询默认值PageQuretDTO:{}",pageQueryDTO );
-        PageResult pageResult =scientificDynamicServiceImpl.pageQuery(pageQueryDTO);
+    log.info("分页查询默认值pageNum:{},pageSize:{},title:{}",pageNum,pageSize,title );
+        PageResult pageResult =scientificDynamicServiceImpl.pageQuery(pageNum,pageSize,title);
     return Result.success(pageResult);
     }
 
