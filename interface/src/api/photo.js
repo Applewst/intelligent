@@ -2,7 +2,7 @@
 import service from './request';
 import { ref } from 'vue';
 // 切换模式：true-使用模拟数据，false-使用真实AJAX请求
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 const List = ref([
   {
     id: 1,

@@ -55,7 +55,7 @@ const mockTeacherData = [
 
 export const getTeacherList = async (params = {}) => {
   // 标记是否使用模拟数据（开发阶段可设为true，上线前改为false）
-  const useMock = true;
+  const useMock = false;
 
   try {
     if (useMock) {

@@ -54,6 +54,8 @@ const loadPhotos = async () => {
       pageSize: 6,
       name: '',
     }) // 从JS/API获取数据
+    console.log(apiData)
+
     // 验证API返回格式
     if (Array.isArray(apiData.data)) {
       displayedPhotos.value = apiData.data // 将API数据赋值给显示列表

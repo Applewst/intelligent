@@ -1,7 +1,7 @@
 import request from "./request.js"
 
 // 模拟数据开关（开发时设置为true，生产环境设置为false）
-const USE_MOCK_DATA = true
+const USE_MOCK_DATA = false
 
 // 模拟数据
 const mockTeamData = {

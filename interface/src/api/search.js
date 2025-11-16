@@ -122,11 +122,11 @@ const papers = ref([
     time: '2023-05-15',
   },
 ]);
-const useMock = true;
+const useMock = false;
 //获取论文
 export const GetsearchPapers = async (...params)=>{
   console.log('获取论文信息API：',params)
-  
+
   if(useMock){
     return {
       "code": 1,

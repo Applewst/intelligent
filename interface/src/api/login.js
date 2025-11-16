@@ -1,11 +1,11 @@
 import service from "./request";
 
-const mockUserData = 
+const mockUserData =
     "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1QjlBRUQ4OUFEOTU3RjY2MDYzQzI2QTBBQzJDNzAzQiIsInVzZXIiOiJ7XCJpZFwiOlwiMVwiLFwicm9sZVwiOjAsXCJ1c2VybmFtZVwiOlwiYWRtaW5cIn0iLCJpc3MiOiJzeXN0ZW0iLCJpYXQiOjE3NjA2MTQ0NDAsImV4cCI6MTc2MDYxNjI0MH0.JMRNwAzBI_AAcF_90T-bX1DiZlM0it8HpeLgS0JrSkQ"
 
 //登录请求
 export const UserLogin = async (username,password) =>{
-  const useMock = true;
+  const useMock =false;
   if(useMock){
       return {
       "code": 1,

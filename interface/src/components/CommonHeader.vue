@@ -6,7 +6,6 @@ import { useCounterStore } from '../stores/counter'
 // import { useUserStore } from '../stores/user'
 import { useRouter, useRoute } from 'vue-router'
 
-
 // const storeuser = useUserStore()
 const router = useRouter()
 const route = useRoute()
@@ -43,7 +42,7 @@ function handleMenuSelect(key) {
   if (key === 'logout') {
     isLogin.value = false
     userName.value = ''
-    
+
     //本地储存的token删除
     localStorage.removeItem('token')
     localStorage.removeItem('username')
@@ -66,75 +65,74 @@ onUpdated(() => {
 <template>
   <div class="allheader">
     <div class="header-top">
-        <div class="logo"><img src="../assets/images/hut.png" alt="" style="width: 80px" /></div>
-        <div class="search-center">
-          <el-input placeholder="搜索" size="small" class="search-input" :prefix-icon="Search" />
-        </div>
-        <div class="header-actions">
-          <el-button type="primary" size="small">English</el-button>
-          <el-dropdown trigger="click" @command="handleMenuSelect">
-            <span class="el-dropdown-link">
-              <el-avatar
-                v-if="isLogin"
-                :style="userType === 'admin' ? 'border:2px solid #54475e' : 'border:2px solid gold'"
-                size="large"
-                >{{ userName ? userName : '' }}</el-avatar
+      <div class="logo"><img src="../assets/images/hut.png" alt="" style="width: 80px" /></div>
+      <div class="search-center">
+        <el-input placeholder="搜索" size="small" class="search-input" :prefix-icon="Search" />
+      </div>
+      <div class="header-actions">
+        <el-button type="primary" size="small">English</el-button>
+        <el-dropdown trigger="click" @command="handleMenuSelect">
+          <span class="el-dropdown-link">
+            <el-avatar
+              v-if="isLogin"
+              :style="userType === 'admin' ? 'border:2px solid #54475e' : 'border:2px solid gold'"
+              size="large"
+              >{{ userName ? userName : '' }}</el-avatar
+            >
+            <el-avatar v-else size="large" icon="el-icon-user"></el-avatar>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-if="!isLogin" command="login" @click="handleAvatarClick"
+                >登录</el-dropdown-item
               >
-              <el-avatar v-else size="large" icon="el-icon-user"></el-avatar>
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item v-if="!isLogin" command="login" @click="handleAvatarClick"
-                  >登录</el-dropdown-item
-                >
-                <el-dropdown-item v-else command="logout" >退出登录</el-dropdown-item>
-                <!-- 跳转到后台的首页 -->
-                <el-dropdown-item v-if="isLogin" disabled>
-                  {{ userType === 'admin' ? '管理员' : '内部人员' }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
+              <el-dropdown-item v-else command="logout">退出登录</el-dropdown-item>
+              <!-- 跳转到后台的首页 -->
+              <el-dropdown-item v-if="isLogin" disabled>
+                {{ userType === 'admin' ? '管理员' : '内部人员' }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
+    </div>
 
-      <div class="header-menu-container">
-        <el-menu
-          class="header-menu"
-          mode="horizontal"
-          :default-active="activeMenuIndex"
-          @select="(key) => (activeIndex = key)"
-          background-color="#409EFF"
-          text-color="#fff"
-          active-text-color="#ffd04b"
-          router="true"
-        >
-          <el-menu-item index="/">首页</el-menu-item>
-          <el-menu-item index="/team/introduction">团队介绍</el-menu-item>
-          <el-sub-menu index="search">
-            <template #title>研究成果</template>
-            <el-menu-item index="/search/project">研究项目</el-menu-item>
-            <el-menu-item index="/search/paper">发表论文</el-menu-item>
-            <el-menu-item index="/search/award">获奖情况</el-menu-item>
-          </el-sub-menu>
-          <el-sub-menu index="news">
-            <template #title>团队动态</template>
-            <el-menu-item index="/news/activity">科研动态</el-menu-item>
-            <el-menu-item index="/news/event">团队活动</el-menu-item>
-            <el-menu-item index="/news/student">学生发展</el-menu-item>
-            <el-menu-item index="/news/photo">照片墙</el-menu-item>
-          </el-sub-menu>
-          <el-sub-menu index="member">
-            <template #title>成员信息</template>
-            <el-menu-item index="/member/teacher">师资队伍</el-menu-item>
-            <el-menu-item index="/member/studentlist">在读学生</el-menu-item>
-            <el-menu-item index="/member/alumni">桃李天下</el-menu-item>
-          </el-sub-menu>
-          <el-menu-item index="/link/contact">联系我们</el-menu-item>
-          <el-menu-item index="/resource" v-show="store.isLogin">资源共享</el-menu-item>
-
-        </el-menu>
-      </div>
+    <div class="header-menu-container">
+      <el-menu
+        class="header-menu"
+        mode="horizontal"
+        :default-active="activeMenuIndex"
+        @select="(key) => (activeIndex = key)"
+        background-color="#409EFF"
+        text-color="#fff"
+        active-text-color="#ffd04b"
+        router="true"
+      >
+        <el-menu-item index="/">首页</el-menu-item>
+        <el-menu-item index="/team/introduction">团队介绍</el-menu-item>
+        <el-sub-menu index="search">
+          <template #title>研究成果</template>
+          <el-menu-item index="/search/project">研究项目</el-menu-item>
+          <el-menu-item index="/search/paper">发表论文</el-menu-item>
+          <el-menu-item index="/search/award">获奖情况</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="news">
+          <template #title>团队动态</template>
+          <el-menu-item index="/news/activity">科研动态</el-menu-item>
+          <el-menu-item index="/news/event">团队活动</el-menu-item>
+          <el-menu-item index="/news/student">学生发展</el-menu-item>
+          <el-menu-item index="/news/photo">照片墙</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="member">
+          <template #title>成员信息</template>
+          <el-menu-item index="/member/teacher">师资队伍</el-menu-item>
+          <el-menu-item index="/member/studentlist">在读学生</el-menu-item>
+          <el-menu-item index="/member/alumni">桃李天下</el-menu-item>
+        </el-sub-menu>
+        <el-menu-item index="/link/contact">联系我们</el-menu-item>
+        <el-menu-item index="/resource" v-show="store.isLogin">资源共享</el-menu-item>
+      </el-menu>
+    </div>
   </div>
 </template>
 
@@ -228,7 +226,7 @@ onUpdated(() => {
   font-size: 20px;
   position: fixed; /* 固定定位 */
   top: 80px;
-   z-index: 1000;
+  z-index: 1000;
 }
 
 .header-menu :deep(.el-menu-item),

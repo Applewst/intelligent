@@ -28,7 +28,7 @@
         <el-table-column prop="name" label="姓名" width="120" />
         <el-table-column prop="title" label="研究方向" min-width="150" />
         <el-table-column
-          prop="description"
+          prop="detail"
           label="教师详情"
           min-width="200"
           show-overflow-tooltip
@@ -63,7 +63,7 @@
         <el-pagination
           v-model:current-page="pagination.page"
           v-model:page-size="pagination.pageSize"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[5, 10, 20, 50, 100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
@@ -91,9 +91,9 @@
         <el-form-item label="研究方向" prop="title">
           <el-input v-model="formData.title" placeholder="请输入研究方向" />
         </el-form-item>
-        <el-form-item label="教师详情" prop="description">
+        <el-form-item label="教师详情" prop="detail">
           <el-input
-            v-model="formData.description"
+            v-model="formData.detail"
             type="textarea"
             :rows="4"
             placeholder="请输入教师详细介绍"
@@ -131,14 +131,14 @@ import {
 } from "@/api/teacher";
 
 // 模拟数据开关：true=使用模拟数据，false=使用真实API
-const USE_MOCK_DATA = ref(true);
+const USE_MOCK_DATA = ref(false);
 
 const mockTeachers = ref([
   {
     id: 1,
     name: "张伟",
     title: "机器学习与深度学习",
-    description:
+    detail:
       "主要研究深度神经网络、强化学习和计算机视觉领域，发表SCI论文20余篇。",
     email: "zhangwei@example.com",
     avatar: "/placeholder.svg?height=50&width=50",
@@ -148,7 +148,7 @@ const mockTeachers = ref([
     id: 2,
     name: "李娜",
     title: "计算机视觉",
-    description:
+    detail:
       "专注于图像识别、目标检测和视频分析技术研究，主持国家自然科学基金项目2项。",
     email: "lina@example.com",
     avatar: "/placeholder.svg?height=50&width=50",
@@ -158,8 +158,7 @@ const mockTeachers = ref([
     id: 3,
     name: "王强",
     title: "自然语言处理",
-    description:
-      "从事文本挖掘、情感分析和机器翻译研究，获得省部级科技进步奖3项。",
+    detail: "从事文本挖掘、情感分析和机器翻译研究，获得省部级科技进步奖3项。",
     email: "wangqiang@example.com",
     avatar: "/placeholder.svg?height=50&width=50",
     gender: 1,
@@ -168,7 +167,7 @@ const mockTeachers = ref([
     id: 4,
     name: "赵敏",
     title: "数据挖掘与分析",
-    description:
+    detail:
       "擅长大数据分析、数据可视化和商业智能，指导研究生获得多项竞赛奖项。",
     email: "zhaomin@example.com",
     avatar: "/placeholder.svg?height=50&width=50",
@@ -178,8 +177,7 @@ const mockTeachers = ref([
     id: 5,
     name: "刘洋",
     title: "分布式系统",
-    description:
-      "研究云计算架构、微服务技术和容器编排，有丰富的工业界项目经验。",
+    detail: "研究云计算架构、微服务技术和容器编排，有丰富的工业界项目经验。",
     email: "liuyang@example.com",
     avatar: "/placeholder.svg?height=50&width=50",
     gender: 1,
@@ -188,8 +186,7 @@ const mockTeachers = ref([
     id: 6,
     name: "陈静",
     title: "人工智能伦理",
-    description:
-      "关注AI技术的社会影响、算法公平性和隐私保护问题，出版专著2部。",
+    detail: "关注AI技术的社会影响、算法公平性和隐私保护问题，出版专著2部。",
     email: "chenjing@example.com",
     avatar: "/placeholder.svg?height=50&width=50",
     gender: 2,
@@ -198,8 +195,7 @@ const mockTeachers = ref([
     id: 7,
     name: "杨军",
     title: "云计算与大数据",
-    description:
-      "主导多个企业级云平台建设项目，擅长Hadoop、Spark等大数据技术栈。",
+    detail: "主导多个企业级云平台建设项目，擅长Hadoop、Spark等大数据技术栈。",
     email: "yangjun@example.com",
     avatar: "/placeholder.svg?height=50&width=50",
     gender: 1,
@@ -208,8 +204,7 @@ const mockTeachers = ref([
     id: 8,
     name: "周芳",
     title: "软件工程",
-    description:
-      "专注于软件设计模式、敏捷开发和DevOps实践，培养学生就业率100%。",
+    detail: "专注于软件设计模式、敏捷开发和DevOps实践，培养学生就业率100%。",
     email: "zhoufang@example.com",
     avatar: "/placeholder.svg?height=50&width=50",
     gender: 2,
@@ -235,7 +230,7 @@ const loading = ref(false);
 // 分页
 const pagination = reactive({
   page: 1,
-  pageSize: 10,
+  pageSize: 5,
   total: 0,
 });
 
@@ -247,7 +242,7 @@ const formData = reactive({
   id: undefined,
   name: "",
   title: "",
-  description: "",
+  detail: "",
   email: "",
   avatar: "",
   gender: 1,
@@ -256,7 +251,7 @@ const formData = reactive({
 const formRules = {
   name: [{ required: true, message: "请输入教师姓名", trigger: "blur" }],
   title: [{ required: true, message: "请输入研究方向", trigger: "blur" }],
-  description: [{ required: true, message: "请输入教师详情", trigger: "blur" }],
+  detail: [{ required: true, message: "请输入教师详情", trigger: "blur" }],
   email: [
     { required: true, message: "请输入邮箱", trigger: "blur" },
     { type: "email", message: "请输入正确的邮箱格式", trigger: "blur" },
@@ -288,12 +283,15 @@ const fetchTeacherList = async () => {
     } else {
       // 使用真实API
       const res = await realGetTeacherList({
-        page: pagination.page,
+        pageNum: pagination.page,
         pageSize: pagination.pageSize,
         name: searchForm.name,
       });
-      tableData.value = res.data.records || res.data.list || [];
-      pagination.total = res.data.total || 0;
+
+      console.log(res.data.data.data);
+
+      tableData.value = res.data.data.data || [];
+      pagination.total = res.data.data.total || 0;
     }
   } catch (error) {
     console.error("获取教师列表失败:", error);
@@ -434,7 +432,7 @@ const handleDialogClose = () => {
     id: undefined,
     name: "",
     title: "",
-    description: "",
+    detail: "",
     email: "",
     avatar: "",
     gender: 1,
