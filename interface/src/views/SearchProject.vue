@@ -2,7 +2,10 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getProjectList } from '@/api/project'
+// 1. 从 element-plus 中导入核心组件
 import { ElMessage, ElAvatar, ElEmpty, ElButton, ElSkeleton, ElIcon } from 'element-plus'
+// 2. 从 @element-plus/icons-vue 中单独导入 WarningFilled 图标
+import { WarningFilled } from '@element-plus/icons-vue'
 
 // 路由实例
 const router = useRouter()
@@ -19,19 +22,25 @@ const fetchDirections = async () => {
   directions.value = []
 
   try {
-    // 传递固定参数：pageNum=1, pageSize=3, name=''
+    // 保持你原来的传参方式：传递一个对象
     const response = await getProjectList({
       pageNum: 1,
       pageSize: 3,
       name: '',
     })
-    if (response.code === 1 && Array.isArray(response.data)) {
-      directions.value = response.data
+
+    // 核心修改：正确地处理返回的数据
+    if (response.code === 1) {
+      // API返回的数据结构是 { code: 1, data: { total: ..., data: [...] } }
+      // 我们需要的项目数组在 response.data.data 中
+      directions.value = response.data.data || []
+
       if (directions.value.length === 0) {
         ElMessage.info('当前没有项目数据')
       }
     } else {
-      throw new Error('数据格式异常')
+      // 如果API返回错误码，显示错误信息
+      throw new Error(response.message || '获取项目数据失败')
     }
   } catch (err) {
     error.value = err.message || '获取项目数据失败，请重试'
@@ -75,7 +84,7 @@ const handleCardClick = (projectId) => {
         <div class="avatar-container">
           <div class="avatar-bg"></div>
           <el-avatar
-            :src="direction.imageUrl"
+            :src="direction.image"
             class="direction-avatar"
             shape="circle"
             :error="errorImage"

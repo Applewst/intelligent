@@ -38,7 +38,7 @@ export const getGraduateList = async (params = { pageNum: 1, pageSize: 10, name:
         }, 300)
       })
     } else {
-      const response = await service.get("/graduates", { params })
+      const response = await service.get("/graduates/list", { params })
       return response
     }
   } catch (error) {

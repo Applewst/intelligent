@@ -16,7 +16,7 @@ const fetchTeamData = async () => {
     const response = await getTeamIntroduction()
     console.log(response)
 
-    if (response.code === 200 && response.data) {
+    if (response.code === 1 && response.data) {
       teamData.value = response.data
     } else {
       ElMessage.error(response.message || '获取团队介绍失败')

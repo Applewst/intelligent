@@ -1,3 +1,122 @@
+<script setup>
+import { ref, reactive, onMounted } from "vue";
+import { ElMessage } from "element-plus";
+import { Plus } from "@element-plus/icons-vue";
+import { getTeamIntroduction, updateTeamIntroduction } from "@/api/introduce";
+import { uploadImage } from "@/api/upload"; // 引入通用文件上传接口
+
+const formRef = ref(null);
+const loading = ref(false);
+const submitting = ref(false);
+const imageUrl = ref(""); // 存储图片 URL
+
+const formData = reactive({
+  teamName: "",
+  introduction: "",
+  imageUrl: "", // 存储图片 URL
+});
+
+const rules = {
+  teamName: [{ required: true, message: "请输入团队名称", trigger: "blur" }],
+  introduction: [
+    { required: true, message: "请输入团队简介", trigger: "blur" },
+  ],
+  imageUrl: [{ required: true, message: "请上传团队图片", trigger: "change" }],
+};
+
+// 获取团队介绍信息
+const fetchTeamData = async () => {
+  loading.value = true;
+  try {
+    const response = await getTeamIntroduction();
+    if (response.code === 1) {
+      formData.teamName = response.data.teamName;
+      formData.introduction = response.data.introduction;
+      imageUrl.value = response.data.imageUrl; // 后端返回的图片 URL
+      formData.imageUrl = response.data.imageUrl; // 赋值给表单
+    } else {
+      ElMessage.error(response.message || "获取数据失败");
+    }
+  } catch (error) {
+    ElMessage.error("获取数据失败，请稍后重试");
+    console.error("Error fetching team data:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 处理图片上传
+const handleImageUpload = async (options) => {
+  try {
+    const file = options.file;
+    const isImage = file.type.startsWith("image/");
+    const isLt5M = file.size / 1024 / 1024 < 5;
+
+    if (!isImage) {
+      ElMessage.error("只能上传图片文件!");
+      return;
+    }
+    if (!isLt5M) {
+      ElMessage.error("图片大小不能超过 5MB!");
+      return;
+    }
+
+    // 调用通用文件上传接口
+    const response = await uploadImage(file);
+    if (response.code === 200) {
+      imageUrl.value = response.data.url; // 存储图片 URL
+      formData.imageUrl = response.data.url; // 赋值给表单
+      ElMessage.success("图片上传成功");
+    } else {
+      ElMessage.error(response.message || "图片上传失败");
+    }
+  } catch (error) {
+    ElMessage.error("图片上传失败，请稍后重试");
+    console.error("Error uploading image:", error);
+  }
+};
+
+// 提交表单
+const handleSubmit = async () => {
+  if (!formRef.value) return;
+
+  await formRef.value.validate(async (valid) => {
+    if (valid) {
+      submitting.value = true;
+      try {
+        // 传递包含图片 URL 的表单数据
+        const response = await updateTeamIntroduction(formData);
+
+        if (response.code === 1) {
+          ElMessage.success("保存成功");
+          await fetchTeamData(); // 重新获取数据
+        } else {
+          ElMessage.error(response.message || "保存失败");
+        }
+      } catch (error) {
+        ElMessage.error("保存失败，请稍后重试");
+        console.error("Error submitting form:", error);
+      } finally {
+        submitting.value = false;
+      }
+    }
+  });
+};
+
+// 取消操作
+const handleCancel = () => {
+  formRef.value?.resetFields();
+  imageUrl.value = "";
+  formData.imageUrl = "";
+  fetchTeamData(); // 重新加载原始数据
+};
+
+// 组件挂载时获取数据
+onMounted(() => {
+  fetchTeamData();
+});
+</script>
+
 <template>
   <div class="team-introduction">
     <el-card class="introduction-card">
@@ -59,125 +178,6 @@
     </el-card>
   </div>
 </template>
-
-<script setup>
-import { ref, reactive, onMounted } from "vue";
-import { ElMessage } from "element-plus";
-import { Plus } from "@element-plus/icons-vue";
-import { getTeamIntroduction, updateTeamIntroduction } from "@/api/introduce";
-import { uploadImage } from "@/api/upload"; // 引入通用文件上传接口
-
-const formRef = ref(null);
-const loading = ref(false);
-const submitting = ref(false);
-const imageUrl = ref(""); // 存储图片 URL
-
-const formData = reactive({
-  teamName: "",
-  introduction: "",
-  imageUrl: "", // 存储图片 URL
-});
-
-const rules = {
-  teamName: [{ required: true, message: "请输入团队名称", trigger: "blur" }],
-  introduction: [
-    { required: true, message: "请输入团队简介", trigger: "blur" },
-  ],
-  imageUrl: [{ required: true, message: "请上传团队图片", trigger: "change" }],
-};
-
-// 获取团队介绍信息
-const fetchTeamData = async () => {
-  loading.value = true;
-  try {
-    const response = await getTeamIntroduction();
-    if (response.code === 200) {
-      formData.teamName = response.data.teamName;
-      formData.introduction = response.data.introduction;
-      imageUrl.value = response.data.imageUrl; // 后端返回的图片 URL
-      formData.imageUrl = response.data.imageUrl; // 赋值给表单
-    } else {
-      ElMessage.error(response.message || "获取数据失败");
-    }
-  } catch (error) {
-    ElMessage.error("获取数据失败，请稍后重试");
-    console.error("Error fetching team data:", error);
-  } finally {
-    loading.value = false;
-  }
-};
-
-// 处理图片上传
-const handleImageUpload = async (options) => {
-  try {
-    const file = options.file;
-    const isImage = file.type.startsWith("image/");
-    const isLt5M = file.size / 1024 / 1024 < 5;
-
-    if (!isImage) {
-      ElMessage.error("只能上传图片文件!");
-      return;
-    }
-    if (!isLt5M) {
-      ElMessage.error("图片大小不能超过 5MB!");
-      return;
-    }
-
-    // 调用通用文件上传接口
-    const response = await uploadImage(file);
-    if (response.code === 200) {
-      imageUrl.value = response.data.url; // 存储图片 URL
-      formData.imageUrl = response.data.url; // 赋值给表单
-      ElMessage.success("图片上传成功");
-    } else {
-      ElMessage.error(response.message || "图片上传失败");
-    }
-  } catch (error) {
-    ElMessage.error("图片上传失败，请稍后重试");
-    console.error("Error uploading image:", error);
-  }
-};
-
-// 提交表单
-const handleSubmit = async () => {
-  if (!formRef.value) return;
-
-  await formRef.value.validate(async (valid) => {
-    if (valid) {
-      submitting.value = true;
-      try {
-        // 传递包含图片 URL 的表单数据
-        const response = await updateTeamIntroduction(formData);
-
-        if (response.code === 200) {
-          ElMessage.success("保存成功");
-          await fetchTeamData(); // 重新获取数据
-        } else {
-          ElMessage.error(response.message || "保存失败");
-        }
-      } catch (error) {
-        ElMessage.error("保存失败，请稍后重试");
-        console.error("Error submitting form:", error);
-      } finally {
-        submitting.value = false;
-      }
-    }
-  });
-};
-
-// 取消操作
-const handleCancel = () => {
-  formRef.value?.resetFields();
-  imageUrl.value = "";
-  formData.imageUrl = "";
-  fetchTeamData(); // 重新加载原始数据
-};
-
-// 组件挂载时获取数据
-onMounted(() => {
-  fetchTeamData();
-});
-</script>
 
 <style scoped>
 /* 样式不变 */

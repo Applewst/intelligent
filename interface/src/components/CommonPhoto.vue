@@ -50,11 +50,11 @@ const loadPhotos = async () => {
 
     // 调用API获取数据（核心：使用JS传过来的数据）
     const apiData = await getPhotoWallImages(1, 6, '') // 从JS/API获取数据
-    console.log(apiData)
+    // console.log(apiData)
 
     // 验证API返回格式
-    if (Array.isArray(apiData.data)) {
-      displayedPhotos.value = apiData.data // 将API数据赋值给显示列表
+    if (Array.isArray(apiData.data.data)) {
+      displayedPhotos.value = apiData.data.data // 将API数据赋值给显示列表
     } else {
       throw new Error('API返回数据格式错误')
     }

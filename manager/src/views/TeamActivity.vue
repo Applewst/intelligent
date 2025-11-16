@@ -1,3 +1,158 @@
+<script setup>
+import { ref, onMounted } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import {
+  getEventList,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+} from "../api/events.js";
+
+// 搜索参数
+const searchName = ref("");
+
+// 分页参数
+const pageNum = ref(1);
+const pageSize = ref(10);
+const total = ref(0);
+
+// 数据列表
+const eventList = ref([]);
+const loading = ref(false);
+
+// 对话框状态
+const dialogVisible = ref(false);
+const isEdit = ref(false);
+const dialogTitle = ref("");
+const formRef = ref();
+
+// 表单数据
+const formData = ref({
+  title: "",
+  image: "",
+  detail: "",
+  time: "",
+});
+
+// 表单验证规则
+const formRules = {
+  title: [{ required: true, message: "请输入活动标题", trigger: "blur" }],
+  image: [{ required: true, message: "请输入图片URL", trigger: "blur" }],
+  detail: [{ required: true, message: "请输入活动详情", trigger: "blur" }],
+  time: [{ required: true, message: "请选择活动时间", trigger: "change" }],
+};
+
+// 加载数据
+const loadData = async () => {
+  loading.value = true;
+  try {
+    const response = await getEventList({
+      pageNum: pageNum.value,
+      pageSize: pageSize.value,
+      title: searchName.value,
+    });
+    eventList.value = response.list;
+    total.value = response.total;
+  } catch (error) {
+    ElMessage.error("加载活动列表失败");
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 搜索
+const handleSearch = () => {
+  pageNum.value = 1;
+  loadData();
+};
+
+// 分页改变
+const handlePageChange = (page) => {
+  pageNum.value = page;
+  loadData();
+};
+
+const handleSizeChange = (size) => {
+  pageSize.value = size;
+  pageNum.value = 1;
+  loadData();
+};
+
+// 添加
+const handleAdd = () => {
+  isEdit.value = false;
+  dialogTitle.value = "添加新活动";
+  formData.value = {
+    title: "",
+    image: "",
+    detail: "",
+    time: "",
+  };
+  dialogVisible.value = true;
+};
+
+// 编辑
+const handleEdit = (row) => {
+  isEdit.value = true;
+  dialogTitle.value = "编辑活动";
+  formData.value = {
+    id: row.id,
+    title: row.title,
+    image: row.image,
+    detail: row.detail,
+    time: row.time,
+  };
+  dialogVisible.value = true;
+};
+
+// 删除
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm("确定要删除此活动吗？", "警告", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    });
+
+    await deleteEvent(row.id);
+    ElMessage.success("活动删除成功");
+    loadData();
+  } catch (error) {
+    if (error !== "cancel") {
+      ElMessage.error("删除活动失败");
+    }
+  }
+};
+
+// 提交表单
+const handleSubmit = async () => {
+  if (!formRef.value) return;
+
+  await formRef.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        if (isEdit.value && formData.value.id) {
+          await updateEvent(formData.value);
+          ElMessage.success("活动更新成功");
+        } else {
+          await createEvent(formData.value);
+          ElMessage.success("活动创建成功");
+        }
+        dialogVisible.value = false;
+        loadData();
+      } catch (error) {
+        ElMessage.error(`${isEdit.value ? "更新" : "创建"}活动失败`);
+      }
+    }
+  });
+};
+
+// 初始化加载
+onMounted(() => {
+  loadData();
+});
+</script>
+
 <template>
   <div class="event-admin">
     <!-- 搜索和操作栏 -->
@@ -198,161 +353,6 @@
     </el-dialog>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import {
-  getEventList,
-  createEvent,
-  updateEvent,
-  deleteEvent,
-} from "../api/events.js";
-
-// 搜索参数
-const searchName = ref("");
-
-// 分页参数
-const pageNum = ref(1);
-const pageSize = ref(10);
-const total = ref(0);
-
-// 数据列表
-const eventList = ref([]);
-const loading = ref(false);
-
-// 对话框状态
-const dialogVisible = ref(false);
-const isEdit = ref(false);
-const dialogTitle = ref("");
-const formRef = ref();
-
-// 表单数据
-const formData = ref({
-  title: "",
-  image: "",
-  detail: "",
-  time: "",
-});
-
-// 表单验证规则
-const formRules = {
-  title: [{ required: true, message: "请输入活动标题", trigger: "blur" }],
-  image: [{ required: true, message: "请输入图片URL", trigger: "blur" }],
-  detail: [{ required: true, message: "请输入活动详情", trigger: "blur" }],
-  time: [{ required: true, message: "请选择活动时间", trigger: "change" }],
-};
-
-// 加载数据
-const loadData = async () => {
-  loading.value = true;
-  try {
-    const response = await getEventList({
-      pageNum: pageNum.value,
-      pageSize: pageSize.value,
-      name: searchName.value,
-    });
-    eventList.value = response.list;
-    total.value = response.total;
-  } catch (error) {
-    ElMessage.error("加载活动列表失败");
-  } finally {
-    loading.value = false;
-  }
-};
-
-// 搜索
-const handleSearch = () => {
-  pageNum.value = 1;
-  loadData();
-};
-
-// 分页改变
-const handlePageChange = (page) => {
-  pageNum.value = page;
-  loadData();
-};
-
-const handleSizeChange = (size) => {
-  pageSize.value = size;
-  pageNum.value = 1;
-  loadData();
-};
-
-// 添加
-const handleAdd = () => {
-  isEdit.value = false;
-  dialogTitle.value = "添加新活动";
-  formData.value = {
-    title: "",
-    image: "",
-    detail: "",
-    time: "",
-  };
-  dialogVisible.value = true;
-};
-
-// 编辑
-const handleEdit = (row) => {
-  isEdit.value = true;
-  dialogTitle.value = "编辑活动";
-  formData.value = {
-    id: row.id,
-    title: row.title,
-    image: row.image,
-    detail: row.detail,
-    time: row.time,
-  };
-  dialogVisible.value = true;
-};
-
-// 删除
-const handleDelete = async (row) => {
-  try {
-    await ElMessageBox.confirm("确定要删除此活动吗？", "警告", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      type: "warning",
-    });
-
-    await deleteEvent(row.id);
-    ElMessage.success("活动删除成功");
-    loadData();
-  } catch (error) {
-    if (error !== "cancel") {
-      ElMessage.error("删除活动失败");
-    }
-  }
-};
-
-// 提交表单
-const handleSubmit = async () => {
-  if (!formRef.value) return;
-
-  await formRef.value.validate(async (valid) => {
-    if (valid) {
-      try {
-        if (isEdit.value && formData.value.id) {
-          await updateEvent(formData.value);
-          ElMessage.success("活动更新成功");
-        } else {
-          await createEvent(formData.value);
-          ElMessage.success("活动创建成功");
-        }
-        dialogVisible.value = false;
-        loadData();
-      } catch (error) {
-        ElMessage.error(`${isEdit.value ? "更新" : "创建"}活动失败`);
-      }
-    }
-  });
-};
-
-// 初始化加载
-onMounted(() => {
-  loadData();
-});
-</script>
 
 <style scoped>
 .event-admin {

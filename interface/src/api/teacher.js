@@ -98,7 +98,7 @@ const mockTeacherMap = {
 }
 
 export const getTeacherDetail = async (id) => {
-  const useMock ='true';
+  const useMock =false;
    if (useMock) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {

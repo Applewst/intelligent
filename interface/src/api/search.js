@@ -217,7 +217,7 @@ export const GetSearchProjects = async (id)=>{
       "data":modules.value[id-1]
     }
   }
-  return service.get('/api/search',{
+  return service.get('/search',{
     params:{
       id
     }

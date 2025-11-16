@@ -75,7 +75,7 @@ const router = createRouter({
           path: '/resource',
           name: 'resource',
           component: ()=>import('../views/ResourceData.vue'),
-        
+
         },
         {
           path: '/search/project/:projectId',
@@ -106,10 +106,6 @@ const router = createRouter({
       name: 'newPhotos',
       component: NewPhotos
     }
-   
-
-
-
   ],
   scrollBehavior(to, from, savedPosition) {
     // 始终滚动到顶部

@@ -20,7 +20,7 @@ const fetchTeachers = async () => {
     pageSize: pageSize.value,
     name: '', // 传递空的name参数
   })
-  // console.log(res.data)
+  console.log(res.data)
 
   if (res.code === 1) {
     teachers.value = res.data.data

@@ -17,7 +17,11 @@ const cleanAvatar = (raw = '') => {
 
 const fetchData = async () => {
   try {
+    console.log(teacherId)
+
     const res = await getTeacherDetail(Number(teacherId))
+    console.log(res)
+
     teacher.value = res.data.data
   } catch (e) {
     ElMessage.error(e.message || '获取教师详情失败')
