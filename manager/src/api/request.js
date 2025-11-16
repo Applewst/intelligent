@@ -29,13 +29,8 @@ service.interceptors.request.use(config => {
 // 添加响应拦截器
 service.interceptors.response.use(res=> {
     // 2xx 范围内的状态码都会触发该函数。
-<<<<<<< HEAD
-   if(res.data.code===1){
-      return res
-=======
     if(res.data.code === 1){
       console.log('后端返回的数据res',res)
->>>>>>> af0715ec2548920cd72f66d431882672a712a340
     }
     return res;
 
