@@ -18,18 +18,19 @@ const isToday = (date) => {
   return today.toDateString() === checkDate.toDateString()
 }
 
-const GetStudentDate = async () => {
-  const res1 = await getStudentList()
-  // const res2 = await getGraduateList()
-  studentDate.value = [100, res1.data.data.total]
+const GetStudentDate = async (pageNum,pageSize,name) => {
+  const res1 = await getStudentList(pageNum,pageSize,name)
+  const res2 = await getGraduateList(pageNum,pageSize,name)
+  studentDate.value = [res2.data.total, res1.data.data.total]
   console.log(studentDate.value)
 }
 
-const GetPaperData = async () => {
+const GetPaperData = async (pageNum,pageSize,author,title) => {
   try {
-    const res = await GetPaperList()
-    if (res.code === 1 && res.data && res.data.rows) {
-      const papers = res.data.rows
+    const res = await GetPaperList(pageNum,pageSize,author,title)
+      console.log(res)
+      
+      const papers = res.data.data
       
       // 按年份统计论文数量
       const yearMap = {}
@@ -44,15 +45,15 @@ const GetPaperData = async () => {
       
       paperData.value = { years, counts }
       console.log('论文按年份统计:', { years, counts })
-    }
+    
   } catch (error) {
     console.error('获取论文数据失败:', error)
   }
 }
 
 onMounted(() => {
-  GetStudentDate()
-  GetPaperData()
+  GetStudentDate('','','')
+  GetPaperData('','','','')
 })
 
 // 监听 studentDate 的变化，数据获取完成后初始化或更新图表

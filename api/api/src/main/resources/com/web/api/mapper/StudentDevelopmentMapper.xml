@@ -38,7 +38,8 @@
     <select id="selectAllStudentDevelopment" resultType="com.web.api.pojo.StudentDevelopment">
         select *
         from student_development
-        where
-            name like concat('%', #{name}, '%')
+        <if test="name != null and name != ''">
+            where name like concat('%', #{name}, '%')
+        </if>
     </select>
 </mapper>

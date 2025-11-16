@@ -3,6 +3,8 @@ package com.web.api.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 /**
  * 论文实体类
  */
@@ -17,6 +19,8 @@ public class Paper {
     private String author;
     /** 文件URL */
     private String file;
+    /** 时间 */
+    private LocalDate time;
     /** 论文描述 */
     private String detail;
 }

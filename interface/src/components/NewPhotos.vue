@@ -86,8 +86,8 @@ const GetPhotoData = async () => {
   try {
     const res = await getPhotoWallImages(1, 1000)
     
-    if (res.code === 1) {
-      allPhotos.value = res.data || []
+    if (res.data.code === 1) {
+      allPhotos.value = res.data.data.data || []
       ElMessage.success('获取成功')
     } else {
       ElMessage.error('获取失败')

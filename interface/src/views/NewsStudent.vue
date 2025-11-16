@@ -11,8 +11,12 @@ const pageNum = ref(1)
 const pageSize = ref(6)
 const total = ref(0)
 
-const GetDevelopList = async (...params) => {
-  const response = await getStudentDevelopList(params)
+const GetDevelopList = async (pageNum, pageSize,name='') => {
+  console.log(pageNum, pageSize, name)
+  
+  const response = await getStudentDevelopList(pageNum, pageSize,name)
+  console.log('response',response);
+  
   if (response.code === 1) {
     list.value = response.data.rows
     total.value = response.data.total

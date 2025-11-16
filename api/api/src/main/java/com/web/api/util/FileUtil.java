@@ -4,10 +4,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -15,10 +17,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@Component
 public class FileUtil {
 
-    // 文件上传根目录，可根据系统修改
-    private static final String RESOURCE_DIR = "D:/resources/";
+    // 注入资源目录配置
+    private static String RESOURCE_DIR;
+
+    @Value("${file.resource-dir}")
+    public void setResourceDir(String resourceDir) {
+        RESOURCE_DIR = resourceDir;
+    }
 
     /**
      * 获取文件扩展名

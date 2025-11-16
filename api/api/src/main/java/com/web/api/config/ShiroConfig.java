@@ -2,9 +2,7 @@ package com.web.api.config;
 
 import com.web.api.config.impl.JwtTokenManager;
 import com.web.api.config.impl.ShiroSessionManager;
-import com.web.api.filter.HttpMethodFilter;
-import com.web.api.filter.JwtAuthcFilter;
-import com.web.api.filter.JwtRolesFilter;
+import com.web.api.filter.NewHttpMethodFilter;
 import jakarta.servlet.Filter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.SecurityUtils;
@@ -56,8 +54,8 @@ public class ShiroConfig {
         sessionManager.setSessionValidationSchedulerEnabled(false);
         //取消cookie
         sessionManager.setSessionIdCookieEnabled(false);
-        //设置全局会话超时时间(ms -> 1h)
-        sessionManager.setGlobalSessionTimeout(60*60*1000);
+        //设置全局会话超时时间(ms)，默认 2 小时
+        sessionManager.setGlobalSessionTimeout(7200000);
         return sessionManager;
     }
 
@@ -84,23 +82,21 @@ public class ShiroConfig {
         Map<String, Filter> filters = new HashMap<>();
 
         //创建自定义过滤器对象
-        //管理员,所有权
-        HttpMethodFilter admin_all = new HttpMethodFilter();
-        admin_all.setAllowedMethod("GET,POST,PUT,DELETE",jwtTokenManager);
-        admin_all.setAllowedRole("admin,user",jwtTokenManager);
-        //用户,get请求
-        HttpMethodFilter user_get = new HttpMethodFilter();
-        user_get.setAllowedMethod("GET",jwtTokenManager);
-        user_get.setAllowedRole("user",jwtTokenManager);
+        //管理员所有权:
+        NewHttpMethodFilter adminAll = new NewHttpMethodFilter();
+        adminAll.setAllowedRole("admin","admin","admin","admin",jwtTokenManager);
 
-        //注册过滤器
-        //jwt需要认证
-        filters.put("jwt-authc",new JwtAuthcFilter(jwtTokenManager));
-        //jwt角色认证 and关系
-        filters.put("jwt-roles",new JwtRolesFilter(jwtTokenManager));
-        //http方法与角色复合认证
-        filters.put("http-method",user_get);
-        filters.put("http-method-admin",admin_all);
+        //游客仅get
+        NewHttpMethodFilter allGet = new NewHttpMethodFilter();
+        allGet.setAllowedRole("","admin","admin","admin",jwtTokenManager);
+        //仅用户get
+        NewHttpMethodFilter onlyUserGet = new NewHttpMethodFilter();
+        onlyUserGet.setAllowedRole("user,admin","admin","admin","admin",jwtTokenManager);
+
+        //载入自定义过滤器
+        filters.put("admin-all",adminAll);
+        filters.put("all-get",allGet);
+        filters.put("user-get",onlyUserGet);
         return filters;
     }
 
@@ -118,20 +114,37 @@ public class ShiroConfig {
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
 
         //设置过滤器链
-        //首页内容
-        filterChainDefinitionMap.put("/news","anon");
-        filterChainDefinitionMap.put("/projects","anon");
-        filterChainDefinitionMap.put("/teachers","anon");
-        filterChainDefinitionMap.put("/photos","anon");
-
-        //登录接口
-        filterChainDefinitionMap.put("/login","anon");
-
-        //注册接口(后续改admin)
-        filterChainDefinitionMap.put("/register","anon");
-
-        //静态资源
-        filterChainDefinitionMap.put("/uploads/**","anon");
+        //用户信息
+        filterChainDefinitionMap.put("/user/login","anon");
+        filterChainDefinitionMap.put("/user/**","admin-all");
+        //毕业生信息
+        filterChainDefinitionMap.put("/graduates/**","all-get");
+        //在读学生信息
+        filterChainDefinitionMap.put("/students/**","all-get");
+        //教师信息
+        filterChainDefinitionMap.put("/teacher/**","all-get");
+        //科研动态信息
+        filterChainDefinitionMap.put("/news/**","all-get");
+        //团队活动信息
+        filterChainDefinitionMap.put("/events/**","all-get");
+        //研究方向信息
+        filterChainDefinitionMap.put("/search/**","all-get");
+        //资源共享
+        filterChainDefinitionMap.put("/resources/**","user-get");
+        //论文管理
+        filterChainDefinitionMap.put("/papers/**","all-get");
+        //学生获奖
+        filterChainDefinitionMap.put("/search/awards/**","all-get");
+        //团队介绍
+        filterChainDefinitionMap.put("/introduce/**","all-get");
+        //联系我们
+        filterChainDefinitionMap.put("/contact/**","all-get");
+        //照片墙
+        filterChainDefinitionMap.put("/team/shoots/**","all-get");
+        //学生发展
+        filterChainDefinitionMap.put("/team/developments/**","all-get");
+        //上传接口
+        filterChainDefinitionMap.put("/upload/**","admin-all");
 
         //载入过滤器链
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -140,14 +153,3 @@ public class ShiroConfig {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-

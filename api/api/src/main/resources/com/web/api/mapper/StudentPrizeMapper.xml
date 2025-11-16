@@ -40,6 +40,9 @@
     <select id="getAllStudentPrizes" resultType="com.web.api.pojo.StudentPrize">
         select *
         from student_prize
+        <if test="author != null and author != ''">
+            where author like concat('%', #{author}, '%')
+        </if>
     </select>
 
 </mapper>

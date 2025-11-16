@@ -37,7 +37,7 @@ public class ResearchDirectionServiceImpl implements ResearchDirectionService {
         List<ResearchDirection> empList = researchDirectionMapper.getAllDirections(pageQuery.getName());
         Page<ResearchDirection> p = (Page<ResearchDirection>) empList;
         //3.返回分页结果
-        return new PageResult((long) p.getPages(),p.getResult());
+        return new PageResult(p.getTotal(),p.getResult());
     }
 
     @Override

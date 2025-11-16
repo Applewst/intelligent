@@ -60,23 +60,29 @@ const developList = [
 ]
 const useMock = false
 //获取学生发展列表
-export const GetDevelopList = (...params) => {
-  console.log('获取学生发展列表：',params)
+export const GetDevelopList = (pageNum,pageSize,name) => {
+  console.log('获取学生发展列表API：',pageNum,pageSize,name)
   if (useMock) {
       return {
         "code":1,
         "message":"success",
         "data":{
           "total":developList.length,
-          "rows":developList
+          "data":developList
         }
       }
   }
-  return service.get('/api/team/developments',{...params})
+  return service.get('/api/team/developments',{
+    params:{
+      pageNum,
+      pageSize,
+      name
+    }
+  })
 }
 //新增学生发展
-export const AddDevelop = (...params) => {
-  console.log('新增学生发展：',params)
+export const AddDevelop = (name,detail,file) => {
+  console.log('新增学生发展API：',name,detail,file)
   if (useMock) {
       return {
         "code":1,
@@ -84,11 +90,15 @@ export const AddDevelop = (...params) => {
         "data":null
       }
   }
-  return service.post('/api/team/developments',{...params})
+  return service.post('/api/team/developments',{
+    name,
+    detail,
+    file
+  })
 }
 //修改学生发展
-export const UpdateDevelop = (...params) => {
-  console.log('修改学生发展：',params)
+export const UpdateDevelop = (id,name,detail,file) => {
+  console.log('编辑学生发展APi：',id,name,detail,file)
   if (useMock) {
       return {
         "code":1,
@@ -96,11 +106,16 @@ export const UpdateDevelop = (...params) => {
         "data":null
       }
   }
-  return service.put('/api/team/developments',{...params})
+  return service.put('/api/team/developments',{
+    id,
+    name,
+    detail,
+    file
+  })
 }
 //删除学生发展
 export const DeleteDevelop = (id) => {
-  console.log('删除学生发展：',id)
+  console.log('删除学生发展API：',id)
   if (useMock) {
       return {
         "code":1,

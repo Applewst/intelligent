@@ -13,6 +13,8 @@ import com.web.api.service.PaperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -28,22 +30,25 @@ public class PaperServiceImpl implements PaperService {
     private PaperMapper paperMapper;
 
     @Override
-    public PageResult getAllPaper(PageQueryDTO pageQuery, String author) {
-        log.info("查询论文列表, num: {}, size: {}, name: {}, author: {}", pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getName(), author);
+    public PageResult getAllPaper(PageQueryDTO pageQuery, String author, String title) {
+        log.info("查询论文列表, num: {}, size: {}, name: {}, author: {}", pageQuery.getPageNum(), pageQuery.getPageSize(), title, author);
+        pageQuery.setName(title);
         //1.设置分页参数
         PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize());
         //2.执行查询,转为Page格式
         List<Paper> empList = paperMapper.getAllPapers(pageQuery.getName(), author);
         Page<Paper> p = (Page<Paper>) empList;
         //3.返回分页结果
-        return new PageResult((long) p.getPages(),p.getResult());
+        return new PageResult(p.getTotal(),p.getResult());
     }
 
     @Override
     public void addPaper(Paper paper) {
+        paper.setTime(LocalDate.now());
         try {
             paperMapper.addPaper(paper);
         } catch (Exception e) {
+            log.error("添加论文信息时发生异常，title：{}", paper.getTitle(), e);
             throw new DatabaseOperationException();
         }
     }

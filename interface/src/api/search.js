@@ -124,8 +124,8 @@ const papers = ref([
 ]);
 const useMock = false;
 //获取论文
-export const GetsearchPapers = async (...params)=>{
-  console.log('获取论文信息API：',params)
+export const GetsearchPapers = async (pageNum,pageSize,author,title)=>{
+  console.log('获取论文信息API：',pageNum,pageSize,author,title)
 
   if(useMock){
     return {
@@ -133,12 +133,17 @@ export const GetsearchPapers = async (...params)=>{
       "message": "success",
       "data": {
         "total":papers.value.length,
-        "rows":papers.value
+        "data":papers.value
       }
     }
   }
   return service.get('/api/search/papers/list',{
-    ...params
+    params:{
+      pageNum,
+      pageSize,
+      author,
+      title
+    }
   })
 }
 
@@ -213,7 +218,9 @@ export const GetSearchProjects = async (id)=>{
     }
   }
   return service.get('/api/search',{
-    id
+    params:{
+      id
+    }
   })
 }
 
@@ -292,7 +299,9 @@ const awardList = [
   }
 ]//获奖数据
 
-export const GetAwards = async ()=>{
+export const GetAwards = async (pageNum, pageSize,author)=>{
+  console.log('获取获奖信息API：',pageNum, pageSize,author)
+
   if(useMock){
     return {
       "code": 1,
@@ -300,5 +309,16 @@ export const GetAwards = async ()=>{
       "data": awardList
     }
   }
+<<<<<<< HEAD
   return service.get('/api/search/awards')
 }
+=======
+  return service.get('/api/search/awards',{
+    params:{
+      pageNum,
+      pageSize,
+      author
+    }
+  })
+}
+>>>>>>> af0715ec2548920cd72f66d431882672a712a340

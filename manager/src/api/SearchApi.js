@@ -1,4 +1,5 @@
 import service from './request';
+// import axios from 'axios';
 const projectList = [
     {
       id: 1,
@@ -41,6 +42,7 @@ const paperList = [
     id: 1,
     title: "神经网络的原理与应用",
     author: "张伟",
+    file: "https://example.com/paper1.pdf",
     time: "2023-10-01",
     detail: "这是关于神经网络原理与应用的内容。",
   },
@@ -48,6 +50,7 @@ const paperList = [
     id: 2,
     title: "卷积神经网络的深度学习",
     author: "王丽",
+    file: "https://example.com/paper2.pdf",
     time: "2023-11-01",
     detail: "这是关于卷积神经网络深度学习的内容。",
   },
@@ -55,6 +58,7 @@ const paperList = [
     id: 3,
     title: "神经网络在医疗领域的应用",
     author: "张伟",
+    file: "https://example.com/paper3.pdf",
     time: "2023-10-01",
     detail: "这是关于神经网络在医疗领域应用的内容。",
   },
@@ -62,6 +66,7 @@ const paperList = [
     id: 4,
     title: "机器学习中的特征选择",
     author: "李华",
+    file: "https://example.com/paper4.pdf",
     time: "2023-09-15",
     detail: "这是关于机器学习中特征选择的内容。",
   },
@@ -69,6 +74,7 @@ const paperList = [
     id: 5,
     title: "深度学习模型的优化策略",
     author: "王丽",
+    file: "https://example.com/paper5.pdf",
     time: "2023-08-20",
     detail: "这是关于深度学习模型优化策略的内容。",
   },
@@ -76,6 +82,7 @@ const paperList = [
     id: 6,
     title: "深度学习的应用",
     author: "哇洒",
+    file: "https://example.com/paper6.pdf",
     time: "2022-07-25",
     detail: "这是关于深度学习的应用的内容。",
   },
@@ -83,6 +90,7 @@ const paperList = [
     id: 7,
     title: "深度学习的发展趋势",
     author: "张胜利",
+    file: "https://example.com/paper7.pdf",
     time: "2025-06-28",
     detail: "这是关于深度学习的发展趋势的内容。",
   },
@@ -91,6 +99,7 @@ const paperList = [
     title: "深度学习的应用",
     time: "2022-05-31",
     author: "钱七",
+    file: "https://example.com/paper8.pdf",
     detail: "这是关于深度学习的应用的内容。",
   },
   {
@@ -222,25 +231,32 @@ const awardList = [
   }
 ]//获奖数据
 
-const useMock = true;
+const useMock = false
 
 //-----------------------------------------------------------
 //获取项目
-export const GetSearchProject = async (...params) => {
-  
-  console.log("获取项目API",...params)
+export const GetSearchProject = async (pageNum, pageSize, name) => {
+  console.log("获取项目API",pageNum, pageSize, name)
   if (useMock) {
     return {
       "code":1,
       "message":"success",
-      "data":projectList
+      "data":{
+        "data": projectList,
+      }
     }
  }
- service.get('/api/search/project', { ...params })
+ return service.get('/api/search/list', {
+    params: {
+      pageNum,
+      pageSize,
+      name
+    }
+  })
 }
 //新增项目
-export const AddSearchProject = async (...project) => {
-  console.log("新增项目API",...project)
+export const AddSearchProject = async (title,sort,image) => {
+  console.log("新增项目API",title,sort,image)
   if(useMock){
     return {
       "code":1,
@@ -248,11 +264,15 @@ export const AddSearchProject = async (...project) => {
       "data":null
     }
   }
-  return service.post('/api/search/projects', {...project })
+  return service.post('/api/search/projects', {
+    title,
+    sort,
+    image
+   })
 }
 //编辑项目
-export const EditSearchProject = async (...project) => {
-  console.log("编辑项目API",...project)
+export const EditSearchProject = async (id,title,sort,image) => {
+  console.log("编辑项目API",id,title,sort,image)
   if(useMock){
     return {
       "code":1,
@@ -260,7 +280,12 @@ export const EditSearchProject = async (...project) => {
       "data":null
     }
   }
-  return service.put('/api/search/projects', {...project })
+  return service.put('/api/search/projects', {
+    id,
+    title,
+    sort,
+    image
+   })
 }
 //删除项目
 export const DeleteSearchProject = async (id) => {
@@ -276,29 +301,32 @@ export const DeleteSearchProject = async (id) => {
 }
 //-----------------------------------------------------------
 // 获取论文列表
-export const GetPaperList = async (...paper) => {
- 
-  if(useMock){
-    console.log(paper);
-    
+export const GetPaperList = async (pageNum, pageSize, author, title,) => {
+ console.log('获取论文列表Api',pageNum, pageSize, author, title);
+ if (useMock) {
     return {
       "code": 1,
       "message": "success",
       "data": {
-        "total": paperList.length,
-        "rows":paperList
-      }
+        "data": paperList,
+        "total": paperList.length
     }
-  }
-
-  return service.post('/api/search/papers/lisst', {
-    ...paper
+  }}
+  return service.get('/api/search/papers/list', {
+    params: {
+      pageNum,
+      pageSize,
+      author,
+      title
+    }
   })
+
 }
 //论文新增
-export const AddPaper = async (...paper) => {
+export const AddPaper = async (title,author,detail,file) => {
+  console.log("论文新增API:",title,author,detail,file) 
   if(useMock){
-    console.log("论文新增API:",...paper) 
+    
     return {
       "code": 1,
       "message": "success",
@@ -306,13 +334,17 @@ export const AddPaper = async (...paper) => {
     }
   }
   return service.post('/api/search/papers', {
-    ...paper
+    title,
+    author,
+    detail,
+    file
   })
 }
 //论文修改
-export const UpdatePaper = async (...paper) => {
+export const UpdatePaper = async (id,title,author,detail,file) => {
+  console.log("论文修改内容API:",id,title,author,detail,file)
   if(useMock){
-    console.log("论文修改内容API:",...paper)
+    
     return {
       "code": 1,
       "message": "success",
@@ -320,39 +352,54 @@ export const UpdatePaper = async (...paper) => {
     }
   }
   return service.put('/api/search/paper', {
-    ...paper
+    id,
+    title,
+    author,
+    detail,
+    file
   })
 }
 //论文删除
 export const DeletePaper = async (id) => {
+  console.log("论文删除API",id)
   if(useMock){
-    console.log("论文删除API",id)
     return {
       "code": 1,
       "message":"success",
       "data":null
     }
   }
-  return service.delete('/api/search/papers',id)
+  return service.delete('/api/search/papers',{
+    params: {
+      id
+    }
+  })
 }
 //-----------------------------------------------------------
 //获取获奖列表
-export const GetAwardList = async (...award) => {
-  console.log("获取获奖API",award)
+export const GetAwardList = async (pageNum, pageSize, author) => {
+  console.log("获取获奖API",pageNum, pageSize, author)
   if(useMock){
     return {
       "code": 1,
       "message": "success",
       "data": {
-        "rows": awardList
+        "data": awardList,
+        "total": awardList.length
       }
     }
   }
-  return service.get('/api/search/awards', {...award})
+  return service.get('/api/search/awards', {
+    params: {
+      pageNum,
+      pageSize,
+      author
+    }
+  })
 }
 //新增获奖
-export const AddAward = async (...award) => {
-  console.log("新增获奖API",...award)
+export const AddAward = async (detail,author,file,time) => {
+  console.log("新增获奖API",detail,author,file,time)
   if(useMock){
     return {
       "code": 1,
@@ -360,11 +407,16 @@ export const AddAward = async (...award) => {
       "data":null
     }
   }
-  return service.post('/api/search/awards', {...award})
+  return service.post('/api/search/awards', {
+    detail,
+    author,
+    file,
+    time
+  })
 }
 //修改获奖
-export const UpdateAward = async (...award) => {
-  console.log("修改获奖API",...award)
+export const UpdateAward = async (id,detail,author,file,time) => {
+  console.log("修改获奖API",id,detail,author,file,time)
   if(useMock){
     return {
       "code": 1,
@@ -372,7 +424,13 @@ export const UpdateAward = async (...award) => {
       "data":null
     }
   }
-  return service.put('/api/search/awards', {...award})
+  return service.put('/api/search/awards', {
+    id,
+    detail,
+    author,
+    file,
+    time
+  })
 }
 //删除获奖
 export const DeleteAward = async (id) => {

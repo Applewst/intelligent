@@ -73,5 +73,11 @@ export const getStudentDevelopList = (...params) => {
         }
       }
     }
-    return service.get('/api/team/developments',{params})
+    return service.get('/api/team/developments',{
+      params:{
+        pageNum,
+        pageSize,
+        name
+      }
+    })
 }

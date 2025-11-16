@@ -15,7 +15,7 @@ public interface PaperService {
      * @param pageQueryDTO 分页查询参数
      * @return 论文列表
      */
-    PageResult getAllPaper(PageQueryDTO pageQueryDTO, String author);
+    PageResult getAllPaper(PageQueryDTO pageQueryDTO, String author, String title);
 
     /**
      * 添加论文

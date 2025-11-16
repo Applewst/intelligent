@@ -73,25 +73,32 @@ const shootList = [
     detail: '医学图像分析中的深度学习技术'
   }
 ]
-const useMock = true
+const useMock = false
+const token = localStorage.getItem('token')
 //获取照片墙列表
-export const GetShootList = (...params) => {
-  console.log('获取照片墙列表API', params)
+export const GetShootList = (pageNum, pageSize, title) => {
+  console.log('获取照片墙列表API', pageNum, pageSize, title)
   if(useMock){
     return {
       "code":1,
       "message":"success",
       "data":{
         "total":shootList.length,
-        "rows":shootList
+        "data":shootList
       }
     }
   }
-  return service.get('/api/team/shoots', { ...params })
+  return service.get('/api/team/shoots', { 
+    params: {
+      pageNum,
+      pageSize,
+      title
+    }
+   })
 }
 //新增照片墙
-export const AddShoot = (...data) => {
-  console.log('新增照片墙API:', data)
+export const AddShoot = (title,file,detail) => {
+  console.log('新增照片墙API:', title,file,detail)
   if(useMock){
     return {
       "code":1,
@@ -99,11 +106,17 @@ export const AddShoot = (...data) => {
       "data":null
     }
   }
-  return service.post('/api/team/shoots', {...data})
+  return service.post('/api/team/shoots', {
+    title,
+    file,
+    headers: {
+        'Authorization': `Bearer ${token}`
+    }
+  })
 }
 //修改照片墙
-export const UpdateShoot = (...data) => {
-  console.log('修改照片墙API:', data)
+export const UpdateShoot = async (id,title,file,detail) => {
+  console.log('修改照片墙API:', id,title,file,detail)
   if(useMock){
     return {
       "code":1,
@@ -111,7 +124,13 @@ export const UpdateShoot = (...data) => {
       "data":null
     }
   }
-  return service.put('/api/team/shoots', {...data})
+  return service.put('/api/team/shoots', {
+    id,
+    title,
+    file,
+    
+    
+  })
 }
 //删除照片墙
 export const DeleteShoot = (id) => {
@@ -123,5 +142,9 @@ export const DeleteShoot = (id) => {
       "data":null
     }
   }
-  return service.delete('/api/team/shoots', {id})
+  return service.delete('/api/team/shoots', {
+    params: {
+      id
+    }
+  })
 }

@@ -1,10 +1,12 @@
 package com.web.api.config.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.web.api.config.JwtProperties;
+import com.web.api.pojo.JwtData;
 import com.web.api.util.EncodesUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -21,6 +23,7 @@ import java.util.Map;
 
 /**
  * JWT令牌管理类
+ * @author Askr-Yggdrasill
  */
 @Slf4j
 @Service
@@ -35,11 +38,12 @@ public class JwtTokenManager {
 
     /**
      * 解析密钥
-     * @return
+     * @return byte[] 原始密钥字节
      */
     private byte[] getSecretKeyBytes() {
         String base64Secret = jwtProperties.getBase64EncodeSecretKey();
-        return Base64.getDecoder().decode(base64Secret); // 解码一次，得到原始密钥字节
+        // 解码一次，得到原始密钥字节
+        return Base64.getDecoder().decode(base64Secret);
     }
 
 
@@ -49,7 +53,7 @@ public class JwtTokenManager {
      * @param ttlMillis 过期时间
      * @param sessionId 唯一标识
      * @param claims jwt存储的一些非隐私信息
-     * @return
+     * @return String jwt令牌
      */
     public String issuedToken(String iss, Long ttlMillis, String sessionId, Map<String, Object> claims) {
 
@@ -68,22 +72,29 @@ public class JwtTokenManager {
         byte[] secretBytes = getSecretKeyBytes();
 
         //创建SecretKey
-        SecretKey key = Keys.hmacShaKeyFor(secretBytes); // JJWT 需要 SecretKey
+        // JJWT 需要 SecretKey
+        SecretKey key = Keys.hmacShaKeyFor(secretBytes);
 
         //生成令牌
         JwtBuilder token = Jwts.builder()
-                .id(sessionId) //唯一标识
-                .claims(claims) //存储信息
-                .issuer(iss) //签发者
-                .issuedAt(new Date(nowMillis)) //签发时间
-                .signWith(key,Jwts.SIG.HS256); //加密方式
+                //唯一标识
+                .id(sessionId)
+                //存储信息
+                .claims(claims)
+                //签发者
+                .issuer(iss)
+                //签发时间
+                .issuedAt(new Date(nowMillis))
+                //加密方式
+                .signWith(key,Jwts.SIG.HS256);
 
         //设置过期时间
         if(ttlMillis > 0){
             //有效期 = 现在时间 + 过期时间
             long expMillis = nowMillis + ttlMillis;
             Date exp = new Date(expMillis);
-            token.expiration(exp); //过期时间
+            //过期时间
+            token.expiration(exp);
         }
 
         //转成字符串
@@ -103,14 +114,18 @@ public class JwtTokenManager {
         byte[] secretBytes = getSecretKeyBytes();
 
         //创建SecretKey
-        SecretKey key = Keys.hmacShaKeyFor(secretBytes); // JJWT 需要 SecretKey
+        // JJWT 需要 SecretKey
+        SecretKey key = Keys.hmacShaKeyFor(secretBytes);
 
         //带着密码去解析
         return Jwts.parser()
-                .verifyWith(key)    //设置签名密码
+                //设置签名密码
+                .verifyWith(key)
                 .build()
-                .parseSignedClaims(token)  //解析token
-                .getPayload();      //获取载荷
+                //解析token
+                .parseSignedClaims(token)
+                //获取载荷
+                .getPayload();
     }
 
     /**
@@ -136,6 +151,18 @@ public class JwtTokenManager {
             log.warn(e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * 获取当前用户角色
+     * @param jwtToken jwt令牌
+     * @return 角色
+     */
+    public String getCurrentUserRole(String jwtToken) {
+        Claims claims = decodeToken(jwtToken);
+        String userJson = (String) claims.get("user");
+        JwtData jwtData = JSONObject.parseObject(userJson, JwtData.class);
+        return jwtData.getIdentity();
     }
 }
 

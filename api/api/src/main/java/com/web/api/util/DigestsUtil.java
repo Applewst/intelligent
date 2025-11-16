@@ -6,11 +6,12 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 /**
  * 散列算法(生成摘要)
  * 测试在client下
+ * @author Askr-Yggdrasill
  */
+@Slf4j
 public class DigestsUtil {
 
     //加密算法
@@ -26,9 +27,7 @@ public class DigestsUtil {
      */
     private static String sha256(String input, String salt){
         //参数1：加密算法名称 参数2：要加密的内容 参数3：盐 参数4：迭代次数
-        String e = new SimpleHash(SHA256,input,salt,ITERATIONS).toString();
-        log.error(e);
-        return e;
+        return new SimpleHash(SHA256,input,salt,ITERATIONS).toString();
     }
 
     /**

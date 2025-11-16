@@ -5,8 +5,8 @@
 
 <mapper namespace="com.web.api.mapper.PaperMapper">
     <insert id="addPaper">
-        insert into paper (title, author, file, detail)
-        values (#{title}, #{author}, #{file}, #{detail})
+        insert into paper (title, author, time , file, detail)
+        values (#{title}, #{author}, #{time}, #{file}, #{detail})
     </insert>
 
     <update id="updatePaper">
@@ -23,6 +23,9 @@
             </if>
             <if test="detail != null and detail != ''">
                 detail = #{detail},
+            </if>
+            <if test="time != null">
+                time = #{time},
             </if>
         </set>
         where id = #{id}
