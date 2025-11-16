@@ -309,10 +309,6 @@ export const GetAwards = async (pageNum, pageSize,author)=>{
       "data": awardList
     }
   }
-<<<<<<< HEAD
-  return service.get('/api/search/awards')
-}
-=======
   return service.get('/api/search/awards',{
     params:{
       pageNum,
@@ -321,4 +317,3 @@ export const GetAwards = async (pageNum, pageSize,author)=>{
     }
   })
 }
->>>>>>> af0715ec2548920cd72f66d431882672a712a340
