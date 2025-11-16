@@ -11,12 +11,12 @@ const pageNum = ref(1)
 const pageSize = ref(6)
 const total = ref(0)
 
-const GetDevelopList = async (pageNum, pageSize,name='') => {
+const GetDevelopList = async (pageNum, pageSize, name = '') => {
   console.log(pageNum, pageSize, name)
-  
-  const response = await getStudentDevelopList(pageNum, pageSize,name)
-  console.log('response',response);
-  
+
+  const response = await getStudentDevelopList(pageNum, pageSize, name)
+  console.log('response', response)
+
   if (response.code === 1) {
     list.value = response.data.rows
     total.value = response.data.total
@@ -28,25 +28,23 @@ const GetDevelopList = async (pageNum, pageSize,name='') => {
 }
 
 onMounted(() => {
+  console.log(123)
+
   GetDevelopList(pageNum.value, pageSize.value)
 })
-watch([pageNum, pageSize],()=>{
+watch([pageNum, pageSize], () => {
   GetDevelopList(pageNum.value, pageSize.value)
 })
 // <CHANGE> 添加页码改变处理函数
 const handleCurrentChange = (page) => {
   pageNum.value = page
-  
 }
 
 // <CHANGE> 添加每页条数改变处理函数
 const handleSizeChange = (size) => {
   pageSize.value = size
   pageNum.value = 1 // 重置到第一页
-  
 }
-
-
 </script>
 
 <template>
@@ -90,13 +88,13 @@ const handleSizeChange = (size) => {
   background: #fafbfc;
   min-height: 100vh;
 }
-.TitleTop{
+.TitleTop {
   //放中间
   text-align: center;
   margin-bottom: 10px;
   font-size: 36px;
   font-weight: 600;
-  color: #303133; 
+  color: #303133;
 }
 .cards {
   display: grid;

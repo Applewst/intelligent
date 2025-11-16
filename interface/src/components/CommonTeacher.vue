@@ -30,14 +30,15 @@ const fetchTeacherData = async () => {
 
     const res = await getTeacherList({
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 6,
       name: '',
     })
+    // console.log(res)
 
-    if (res.data.code === 0) {
-      personnelList.value = res.data.data.list
+    if (res.code === 1) {
+      personnelList.value = res.data.data
     } else {
-      ElMessage.warning(res.data.message || '获取数据失败')
+      ElMessage.warning(res.message || '获取数据失败')
     }
   } catch (error) {
     console.error('数据请求失败：', error)

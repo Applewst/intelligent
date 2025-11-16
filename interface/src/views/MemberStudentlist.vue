@@ -1,3 +1,53 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { getStudentList } from '@/api/student'
+import { ElMessage } from 'element-plus'
+
+const students = ref([])
+const loading = ref(true)
+
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+
+const fetchStudentData = async () => {
+  try {
+    loading.value = true
+    const res = await getStudentList({
+      pageNum: currentPage.value,
+      pageSize: pageSize.value,
+      name: '',
+    })
+    // console.log(res)
+
+    if (res.code === 1) {
+      students.value = res.data.data
+      total.value = res.data.total
+    } else {
+      ElMessage.warning(res.message || '获取数据失败')
+    }
+  } catch (error) {
+    console.error('学生数据请求失败：', error)
+    ElMessage.error('加载学生数据失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleSizeChange = (newSize) => {
+  pageSize.value = newSize
+  currentPage.value = 1
+  fetchStudentData()
+}
+
+const handleCurrentChange = (newPage) => {
+  currentPage.value = newPage
+  fetchStudentData()
+}
+
+onMounted(fetchStudentData)
+</script>
+
 <template>
   <div class="student-wall">
     <h2 class="title">在读学生</h2>
@@ -33,51 +83,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { getStudentList } from '@/api/student'
-import { ElMessage } from 'element-plus'
-
-const students = ref([])
-const loading = ref(true)
-
-const currentPage = ref(1)
-const pageSize = ref(10)
-const total = ref(0)
-
-const fetchStudentData = async () => {
-  try {
-    loading.value = true
-    const res = await getStudentList(currentPage.value, pageSize.value, '')
-
-    if (res.data.code === 0) {
-      students.value = res.data.data.list
-      total.value = res.data.data.total
-    } else {
-      ElMessage.warning(res.data.message || '获取数据失败')
-    }
-  } catch (error) {
-    console.error('学生数据请求失败：', error)
-    ElMessage.error('加载学生数据失败，请稍后重试')
-  } finally {
-    loading.value = false
-  }
-}
-
-const handleSizeChange = (newSize) => {
-  pageSize.value = newSize
-  currentPage.value = 1
-  fetchStudentData()
-}
-
-const handleCurrentChange = (newPage) => {
-  currentPage.value = newPage
-  fetchStudentData()
-}
-
-onMounted(fetchStudentData)
-</script>
 
 <style scoped lang="less">
 .student-wall {

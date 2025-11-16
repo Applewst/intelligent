@@ -1,3 +1,41 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { getContactInfo } from '@/api/contact.js'
+
+const loading = ref(false)
+const contactInfo = ref(null)
+
+// 获取联系信息
+const fetchContactInfo = async () => {
+  loading.value = true
+  try {
+    const response = await getContactInfo()
+    // console.log(response)
+
+    if (response.code === 1) {
+      contactInfo.value = response.data
+    } else {
+      ElMessage.error(response.message || '获取联系信息失败')
+    }
+  } catch (error) {
+    console.error('获取联系信息失败：', error)
+    ElMessage.error('获取联系信息失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
+}
+
+// 刷新数据
+const refreshData = () => {
+  fetchContactInfo()
+}
+
+onMounted(() => {
+  fetchContactInfo()
+})
+</script>
+
 <template>
   <div class="contact-display">
     <el-card class="contact-card" v-loading="loading">
@@ -93,42 +131,6 @@
     </el-card>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { getContactInfo } from '@/api/contact.js'
-
-const loading = ref(false)
-const contactInfo = ref(null)
-
-// 获取联系信息
-const fetchContactInfo = async () => {
-  loading.value = true
-  try {
-    const response = await getContactInfo()
-    if (response.code === 200) {
-      contactInfo.value = response.data
-    } else {
-      ElMessage.error(response.message || '获取联系信息失败')
-    }
-  } catch (error) {
-    console.error('获取联系信息失败：', error)
-    ElMessage.error('获取联系信息失败，请稍后重试')
-  } finally {
-    loading.value = false
-  }
-}
-
-// 刷新数据
-const refreshData = () => {
-  fetchContactInfo()
-}
-
-onMounted(() => {
-  fetchContactInfo()
-})
-</script>
 
 <style scoped>
 .contact-display {

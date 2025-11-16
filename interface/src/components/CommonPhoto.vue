@@ -49,11 +49,7 @@ const loadPhotos = async () => {
     errorMessage.value = ''
 
     // 调用API获取数据（核心：使用JS传过来的数据）
-    const apiData = await getPhotoWallImages({
-      pageNum: 1,
-      pageSize: 6,
-      name: '',
-    }) // 从JS/API获取数据
+    const apiData = await getPhotoWallImages(1, 6, '') // 从JS/API获取数据
     console.log(apiData)
 
     // 验证API返回格式

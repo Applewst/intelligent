@@ -4,17 +4,17 @@ import service from './request';
 const mockProjectData = [
   {
     id: 1,
-    imageUrl: 'https://picsum.photos/seed/proj1/200/200',
+    image: 'https://picsum.photos/seed/proj1/200/200',
     title: '服务推荐',
   },
   {
     id: 2,
-    imageUrl: 'https://picsum.photos/seed/proj2/200/200',
+    image: 'https://picsum.photos/seed/proj2/200/200',
     title: '自然语言，大模型',
   },
   {
     id: 3,
-    imageUrl: 'https://picsum.photos/seed/proj3/200/200',
+    image: 'https://picsum.photos/seed/proj3/200/200',
     title: '图像处理，计算机视觉',
   },
 

@@ -52,11 +52,11 @@ const fetchGraduateData = async () => {
       name: '', // 设置name参数为空值
     })
 
-    if (res.data.code === 0) {
-      graduates.value = res.data.data.list
-      total.value = res.data.data.total
+    if (res.code === 1) {
+      graduates.value = res.data.data
+      total.value = res.data.total
     } else {
-      ElMessage.warning(res.data.message || '获取数据失败')
+      ElMessage.warning(res.message || '获取数据失败')
     }
   } catch (error) {
     console.error('学生数据请求失败：', error)

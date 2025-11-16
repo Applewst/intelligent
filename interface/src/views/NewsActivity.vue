@@ -15,13 +15,17 @@ const loadData = async () => {
     const params = {
       pageNum: currentPage.value,
       pageSize: pageSize.value,
-      name: '', // 如果接口支持按名称搜索，可以保留
+      title: '', // 如果接口支持按名称搜索，可以保留
     }
     // 2. 调用统一的函数
+    // console.log(params)
+
     const res = await getNewsList(params)
-    if (res.code === 0) {
+    // console.log(res)
+
+    if (res.code === 1) {
       // 注意：现在 res.data 是一个分页对象
-      list.value = res.data.list || []
+      list.value = res.data.data || []
       total.value = res.data.total || 0
     }
   } finally {

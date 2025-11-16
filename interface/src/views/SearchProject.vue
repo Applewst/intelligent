@@ -25,7 +25,7 @@ const fetchDirections = async () => {
       pageSize: 3,
       name: '',
     })
-    if (response.code === 0 && Array.isArray(response.data)) {
+    if (response.code === 1 && Array.isArray(response.data)) {
       directions.value = response.data
       if (directions.value.length === 0) {
         ElMessage.info('当前没有项目数据')

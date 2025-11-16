@@ -16,9 +16,11 @@ const loadEvent = async () => {
   const res = await getEventList({
     pageNum: pageNum.value,
     pageSize: pageSize.value,
-    name: '',
+    title: '',
   })
-  if (res.code === 0) {
+  console.log(res)
+
+  if (res.code === 1) {
     list.value = res.data
     // <CHANGE> 假设接口返回total字段，如果没有则使用data.length
     total.value = res.total || res.data.length

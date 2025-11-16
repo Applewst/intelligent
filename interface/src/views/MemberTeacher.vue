@@ -20,12 +20,11 @@ const fetchTeachers = async () => {
     pageSize: pageSize.value,
     name: '', // 传递空的name参数
   })
+  // console.log(res.data)
 
-  if (res.data.code === 0) {
-    const { list, total: totalCount } = res.data.data
-
-    teachers.value = list
-    total.value = totalCount
+  if (res.code === 1) {
+    teachers.value = res.data.data
+    total.value = res.data.total
   }
 }
 
@@ -36,7 +35,7 @@ const handlePageChange = (page) => {
 
 const handleSizeChange = (size) => {
   pageSize.value = size
-  currentPage.value = 1 // 切换每页条数时重置到第一页
+  currentPage.value = 1
   fetchTeachers()
 }
 

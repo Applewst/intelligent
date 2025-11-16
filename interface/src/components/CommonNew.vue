@@ -27,11 +27,11 @@ onMounted(async () => {
       pageSize: 4,
       name: '',
     })
-    console.log(response)
+    // console.log(response)
 
     // 3. 正确处理分页格式的返回数据
-    if (response.code === 0) {
-      newList.value = response.data.list || []
+    if (response.code === 1) {
+      newList.value = response.data.data || []
     } else {
       newList.value = []
       ElMessage.warning(response.message || '获取动态列表失败')

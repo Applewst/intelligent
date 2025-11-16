@@ -1,3 +1,40 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { getTeamIntroduction } from '@/api/introduce.js'
+
+// 响应式数据
+const loading = ref(false)
+const teamData = ref(null)
+
+/**
+ * 获取团队介绍数据
+ */
+const fetchTeamData = async () => {
+  loading.value = true
+  try {
+    const response = await getTeamIntroduction()
+    console.log(response)
+
+    if (response.code === 200 && response.data) {
+      teamData.value = response.data
+    } else {
+      ElMessage.error(response.message || '获取团队介绍失败')
+    }
+  } catch (error) {
+    console.error('获取团队介绍失败:', error)
+    ElMessage.error('获取团队介绍失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
+}
+
+// 组件挂载时获取数据
+onMounted(() => {
+  fetchTeamData()
+})
+</script>
+
 <template>
   <div class="team-intro-container">
     <!-- 加载状态 -->
@@ -42,42 +79,6 @@
     </el-empty>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { getTeamIntroduction } from '@/api/introduce.js'
-
-// 响应式数据
-const loading = ref(false)
-const teamData = ref(null)
-
-/**
- * 获取团队介绍数据
- */
-const fetchTeamData = async () => {
-  loading.value = true
-  try {
-    const response = await getTeamIntroduction()
-
-    if (response.code === 200 && response.data) {
-      teamData.value = response.data
-    } else {
-      ElMessage.error(response.message || '获取团队介绍失败')
-    }
-  } catch (error) {
-    console.error('获取团队介绍失败:', error)
-    ElMessage.error('获取团队介绍失败，请稍后重试')
-  } finally {
-    loading.value = false
-  }
-}
-
-// 组件挂载时获取数据
-onMounted(() => {
-  fetchTeamData()
-})
-</script>
 
 <style scoped>
 .team-intro-container {

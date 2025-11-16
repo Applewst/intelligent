@@ -15,7 +15,7 @@ const mockStudentData = [
 
 /* ------------- API 封装 ------------- */
 export const getStudentList = async (params = {}) => {
-  const useMock = flase   // 开发阶段 true，上线改为 false
+  const useMock = false
 
   try {
     if (useMock) {
@@ -32,8 +32,7 @@ export const getStudentList = async (params = {}) => {
         }, 300)
       })
     } else {
-      // 真实后端接口
-      const response = await service.get('/students', {params})
+      const response = await service.get('/students/list', { params});
       return response
     }
   } catch (error) {
