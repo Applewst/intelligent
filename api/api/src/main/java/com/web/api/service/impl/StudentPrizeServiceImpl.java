@@ -28,6 +28,7 @@ public class StudentPrizeServiceImpl implements StudentPrizeService {
 
     @Override
     public PageResult getAllStudentPrizes(PageQueryDTO pageQuery) {
+        log.info("查询学生获奖列表, num: {}, size: {}, name: {}", pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getName());
         //1.设置分页参数
         PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize());
         //2.执行查询,转为Page格式

@@ -28,7 +28,7 @@ public class PictureWallServiceImpl implements PictureWallService {
 
     @Override
     public PageResult getPictureWallList(PageQueryDTO pageQuery) {
-        log.info("查询论文列表, num: {}, size: {}, name: {}", pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getName());
+        log.info("查询照片墙列表, num: {}, size: {}, name: {}", pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getName());
         //1.设置分页参数
         PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize());
         //2.执行查询,转为Page格式
