@@ -11,6 +11,18 @@ export function getTeacherList(params) {
 }
 
 /**
+ * 获取教师详情
+ * @param {number} id - 教师ID
+ */
+export function getTeacherDetail(id) {
+  return request({
+    url: '/teacher', 
+    method: 'get',
+    params:id
+  });
+}
+
+/**
  * 添加教师
  */
 export function addTeacher(data) {

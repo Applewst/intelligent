@@ -168,7 +168,7 @@ const fetchContactInfo = async () => {
   loading.value = true;
   try {
     const response = await getContactInfo();
-    if (response.code === 200) {
+    if (response.code === 1) {
       Object.assign(formData, response.data);
       Object.assign(originalData, response.data);
     } else {

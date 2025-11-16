@@ -116,12 +116,13 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
 import {
   getTeacherList as realGetTeacherList,
   addTeacher as realAddTeacher,
   updateTeacher as realUpdateTeacher,
   deleteTeacher as realDeleteTeacher,
+  getTeacherDetail,
 } from "@/api/teacher";
 
 // 模拟数据开关：true=使用模拟数据，false=使用真实API
@@ -313,10 +314,45 @@ const handleAdd = () => {
 };
 
 // 编辑
-const handleEdit = (row) => {
+const handleEdit = async (row) => {
   dialogTitle.value = "编辑教师";
-  Object.assign(formData, row);
-  dialogVisible.value = true;
+
+  // 创建一个加载实例，让用户知道正在获取数据
+  const loadingInstance = ElLoading.service({
+    lock: true,
+    text: "正在加载教师详情...",
+    background: "rgba(0, 0, 0, 0.7)",
+  });
+
+  try {
+    // 如果使用真实API
+    if (!USE_MOCK_DATA.value) {
+      // 调用获取详情的接口
+      const response = await getTeacherDetail(row.id);
+
+      // 假设接口返回的数据结构是 { code: 1, data: { ...教师详情 } }
+      if (response.code === 1 && response.data) {
+        // 使用接口返回的数据填充表单
+        Object.assign(formData, response.data);
+      } else {
+        ElMessage.error(response.message || "获取教师详情失败");
+        return; // 如果获取失败，则不打开对话框
+      }
+    } else {
+      // 如果使用模拟数据，直接使用行数据（模拟API调用）
+      await mockDelay(300);
+      Object.assign(formData, row);
+    }
+
+    // 数据获取成功后，打开对话框
+    dialogVisible.value = true;
+  } catch (error) {
+    console.error("编辑教师时获取详情失败:", error);
+    ElMessage.error("加载失败，请稍后重试");
+  } finally {
+    // 无论成功失败，都关闭加载
+    loadingInstance.close();
+  }
 };
 
 const handleDelete = async (row) => {

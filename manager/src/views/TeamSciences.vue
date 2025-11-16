@@ -176,7 +176,7 @@ const loadData = async () => {
       pageSize.value,
       searchName.value
     );
-    tableData.value = response.data.records;
+    tableData.value = response.data.data;
     total.value = response.data.total;
   } catch (error) {
     ElMessage.error("加载数据失败");
