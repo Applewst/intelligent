@@ -26,10 +26,12 @@ public class TeamDynamicController {
      * 获取科研动态列表
      */
     @GetMapping("/event/list")
-    public Result getAllDynamics(PageQueryDTO pageQueryDTO)
+    public Result getAllDynamics(@RequestParam(defaultValue = "1") int pageNum,
+                                 @RequestParam(defaultValue = "10") int pageSize,
+                                 @RequestParam String title)
     {
-        log.info("分页查询默认值pageQueryDTO:{}", pageQueryDTO);
-        PageResult pageResult =teamDynamicServiceImpl.pageQuery(pageQueryDTO);
+        log.info("分页查询默认值pageNum:{},pageSize:{},title:{}",pageNum,pageSize,title );
+        PageResult pageResult =teamDynamicServiceImpl.pageQuery(pageNum,pageSize,title);
         return Result.success(pageResult);
     }
 

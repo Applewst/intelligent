@@ -61,9 +61,9 @@ public class TeamDynamicServiceImpl implements TeamDynamicService {
     }
 
     @Override
-    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
-        PageHelper.startPage(pageQueryDTO.getPageNum(), pageQueryDTO.getPageSize());
-        Page<TeamDynamic> page = teamDynamicMapper.pageQuery(pageQueryDTO);
+    public PageResult pageQuery(int pageNum,int pageSize,String title) {
+        PageHelper.startPage(pageNum,pageSize);
+        Page<TeamDynamic> page = teamDynamicMapper.pageQuery(title);
         log.info("返回分页结果");
         return new PageResult(page.getTotal(), page.getResult());
     }

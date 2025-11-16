@@ -42,5 +42,5 @@ public interface TeamDynamicService {
      * 分页查询
      * @return
      */
-    PageResult pageQuery(PageQueryDTO pageQueryDTO);
+    PageResult pageQuery(int pageNum, int pageSize,String title);
 }
