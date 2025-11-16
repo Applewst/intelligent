@@ -5,6 +5,7 @@ import com.web.api.pojo.Result;
 
 /**
  * 登录服务接口
+ * @author Askr-Yggdrasill
  */
 public interface LoginService {
 

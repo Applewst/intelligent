@@ -2,6 +2,7 @@ package com.web.api.controller;
 
 import com.web.api.pojo.LoginVo;
 import com.web.api.pojo.PageQueryDTO;
+import com.web.api.service.impl.LoginServiceImpl;
 import com.web.api.service.impl.ResearchDirectionServiceImpl;
 import com.web.api.service.impl.ScientificDynamicServiceImpl;
 import com.web.api.service.impl.TeamDynamicServiceImpl;
@@ -13,6 +14,7 @@ import com.web.api.pojo.Result;
 
 /**
  * 首页内容
+ * @author Askr-Yggdrasill
  */
 @Slf4j
 @RestController
@@ -28,7 +30,7 @@ public class HomePageController {
     private ResearchDirectionServiceImpl researchDirectionServiceImpl;
 
     @Autowired
-    private com.web.api.service.impl.LoginServiceimpl loginServiceimpl;
+    private LoginServiceImpl loginServiceimpl;
 
     /**
      * 最新动态

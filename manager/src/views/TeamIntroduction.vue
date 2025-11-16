@@ -36,8 +36,8 @@
             <el-upload
               class="image-uploader"
               :show-file-list="false"
-              :on-change="handleImageChange"
-              :auto-upload="false"
+              :http-request="handleImageUpload"
+              :auto-upload="true"
               accept="image/*"
             >
               <img v-if="imageUrl" :src="imageUrl" class="preview-image" />
@@ -65,16 +65,17 @@ import { ref, reactive, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import { getTeamIntroduction, updateTeamIntroduction } from "@/api/introduce";
+import { uploadImage } from "@/api/upload"; // 引入通用文件上传接口
 
 const formRef = ref(null);
 const loading = ref(false);
 const submitting = ref(false);
-const imageUrl = ref(""); // 存储图片的 Base64 或 URL
+const imageUrl = ref(""); // 存储图片 URL
 
 const formData = reactive({
   teamName: "",
   introduction: "",
-  imageUrl: "", // 存储图片 Base64 字符串
+  imageUrl: "", // 存储图片 URL
 });
 
 const rules = {
@@ -106,27 +107,35 @@ const fetchTeamData = async () => {
   }
 };
 
-// 处理图片变化（转换为 Base64）
-const handleImageChange = (file) => {
-  const isImage = file.raw.type.startsWith("image/");
-  const isLt5M = file.raw.size / 1024 / 1024 < 5;
+// 处理图片上传
+const handleImageUpload = async (options) => {
+  try {
+    const file = options.file;
+    const isImage = file.type.startsWith("image/");
+    const isLt5M = file.size / 1024 / 1024 < 5;
 
-  if (!isImage) {
-    ElMessage.error("只能上传图片文件!");
-    return;
-  }
-  if (!isLt5M) {
-    ElMessage.error("图片大小不能超过 5MB!");
-    return;
-  }
+    if (!isImage) {
+      ElMessage.error("只能上传图片文件!");
+      return;
+    }
+    if (!isLt5M) {
+      ElMessage.error("图片大小不能超过 5MB!");
+      return;
+    }
 
-  // 转换为 Base64
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    imageUrl.value = e.target.result; // 预览用
-    formData.imageUrl = e.target.result; // 存储到表单
-  };
-  reader.readAsDataURL(file.raw);
+    // 调用通用文件上传接口
+    const response = await uploadImage(file);
+    if (response.code === 200) {
+      imageUrl.value = response.data.url; // 存储图片 URL
+      formData.imageUrl = response.data.url; // 赋值给表单
+      ElMessage.success("图片上传成功");
+    } else {
+      ElMessage.error(response.message || "图片上传失败");
+    }
+  } catch (error) {
+    ElMessage.error("图片上传失败，请稍后重试");
+    console.error("Error uploading image:", error);
+  }
 };
 
 // 提交表单
@@ -137,7 +146,7 @@ const handleSubmit = async () => {
     if (valid) {
       submitting.value = true;
       try {
-        // 直接传递 JSON 格式，包含 Base64 字符串
+        // 传递包含图片 URL 的表单数据
         const response = await updateTeamIntroduction(formData);
 
         if (response.code === 200) {
@@ -159,6 +168,8 @@ const handleSubmit = async () => {
 // 取消操作
 const handleCancel = () => {
   formRef.value?.resetFields();
+  imageUrl.value = "";
+  formData.imageUrl = "";
   fetchTeamData(); // 重新加载原始数据
 };
 

@@ -14,7 +14,7 @@ const mockGraduateData = [
 
 /* ------------- API 封装 ------------- */
 export const getGraduateList = async (params = { pageNum: 1, pageSize: 10, name: "" }) => {
-  const useMock = true // 开发阶段 true，上线改为 false
+  const useMock = false // 开发阶段 true，上线改为 false
 
   try {
     if (useMock) {

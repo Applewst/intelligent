@@ -61,7 +61,7 @@
         <el-pagination
           v-model:current-page="pagination.page"
           v-model:page-size="pagination.size"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[5, 10, 20, 50, 100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
@@ -133,7 +133,7 @@ const loading = ref(false);
 // 分页
 const pagination = reactive({
   page: 1,
-  size: 10,
+  size: 5,
   total: 0,
 });
 
@@ -161,12 +161,14 @@ const fetchGraduateList = async () => {
   try {
     const params = {
       name: searchForm.name,
-      page: pagination.page,
-      size: pagination.size,
+      pageNum: pagination.page,
+      pageSize: pagination.size,
     };
     const res = await getGraduateList(params);
-    if (res.code === 200) {
-      tableData.value = res.data.list;
+    // console.log(res);
+
+    if (res.code === 1) {
+      tableData.value = res.data.data;
       pagination.total = res.data.total;
     }
   } catch (error) {

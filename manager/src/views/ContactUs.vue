@@ -46,8 +46,8 @@
             <el-upload
               class="image-uploader"
               :show-file-list="false"
-              :auto-upload="false"
-              :on-change="handleLocationImageChange"
+              :http-request="handleLocationImageUpload"
+              :auto-upload="true"
               accept="image/*"
             >
               <img
@@ -85,8 +85,8 @@
             <el-upload
               class="qrcode-uploader"
               :show-file-list="false"
-              :auto-upload="false"
-              :on-change="handleQrCodeChange"
+              :http-request="handleQrCodeUpload"
+              :auto-upload="true"
               accept="image/*"
             >
               <img
@@ -121,6 +121,7 @@
 import { ref, reactive, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import { getContactInfo, updateContactInfo } from "@/api/contact.js";
+import { uploadImage } from "@/api/upload"; // 引入通用文件上传接口
 
 // 表单引用
 const formRef = ref(null);
@@ -133,9 +134,9 @@ const submitting = ref(false);
 const formData = reactive({
   email: "",
   location: "",
-  locationImage: "", // 存储图片Base64字符串或URL
+  locationImage: "", // 存储图片 URL
   wechatAccount: "",
-  wechatQrCode: "", // 存储图片Base64字符串或URL
+  wechatQrCode: "", // 存储图片 URL
 });
 
 // 原始数据备份（用于重置）
@@ -181,63 +182,63 @@ const fetchContactInfo = async () => {
   }
 };
 
-// 将图片文件转换为Base64字符串
-const imageToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => resolve(e.target.result);
-    reader.onerror = (error) => reject(error);
-    reader.readAsDataURL(file);
-  });
-};
-
-// 验证图片大小和类型
-const validateImage = (file, maxSizeMB = 5) => {
-  const isImage = file.type.startsWith("image/");
-  const isLtMaxSize = file.size / 1024 / 1024 < maxSizeMB;
-
-  if (!isImage) {
-    ElMessage.error("只能上传图片文件!");
-    return false;
-  }
-  if (!isLtMaxSize) {
-    ElMessage.error(`图片大小不能超过 ${maxSizeMB}MB!`);
-    return false;
-  }
-  return true;
-};
-
-// 处理科研地点图片选择
-const handleLocationImageChange = async (uploadFile) => {
-  const file = uploadFile.raw;
-  if (!file) return;
-
-  if (!validateImage(file, 5)) {
-    return;
-  }
-
+// 处理科研地点图片上传
+const handleLocationImageUpload = async (options) => {
   try {
-    formData.locationImage = await imageToBase64(file);
+    const file = options.file;
+    const isImage = file.type.startsWith("image/");
+    const isLt5M = file.size / 1024 / 1024 < 5;
+
+    if (!isImage) {
+      ElMessage.error("只能上传图片文件!");
+      return;
+    }
+    if (!isLt5M) {
+      ElMessage.error("图片大小不能超过 5MB!");
+      return;
+    }
+
+    // 调用通用文件上传接口
+    const response = await uploadImage(file);
+    if (response.code === 200) {
+      formData.locationImage = response.data.url; // 存储图片 URL
+      ElMessage.success("科研地点图片上传成功");
+    } else {
+      ElMessage.error(response.message || "科研地点图片上传失败");
+    }
   } catch (error) {
-    console.error("图片转换失败：", error);
-    ElMessage.error("图片处理失败，请重试");
+    console.error("科研地点图片上传失败：", error);
+    ElMessage.error("科研地点图片上传失败，请稍后重试");
   }
 };
 
-// 处理微信二维码图片选择
-const handleQrCodeChange = async (uploadFile) => {
-  const file = uploadFile.raw;
-  if (!file) return;
-
-  if (!validateImage(file, 2)) {
-    return;
-  }
-
+// 处理微信二维码上传
+const handleQrCodeUpload = async (options) => {
   try {
-    formData.wechatQrCode = await imageToBase64(file);
+    const file = options.file;
+    const isImage = file.type.startsWith("image/");
+    const isLt2M = file.size / 1024 / 1024 < 2;
+
+    if (!isImage) {
+      ElMessage.error("只能上传图片文件!");
+      return;
+    }
+    if (!isLt2M) {
+      ElMessage.error("图片大小不能超过 2MB!");
+      return;
+    }
+
+    // 调用通用文件上传接口
+    const response = await uploadImage(file);
+    if (response.code === 200) {
+      formData.wechatQrCode = response.data.url; // 存储图片 URL
+      ElMessage.success("微信二维码上传成功");
+    } else {
+      ElMessage.error(response.message || "微信二维码上传失败");
+    }
   } catch (error) {
-    console.error("图片转换失败：", error);
-    ElMessage.error("图片处理失败，请重试");
+    console.error("微信二维码上传失败：", error);
+    ElMessage.error("微信二维码上传失败，请稍后重试");
   }
 };
 
@@ -249,12 +250,10 @@ const handleSubmit = async () => {
     if (valid) {
       submitting.value = true;
       try {
-        // 直接提交formData，其中包含了Base64字符串
+        // 传递包含图片 URL 的表单数据
         const response = await updateContactInfo(formData);
         if (response.code === 200) {
           ElMessage.success("保存成功");
-          // 注意：这里假设后端返回了更新后的完整数据，包括图片的URL
-          // 如果后端只返回成功状态，我们需要手动更新originalData
           Object.assign(originalData, formData);
         } else {
           ElMessage.error(response.message || "保存失败");

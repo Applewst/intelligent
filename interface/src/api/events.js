@@ -42,7 +42,7 @@ const mockEventData = [
 /* ============== 获取团队活动列表 ============== */
 // <CHANGE> 修改函数以支持分页参数
 export const getEventList = async (params = {}) => {
-  const useMock = import.meta.env.VITE_USE_MOCK === 'true' || !import.meta.env.VITE_API_BASE_URL
+  const useMock =false
 
   if (useMock) {
     await new Promise(resolve => setTimeout(resolve, 600)) // 模拟延迟

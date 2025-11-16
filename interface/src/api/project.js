@@ -25,7 +25,7 @@ export const getProjectList = async (params = {}) => {
   const { category = 'all' } = params;
 
   // 本地开发时使用模拟数据（与new.js保持一致的逻辑）
-  const useMock = import.meta.env.VITE_USE_MOCK === 'true' || !import.meta.env.VITE_API_BASE_URL;
+  const useMock =false
 
   if (useMock) {
     // 模拟网络延迟，与new.js保持一致

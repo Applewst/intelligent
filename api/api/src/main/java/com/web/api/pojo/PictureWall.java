@@ -20,4 +20,6 @@ public class PictureWall {
     private String file;
     /** 时间 */
     private LocalDateTime time;
+    /** 描述 */
+    private String detail;
 }

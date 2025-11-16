@@ -19,7 +19,7 @@ const mockNewsData = [
  */
 export const getNewsList = async (params = {}) => {
   const { pageNum = 1, pageSize = 10, category } = params;
-  const useMock = import.meta.env.VITE_USE_MOCK === 'true' || !import.meta.env.VITE_API_BASE_URL;
+  const useMock = false
 
   if (useMock) {
     // 模拟网络延迟

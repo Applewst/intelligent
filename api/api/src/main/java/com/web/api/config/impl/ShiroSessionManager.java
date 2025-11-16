@@ -26,6 +26,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
     @Autowired
     JwtTokenManager jwtTokenManager;
 
+    @Override
     protected Serializable getSessionId(ServletRequest request, ServletResponse response) throws ShiroException {
         //判断请求header中是否有jwtToken字段
         String token = WebUtils.toHttp(request).getHeader(AUTHORIZATION);

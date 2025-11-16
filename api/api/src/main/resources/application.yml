@@ -17,6 +17,9 @@ server:
   servlet:
     context-path: /api
 
+file:
+  resource-dir: D:/resources/
+
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

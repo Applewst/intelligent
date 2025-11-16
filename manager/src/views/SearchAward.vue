@@ -137,8 +137,10 @@ const tableData = ref([])
 const GetAllAwardData = async (pageNum, pageSize, author) => {
   console.log('获取获奖列表文本处:', pageNum, pageSize, author)
   const response = await GetAwardList(pageNum, pageSize, author)
-  tableData.value = response.data.data  
-  total.value = response.data.total  // 假设返回的总条数在 total 字段中
+  console.log('response:',response)
+  
+  tableData.value = response.data.data.data  
+  total.value = response.data.data.total  // 假设返回的总条数在 total 字段中
   if (response.code === 1) {
     ElMessage.success('获取获奖列表成功')
   } else {

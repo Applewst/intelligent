@@ -5,8 +5,8 @@
 
 <mapper namespace="com.web.api.mapper.PictureWallMapper">
     <insert id="addPictureWall">
-        insert into picture_wall (title, file, time)
-        values (#{title}, #{file}, #{time})
+        insert into picture_wall (title, file, time, detail)
+        values (#{title}, #{file}, #{time}, #{detail})
     </insert>
     <update id="updatePictureWall">
         update picture_wall
@@ -20,7 +20,11 @@
             <if test="time != null and time != ''">
                 time = #{time},
             </if>
+            <if test="detail != null and detail != ''">
+                detail = #{detail},
+            </if>
         </set>
+        where id = #{id}
     </update>
     <delete id="deletePictureWall">
         delete from picture_wall

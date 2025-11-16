@@ -7,11 +7,7 @@ export async function getEventList(params) {
     const response = await request({
       url: "/event/list",
       method: "get",
-      params: {
-        pageNum: params.pageNum,
-        pageSize: params.pageSize,
-        name: params.name || "", 
-      },
+      params,
     })
 
     return response

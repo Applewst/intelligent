@@ -25,8 +25,9 @@ onMounted(async () => {
     const response = await getNewsList({
       pageNum: 1,
       pageSize: 4,
-      category: 'all', // 或者根据需要指定分类，如 'tech'
+      name: '',
     })
+    console.log(response)
 
     // 3. 正确处理分页格式的返回数据
     if (response.code === 0) {

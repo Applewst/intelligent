@@ -231,12 +231,11 @@ const awardList = [
   }
 ]//获奖数据
 
-const useMock = true
+const useMock = false
 
 //-----------------------------------------------------------
 //获取项目
 export const GetSearchProject = async (pageNum, pageSize, name) => {
-  
   console.log("获取项目API",pageNum, pageSize, name)
   if (useMock) {
     return {
@@ -247,7 +246,7 @@ export const GetSearchProject = async (pageNum, pageSize, name) => {
       }
     }
  }
- service.get('/api/search/list', {
+ return service.get('/api/search/list', {
     params: {
       pageNum,
       pageSize,
@@ -370,7 +369,11 @@ export const DeletePaper = async (id) => {
       "data":null
     }
   }
-  return service.delete('/api/search/papers',id)
+  return service.delete('/api/search/papers',{
+    params: {
+      id
+    }
+  })
 }
 //-----------------------------------------------------------
 //获取获奖列表

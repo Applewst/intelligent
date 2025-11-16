@@ -59,10 +59,10 @@ const developList = [
     file: '/placeholder.svg?height=80&width=80'
   }
 ]
-const useMock = true
+const useMock = false
 export const getStudentDevelopList = (...params) => {
   console.log('获取学生发展列表：', params)
-  
+
     if(useMock){
       return {
         "code":1,
@@ -73,5 +73,11 @@ export const getStudentDevelopList = (...params) => {
         }
       }
     }
-    return service.get('/api/team/developments',{params})
+    return service.get('/api/team/developments',{
+      params:{
+        pageNum,
+        pageSize,
+        name
+      }
+    })
 }

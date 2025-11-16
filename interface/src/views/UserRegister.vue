@@ -32,7 +32,7 @@ const loginRules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     {
-      pattern: /^[\u4e00-\u9fa5a-zA-Z0-9_]{2,10}$/,
+      // /^[\u4e00-\u9fa5a-zA-Z0-9_]{2,10}$/
       message: '用户名格式不正确！仅允许汉字，字母、数字和下划线，长度为 2-10',
       trigger: 'blur',
     },
@@ -40,7 +40,7 @@ const loginRules = {
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     {
-      pattern: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/,
+      // pattern: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/,
       message: '密码格式不正确！至少包含一个字母、一个数字，长度为 6-20',
       trigger: 'blur',
     },
@@ -101,13 +101,15 @@ const loginRules = {
       if (currentForm.value === "login") {
           try {
             //登录请求
+            console.log(loginForm.username,loginForm.password);
+            
             const response = await UserLogin(loginForm.username, loginForm.password);
-            console.log('登录成功', response.data);
+            console.log('登录成功', response);
             
             // 存储token（假设返回数据中有token）
-            if (response.data) {
+            if (response) {
               // store.token = response.data;
-              localStorage.setItem('token', response.data);
+              localStorage.setItem('token', response.data.data);
               localStorage.setItem('username', loginForm.username);
             }
             
@@ -127,7 +129,7 @@ const loginRules = {
         try{
       // 注册表单提交处理
             const response = await UserRegister(registerForm.username, registerForm.password, registerForm.jurisdiction);
-            console.log('注册成功', response.data);
+            console.log('注册成功', response);
             ElMessage.success('注册成功，请登录');
             // 切换回登录表单
             toggleForm('login');

@@ -20,7 +20,7 @@ const mockUserData = {
 };
 
 // 是否启用模拟数据 (true: 使用模拟数据; false: 使用真实API)
-const USE_MOCK = true; // 直接硬编码为 true
+const USE_MOCK = false; // 直接硬编码为 true
 
 // =================== API函数 ===================
 

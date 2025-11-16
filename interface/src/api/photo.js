@@ -2,7 +2,7 @@
 import service from './request';
 import { ref } from 'vue';
 // 切换模式：true-使用模拟数据，false-使用真实AJAX请求
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 const List = ref([
   {
     id: 1,
@@ -94,8 +94,10 @@ const List = ref([
 ]);
 
 
-export const getPhotoWallImages = async () => {
+export const getPhotoWallImages = async (pageNum,pageSize,title='') => {
   // 使用模拟数据模式
+  console.log('获取照片墙API',pageNum,pageSize,title);
+
   if (USE_MOCK_DATA) {
     console.log('获取照片墙API');
     return {
@@ -104,5 +106,11 @@ export const getPhotoWallImages = async () => {
       "data":List.value
     }
   }
-  // return service.get('/team/shoots')
+  return service.get('/team/shoots',{
+    params:{
+      pageNum,
+      pageSize,
+      title
+    }
+  })
 }

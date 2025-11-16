@@ -15,7 +15,7 @@ const mockStudentData = [
 
 /* ------------- API 封装 ------------- */
 export const getStudentList = async (params = {}) => {
-  const useMock = true   // 开发阶段 true，上线改为 false
+  const useMock = flase   // 开发阶段 true，上线改为 false
 
   try {
     if (useMock) {

@@ -4,13 +4,14 @@ import lombok.Data;
 
 /**
  * JWT数据实体类
+ * @author Askr-Yggdrasill
  */
 @Data
 public class JwtData {
     /**
      * 用户id
      */
-    private String Id;
+    private String id;
 
     /**
      * 用户名
@@ -19,7 +20,6 @@ public class JwtData {
 
     /**
      * 角色
-     * 0:普通用户 1:管理员
      */
     private String identity;
 }

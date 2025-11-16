@@ -125,12 +125,14 @@
 </template>
 
 <script setup>
-
 import { ref, reactive, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Plus, Search } from "@element-plus/icons-vue";
-import { mockGetList, mockAdd, mockUpdate, mockDelete } from "../api/research";
-
+import {
+  getResearchList,
+  addResearch,
+  updateResearch,
+  deleteResearch,
+} from "../api/research";
 
 // 表格数据
 const tableData = ref([]);
@@ -169,7 +171,7 @@ const formRules = {
 const loadData = async () => {
   loading.value = true;
   try {
-    const response = await mockGetList(
+    const response = await getResearchList(
       pageNum.value,
       pageSize.value,
       searchName.value
@@ -212,7 +214,7 @@ const handleDelete = (row) => {
   })
     .then(async () => {
       try {
-        await mockDelete(row.id);
+        await deleteResearch(row.id);
         ElMessage.success("删除成功");
         loadData();
       } catch (error) {
@@ -232,10 +234,10 @@ const submitForm = async () => {
     if (valid) {
       try {
         if (isEdit.value) {
-          await mockUpdate(formData);
+          await updateResearch(formData);
           ElMessage.success("更新成功");
         } else {
-          await mockAdd({ formData: title });
+          await addResearch({ formData: title });
           ElMessage.success("添加成功");
         }
         dialogVisible.value = false;
