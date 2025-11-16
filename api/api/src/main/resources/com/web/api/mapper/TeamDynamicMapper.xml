@@ -29,7 +29,7 @@
     <select id="pageQuery" resultType="com.web.api.pojo.TeamDynamic">
         select * from team_dynamic
         <where>
-            <if test="title != null and tile !='' ">
+            <if test="title != null and title !='' ">
                 and title like concat('%',#{title},'%')
             </if>
         </where>
