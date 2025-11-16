@@ -97,7 +97,7 @@ const List = ref([
 export const getPhotoWallImages = async (pageNum,pageSize,title='') => {
   // 使用模拟数据模式
   console.log('获取照片墙API',pageNum,pageSize,title);
-  
+
   if (USE_MOCK_DATA) {
     console.log('获取照片墙API');
     return {
@@ -106,7 +106,7 @@ export const getPhotoWallImages = async (pageNum,pageSize,title='') => {
       "data":List.value
     }
   }
-  return service.get('/api/team/shoots',{
+  return service.get('/team/shoots',{
     params:{
       pageNum,
       pageSize,

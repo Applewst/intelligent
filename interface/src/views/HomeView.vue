@@ -26,9 +26,6 @@ import CommonFooter from '@/components/CommonFooter.vue'
           <common-photo />
         </div>
       </el-main>
-      <el-footer>
-        <common-footer></common-footer>
-      </el-footer>
     </el-container>
   </div>
 </template>

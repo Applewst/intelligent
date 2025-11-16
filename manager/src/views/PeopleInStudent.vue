@@ -62,7 +62,7 @@
         <el-pagination
           v-model:current-page="pagination.pageNum"
           v-model:page-size="pagination.pageSize"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[5, 10, 20, 50, 100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
@@ -155,7 +155,7 @@ const loading = ref(false);
 // 分页
 const pagination = reactive({
   pageNum: 1,
-  pageSize: 10,
+  pageSize: 5,
   total: 0,
 });
 
@@ -194,9 +194,11 @@ const fetchStudentList = async () => {
       pageSize: pagination.pageSize,
     };
     const res = await getStudentList(params);
-    if (res.data.code === 0) {
-      tableData.value = res.data.data.list;
-      pagination.total = res.data.data.total;
+    // console.log(res.data);
+
+    if (res.code === 1) {
+      tableData.value = res.data.data;
+      pagination.total = res.data.total;
     }
   } catch (error) {
     ElMessage.error("获取学生列表失败");

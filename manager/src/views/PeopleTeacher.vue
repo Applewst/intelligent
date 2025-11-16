@@ -27,12 +27,6 @@
       <el-table :data="tableData" v-loading="loading" border stripe>
         <el-table-column prop="name" label="姓名" width="120" />
         <el-table-column prop="title" label="研究方向" min-width="150" />
-        <el-table-column
-          prop="detail"
-          label="教师详情"
-          min-width="200"
-          show-overflow-tooltip
-        />
         <el-table-column prop="email" label="邮箱" min-width="180" />
         <el-table-column label="照片" width="100">
           <template #default="{ row }">
@@ -288,10 +282,8 @@ const fetchTeacherList = async () => {
         name: searchForm.name,
       });
 
-      console.log(res.data.data.data);
-
-      tableData.value = res.data.data.data || [];
-      pagination.total = res.data.data.total || 0;
+      tableData.value = res.data.data || [];
+      pagination.total = res.data.total || 0;
     }
   } catch (error) {
     console.error("获取教师列表失败:", error);
