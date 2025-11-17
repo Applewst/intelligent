@@ -28,7 +28,7 @@ public interface TeacherMapper {
      * @param id 教师ID
      * @return 教师信息
      */
-    @Select("SELECT name, title, email,avatar,detail,gender FROM teacher WHERE id = #{id}")
+    @Select("SELECT id,name, title, email,avatar,detail,gender FROM teacher WHERE id = #{id}")
     Teacher getById(Integer id);
 
     /**
