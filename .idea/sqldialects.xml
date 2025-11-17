@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/resource.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/student.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/teacher.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/api/api/src/main/resources/Sql/user.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/api/api/src/main/resources/com/web/api/mapper/StudentMapper.xml" dialect="GenericSQL" />
     <file url="PROJECT" dialect="MySQL" />
   </component>

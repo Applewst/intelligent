@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 4178QqAA
+      MYSQL_DATABASE: app
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: app
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/app?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 4178QqAA
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+      TZ: Asia/Shanghai
+    command: [ "--file.resource-dir=/resources/" ]
+    volumes:
+      - /root/resources/:/resources/
+      - /root/application/app/logs/:/app/logs
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # 挂载自定义的 nginx 配置文件
+      - ./nginx/logs:/var/log/nginx  # 映射日志目录
+      - /var/www/static:/usr/share/nginx/html
+      - /root/application/app/logs:/app/logs
+    depends_on:
+      - app
+
+
+volumes:
+  mysql_data:

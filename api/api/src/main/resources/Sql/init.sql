@@ -70,20 +70,24 @@ VALUES ('人工智能综述', '王志鹏', 'C:/papers/AI_review.pdf', '2025-03-1
 -- 照片墙
 CREATE TABLE `picture_wall`
 (
-    `id`    INT NOT NULL AUTO_INCREMENT,
-    `title` VARCHAR(30)  DEFAULT NULL COMMENT '获得主题',
-    `file`  VARCHAR(255) DEFAULT NULL COMMENT 'URL',
-    `time`  DATE         DEFAULT NULL COMMENT '时间',
+    `id`     int NOT NULL AUTO_INCREMENT,
+    `title`  varchar(30)  DEFAULT NULL COMMENT '获得主题',
+    `file`   varchar(255) DEFAULT NULL COMMENT 'URL',
+    `time`   date         DEFAULT NULL COMMENT '时间',
+    `detail` text COMMENT '描述',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci
-    COMMENT ='照片墙';
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='照片墙';
 
 -- 示例数据
-INSERT INTO `picture_wall` (`title`, `file`, `time`)
-VALUES ('迎新晚会', 'https://example.com/pic1.jpg', '2025-09-01'),
-       ('毕业典礼', 'https://example.com/pic2.jpg', '2025-06-15');
+INSERT INTO `picture_wall` (`title`, `file`, `time`, `detail`)
+VALUES ('迎新晚会', 'https://example.com/pic1.jpg', '2025-09-01', '新生欢迎晚会精彩瞬间'),
+       ('毕业典礼', 'https://example.com/pic2.jpg', '2025-06-15', '毕业生合影与颁奖仪式'),
+       ('实验室年度合影', 'https://example.com/pic3.jpg', '2025-11-10', '科研团队与师生合影'),
+       ('学术沙龙', 'https://example.com/pic4.jpg', '2025-10-05', '学术沙龙交流与报告'),
+       ('社会实践', 'https://example.com/pic5.jpg', '2025-07-20', '学生暑期社会实践活动'),
+       ('编程马拉松', 'https://example.com/pic6.jpg', '2025-08-12', '24小时编程挑战赛精彩剪影');
 
 -- 研究方向
 CREATE TABLE `research_direction`

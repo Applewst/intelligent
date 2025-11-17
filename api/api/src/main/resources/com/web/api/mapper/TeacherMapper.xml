@@ -27,7 +27,7 @@
         </foreach>
     </delete>
     <select id="page" resultType="com.web.api.pojo.Teacher">
-        select name,title,email,avatar,gender from teacher
+        select id,name,title,email,avatar,gender from teacher
         <where>
             <if test="name != null and name != ''">
                 name LIKE CONCAT('%', #{name}, '%')
