@@ -1,3 +1,10 @@
+-- sql
+CREATE DATABASE IF NOT EXISTS `app`
+    DEFAULT CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_0900_ai_ci;
+USE `app`;
+
+
 -- 联系我们表
 CREATE TABLE `contact`
 (
@@ -279,23 +286,33 @@ VALUES ('AI创新团队', '致力于人工智能应用开发', 'https://example.
        ('数据分析团队', '专注于大数据分析和可视化', 'https://example.com/team2.jpg');
 
 -- 团队动态
-CREATE TABLE `team_dynamic`
+create table `team_dynamic`
 (
-    `id`    TINYINT AUTO_INCREMENT COMMENT 'id编号',
-    `title` VARCHAR(20) DEFAULT NULL COMMENT '标题',
-    `desc`  TEXT        DEFAULT NULL COMMENT '详情介绍',
-    `time`  DATETIME    DEFAULT NULL COMMENT '日期',
-    `img`   VARCHAR(50) DEFAULT NULL COMMENT '图片路径',
+    `id`     int NOT NULL AUTO_INCREMENT,
+    `image`  varchar(50) DEFAULT NULL comment '图片地址',
+    `title`  varchar(20) DEFAULT NULL comment '标题',
+    `detail` text comment '内容',
+    `time`   datetime    DEFAULT NULL comment '时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci
-    COMMENT ='团队动态表';
+    comment '团队动态表';
 
 -- 示例数据
-INSERT INTO `team_dynamic` (`title`, `desc`, `time`, `img`)
-VALUES ('团队培训', '团队进行了技能培训', '2025-09-10 10:00:00', 'https://example.com/team_dynamic1.jpg'),
-       ('项目展示', '展示了最新项目成果', '2025-10-05 14:30:00', 'https://example.com/team_dynamic2.jpg');
+INSERT INTO `team_dynamic` (`image`, `title`, `detail`, `time`)
+VALUES ('https://example.com/team_dynamic1.jpg', '团队培训', '团队进行了技能培训与实战演练，提升了成员协作能力。',
+        '2025-09-10 10:00:00'),
+       ('https://example.com/team_dynamic2.jpg', '项目展示', '展示了最新项目成果，获得校内外广泛关注与好评。',
+        '2025-10-05 14:30:00'),
+       ('https://example.com/team_dynamic3.jpg', '成员获奖', '团队成员李华在全国竞赛中获得一等奖。',
+        '2025-11-12 16:20:00'),
+       ('https://example.com/team_dynamic4.jpg', '外部合作', '与某高校签署联合实验室合作协议，共建研发平台。',
+        '2025-08-21 09:15:00'),
+       ('https://example.com/team_dynamic5.jpg', '学术研讨', '举办学术研讨会，邀请多位领域专家开展主题报告与讨论。',
+        '2025-07-03 13:45:00'),
+       ('https://example.com/team_dynamic6.jpg', '新品发布', '团队发布新版本工具包并开放源码，便于社区使用与贡献。',
+        '2025-11-15 11:00:00');
 
 -- 用户表
 CREATE TABLE `user`
