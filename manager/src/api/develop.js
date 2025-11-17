@@ -72,7 +72,7 @@ export const GetDevelopList = (pageNum,pageSize,name) => {
         }
       }
   }
-  return service.get('/api/team/developments',{
+  return service.get('/team/developments',{
     params:{
       pageNum,
       pageSize,
@@ -90,7 +90,7 @@ export const AddDevelop = (name,detail,file) => {
         "data":null
       }
   }
-  return service.post('/api/team/developments',{
+  return service.post('/team/developments',{
     name,
     detail,
     file
@@ -106,7 +106,7 @@ export const UpdateDevelop = (id,name,detail,file) => {
         "data":null
       }
   }
-  return service.put('/api/team/developments',{
+  return service.put('/team/developments',{
     id,
     name,
     detail,
@@ -123,5 +123,9 @@ export const DeleteDevelop = (id) => {
         "data":null
       }
   }
-  return service.delete('/api/team/developments',id)
+  return service.delete('/team/developments',{
+    param:{
+      id
+    }
+  })
 }

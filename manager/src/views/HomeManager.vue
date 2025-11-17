@@ -4,14 +4,14 @@ import * as echarts from 'echarts'
 import { getStudentList } from '@/api/student'
 import { getGraduateList } from '@/api/graduate'
 import { GetPaperList } from '@/api/SearchApi'
-
+import {getResearchList} from '@/api/research'
 const currentDate = ref(new Date())
 const studentChart = ref(null)
 const paperChart = ref(null)
 const activityChart = ref(null)
 const studentDate = ref([])
 const paperData = ref({ years: [], counts: [] })
-
+const activityData = ref({ months: [], counts: [] })
 const isToday = (date) => {
   const today = new Date()
   const checkDate = new Date(date)
@@ -21,14 +21,17 @@ const isToday = (date) => {
 const GetStudentDate = async (pageNum,pageSize,name) => {
   const res1 = await getStudentList(pageNum,pageSize,name)
   const res2 = await getGraduateList(pageNum,pageSize,name)
-  studentDate.value = [res2.data.total, res1.data.data.total]
+  console.log('获取在校生和毕业生数据',res1,res2)
+  
+  studentDate.value = [res2.data.total, res1.data.total]
   console.log(studentDate.value)
 }
 
+//获取论文数据
 const GetPaperData = async (pageNum,pageSize,author,title) => {
   try {
     const res = await GetPaperList(pageNum,pageSize,author,title)
-      console.log(res)
+      console.log('获取论文数据文本处：',res)
       
       const papers = res.data.data
       
@@ -51,9 +54,42 @@ const GetPaperData = async (pageNum,pageSize,author,title) => {
   }
 }
 
+//获取科研动态数据
+const GetActivityData = async (pageNum,pageSize,title) => {
+  const res = await getResearchList(pageNum=1,pageSize='',title='')
+  console.log('获取科研动态数据处：',res)
+  if (res.data) {
+      const activities = res.data.data
+      
+      // 按月份统计科研动态数量
+      const monthMap = {}
+      activities.forEach(activity => {
+        if (activity.time) {
+          const month = activity.time.substring(5, 7) // 提取月份 (MM)
+          monthMap[month] = (monthMap[month] || 0) + 1
+        }
+      })
+      
+      console.log('[v0] 月份统计 monthMap:', monthMap)
+      
+      // 初始化12个月的数据，没有数据的月份为0
+      const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+      const counts = months.map(month => monthMap[month] || 0)
+      
+      activityData.value = { months, counts }
+      console.log('[v0] 科研动态按月份统计:', activityData.value)
+    }
+}
+watch(activityData, (newData) => {
+  if (newData.months.length > 0) {
+    initActivityChart()
+  }
+}, { deep: true })
+
 onMounted(() => {
   GetStudentDate('','','')
   GetPaperData('','','','')
+  GetActivityData('','','')
 })
 
 // 监听 studentDate 的变化，数据获取完成后初始化或更新图表
@@ -161,13 +197,14 @@ const initPaperChart = () => {
 
 // 初始化科研活动图表 - 折线图
 const initActivityChart = () => {
+  if (!activityChart.value) return
   const chart = echarts.init(activityChart.value)
   const option = {
     tooltip: {
       trigger: 'axis'
     },
     legend: {
-      data: ['学术会议', '项目申报', '成果转化'],
+      data: ['数量'],
       top: '0%',
       left: 'center'
     },
@@ -184,36 +221,28 @@ const initActivityChart = () => {
       data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+      minInterval: 1
     },
     series: [
       {
-        name: '学术会议',
+        name: '数量',
         type: 'line',
-        data: [2, 3, 2, 4, 3, 5, 4, 3, 6, 5, 4, 3],
+        data: activityData.value.counts,
         smooth: true,
-        itemStyle: { color: '#F56C6C' }
-      },
-      {
-        name: '项目申报',
-        type: 'line',
-        data: [1, 2, 3, 2, 4, 3, 2, 3, 4, 5, 3, 2],
-        smooth: true,
-        itemStyle: { color: '#909399' }
-      },
-      {
-        name: '成果转化',
-        type: 'line',
-        data: [1, 1, 2, 1, 2, 3, 2, 2, 3, 4, 3, 2],
-        smooth: true,
-        itemStyle: { color: '#9370DB' }
+        itemStyle: { color: '#9370DB' },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(147, 112, 219, 0.3)' },
+            { offset: 1, color: 'rgba(147, 112, 219, 0.05)' }
+          ])
+        }
       }
     ]
   }
   chart.setOption(option)
   window.addEventListener('resize', () => chart.resize())
 }
-
 // 在组件挂载时初始化其他图表
 onMounted(() => {
   initActivityChart()

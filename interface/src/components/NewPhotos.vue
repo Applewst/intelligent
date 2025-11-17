@@ -53,8 +53,8 @@ const loadPhotos = async () => {
     console.log(apiData)
 
     // 验证API返回格式
-    if (Array.isArray(apiData.data)) {
-      displayedPhotos.value = apiData.data // 将API数据赋值给显示列表
+    if (Array.isArray(apiData.data.data)) {
+      displayedPhotos.value = apiData.data.data // 将API数据赋值给显示列表
     } else {
       throw new Error('API返回数据格式错误')
     }
@@ -70,7 +70,7 @@ const loadPhotos = async () => {
 // 查看更多按钮点击事件
 const handleViewMore = () => {
   router.push('/news/photo').catch((err) => {
-    ElMessage.error('跳转失败')
+    ElMessage.error('跳转失败',err)
   })
 }
 
@@ -94,7 +94,7 @@ onBeforeUnmount(() => {
       <h1 class="main-title">照片墙</h1>
       <div class="action-area">
         <el-button @click="handleViewMore" type="primary" class="view-more-btn">
-          查看更多
+          返回
           <ArrowRight class="btn-icon" />
         </el-button>
       </div>

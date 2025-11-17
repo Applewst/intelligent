@@ -63,8 +63,8 @@ const getPhotoWallData = async (pageNum,pageSize,title='') => {
   // console.log('获取照片墙数据文本处', pageNum,pageSize,title)
   const res = await getPhotoWallImages(pageNum,pageSize,title);
   console.log('获取照片墙数据文本处',res )
-  if (res.data.code === 1) {
-    List.value = res.data.data.data.map((item) => {
+  if (res.code === 1) {
+    List.value = res.data.data.map((item) => {
       return {
         ...item,
          style: generateRandomStyle(),

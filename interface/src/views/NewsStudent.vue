@@ -15,10 +15,12 @@ const GetDevelopList = async (pageNum, pageSize, name = '') => {
   console.log(pageNum, pageSize, name)
 
   const response = await getStudentDevelopList(pageNum, pageSize, name)
+  console.log('response',response)
+  
   console.log('response', response)
 
   if (response.code === 1) {
-    list.value = response.data.rows
+    list.value = response.data.data
     total.value = response.data.total
     loading.value = false
   } else {

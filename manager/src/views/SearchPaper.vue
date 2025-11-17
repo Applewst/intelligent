@@ -164,6 +164,8 @@ const tableData = ref([]);
 // 获取论文列表
 const GetAllSearchProject = async (pageNum, pageSize, author, title) => {
   const response = await GetPaperList(pageNum, pageSize, author, title);
+  console.log('获取论文列表文本处',response)
+  
   tableData.value = response.data.data;
   total.value = response.data.total;
 };
@@ -345,25 +347,15 @@ const handleExceedImage = (files, fileList) => {
 
 // 提交表单
 const handleSubmit = () => {
-  this.$refs.paperForm.validate((valid) => {
-    if (valid) {
-      // 提交表单的逻辑
-      console.log('表单提交的数据：', form);
-      const fileUrl = form.file.length > 0 ? form.file[0].url : '';
-      const filesUrl = form.files.length > 0 ? form.files[0].url : '';
+  
       if (isEdit.value) {
         // 编辑接口
-        EditSearchPaper(editId.value, form.title, form.author, form.detail, fileUrl, filesUrl);
+        EditSearchPaper(editId.value, form.title, form.author, form.detail, form.file);
       } else {
-        AddSearchPaper(form.title, form.author, form.detail, fileUrl, filesUrl);
+        AddSearchPaper(form.title, form.author, form.detail, form.file);
       }
       dialogVisible.value = false;
-    } else {
-      console.log('表单验证失败!');
-      return false;
-    }
-  });
-};
+}
 
 // 删除
 const handleDelete = (row) => {

@@ -166,7 +166,7 @@ const GetAllSearchProject = async (pageNum, pageSize,name)=>{
   console.log('response',response);
   
   console.log('获取项目列表文本处',pageNum, pageSize,name)
-  tableData.value = response.data.data.data
+  tableData.value = response.data.data
   var num = 1
   tableData.value.filter(item=>{
     if(item.num===1){

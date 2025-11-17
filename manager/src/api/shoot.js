@@ -88,7 +88,7 @@ export const GetShootList = (pageNum, pageSize, title) => {
       }
     }
   }
-  return service.get('/api/team/shoots', { 
+  return service.get('/team/shoots', { 
     params: {
       pageNum,
       pageSize,
@@ -106,12 +106,10 @@ export const AddShoot = (title,file,detail) => {
       "data":null
     }
   }
-  return service.post('/api/team/shoots', {
+  return service.post('/team/shoots', {
     title,
     file,
-    headers: {
-        'Authorization': `Bearer ${token}`
-    }
+   
   })
 }
 //修改照片墙
@@ -124,7 +122,7 @@ export const UpdateShoot = async (id,title,file,detail) => {
       "data":null
     }
   }
-  return service.put('/api/team/shoots', {
+  return service.put('/team/shoots', {
     id,
     title,
     file,
@@ -142,7 +140,7 @@ export const DeleteShoot = (id) => {
       "data":null
     }
   }
-  return service.delete('/api/team/shoots', {
+  return service.delete('/team/shoots', {
     params: {
       id
     }

@@ -139,8 +139,8 @@ const GetAllAwardData = async (pageNum, pageSize, author) => {
   const response = await GetAwardList(pageNum, pageSize, author)
   console.log('response:',response)
   
-  tableData.value = response.data.data.data  
-  total.value = response.data.data.total  // 假设返回的总条数在 total 字段中
+  tableData.value = response.data.data 
+  total.value = response.data.total  // 假设返回的总条数在 total 字段中
   if (response.code === 1) {
     ElMessage.success('获取获奖列表成功')
   } else {

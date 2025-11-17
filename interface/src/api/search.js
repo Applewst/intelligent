@@ -137,7 +137,7 @@ export const GetsearchPapers = async (pageNum,pageSize,author,title)=>{
       }
     }
   }
-  return service.get('/api/search/papers/list',{
+  return service.get('/search/papers/list',{
     params:{
       pageNum,
       pageSize,
@@ -309,7 +309,7 @@ export const GetAwards = async (pageNum, pageSize,author)=>{
       "data": awardList
     }
   }
-  return service.get('/api/search/awards',{
+  return service.get('/search/awards/list',{
     params:{
       pageNum,
       pageSize,

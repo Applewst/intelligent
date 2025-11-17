@@ -161,8 +161,8 @@ const GetAllhotoList = async (pageNum, pageSize, title) => {
   const response = await GetShootList(pageNum, pageSize, title)
   console.log('后端传回的数据',response.data.data);
   
-  total.value = response.data.data.total
-  photoList.value = response.data.data.data
+  total.value = response.data.total
+  photoList.value = response.data.data
 }
 //新增照片数据
 const AddPhotoList = async (title,file,detail) => {

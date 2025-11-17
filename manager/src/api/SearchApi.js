@@ -246,7 +246,7 @@ export const GetSearchProject = async (pageNum, pageSize, name) => {
       }
     }
  }
- return service.get('/api/search/list', {
+ return service.get('/search/list', {
     params: {
       pageNum,
       pageSize,
@@ -264,7 +264,7 @@ export const AddSearchProject = async (title,sort,image) => {
       "data":null
     }
   }
-  return service.post('/api/search/projects', {
+  return service.post('/search/projects', {
     title,
     sort,
     image
@@ -280,7 +280,7 @@ export const EditSearchProject = async (id,title,sort,image) => {
       "data":null
     }
   }
-  return service.put('/api/search/projects', {
+  return service.put('/search/projects', {
     id,
     title,
     sort,
@@ -297,7 +297,7 @@ export const DeleteSearchProject = async (id) => {
       "data":null
     }
   }
-  return service.delete('/api/search/projects',  { params: { id } })
+  return service.delete('/search/projects',  { params: { id } })
 }
 //-----------------------------------------------------------
 // 获取论文列表
@@ -312,7 +312,7 @@ export const GetPaperList = async (pageNum, pageSize, author, title,) => {
         "total": paperList.length
     }
   }}
-  return service.get('/api/search/papers/list', {
+  return service.get('/search/papers/list', {
     params: {
       pageNum,
       pageSize,
@@ -333,7 +333,7 @@ export const AddPaper = async (title,author,detail,file) => {
       "data":null
     }
   }
-  return service.post('/api/search/papers', {
+  return service.post('/search/papers', {
     title,
     author,
     detail,
@@ -351,7 +351,7 @@ export const UpdatePaper = async (id,title,author,detail,file) => {
       "data":null
     }
   }
-  return service.put('/api/search/paper', {
+  return service.put('/search/paper', {
     id,
     title,
     author,
@@ -369,7 +369,7 @@ export const DeletePaper = async (id) => {
       "data":null
     }
   }
-  return service.delete('/api/search/papers',{
+  return service.delete('/search/papers',{
     params: {
       id
     }
@@ -389,7 +389,7 @@ export const GetAwardList = async (pageNum, pageSize, author) => {
       }
     }
   }
-  return service.get('/api/search/awards', {
+  return service.get('/search/awards/list', {
     params: {
       pageNum,
       pageSize,
@@ -407,7 +407,7 @@ export const AddAward = async (detail,author,file,time) => {
       "data":null
     }
   }
-  return service.post('/api/search/awards', {
+  return service.post('/search/awards', {
     detail,
     author,
     file,
@@ -424,7 +424,7 @@ export const UpdateAward = async (id,detail,author,file,time) => {
       "data":null
     }
   }
-  return service.put('/api/search/awards', {
+  return service.put('/search/awards', {
     id,
     detail,
     author,
@@ -442,5 +442,5 @@ export const DeleteAward = async (id) => {
       "data":null
     }
   }
-  return service.delete('/api/search/awards',  { params: { id } })
+  return service.delete('/search/awards',  { params: { id } })
 }

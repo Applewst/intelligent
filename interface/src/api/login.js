@@ -15,7 +15,7 @@ export const UserLogin = async (username,password) =>{
   //     "data": mockUserData
   //     }
   //   }
-    return service.get('/api/user/login',{
+    return service.get('/user/login',{
       params:{
         username,
         password

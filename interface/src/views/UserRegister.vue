@@ -109,7 +109,7 @@ const loginRules = {
             // 存储token（假设返回数据中有token）
             if (response) {
               // store.token = response.data;
-              localStorage.setItem('token', response.data.data);
+              localStorage.setItem('token', response.data);
               localStorage.setItem('username', loginForm.username);
             }
             
