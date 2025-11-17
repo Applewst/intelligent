@@ -50,7 +50,7 @@ export const getNewsList = async (params = {}) => {
 
   // 生产环境调用真实接口
   return service({
-    url: '/new/list', // 假设真实接口地址是 /news/list
+    url: '/new/list',
     method: 'get',
     params: params
   });

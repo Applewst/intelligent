@@ -1,274 +1,267 @@
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { ArrowRight } from '@element-plus/icons-vue'
-
-// 引入API方法（从JS文件获取数据）
-import { getPhotoWallImages } from '@/api/photo' // 假设此API返回照片数据
-
-// 路由实例
-const router = useRouter()
-
-// 响应式数据（从API接收数据）
-const photoWall = ref(null)
-const displayedPhotos = ref([]) // 存储从API获取的照片数据
-const isLoading = ref(true) // 加载状态
-const errorMessage = ref('') // 错误信息
-const rotationSpeed = 0.8 // 固定旋转速度
-let currentRotation = 0
-let animationId = null
-
-// 计算照片位置样式（动态适配API返回的数量）
-const getPhotoStyle = (index) => {
-  const count = displayedPhotos.value.length
-  if (count === 0) return {}
-
-  const angle = (360 / count) * index
-  const radius = 400 // 环形半径
-
-  return {
-    transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
-    transition: 'transform 0.3s ease',
-  }
-}
-
-// 自动旋转动画
-const animate = () => {
-  if (photoWall.value) {
-    currentRotation += rotationSpeed * 0.1
-    photoWall.value.style.transform = `rotateY(${currentRotation}deg)`
-  }
-  animationId = requestAnimationFrame(animate)
-}
-
-// 从API加载数据
-const loadPhotos = async () => {
-  try {
-    isLoading.value = true
-    errorMessage.value = ''
-
-    // 调用API获取数据（核心：使用JS传过来的数据）
-    const apiData = await getPhotoWallImages(1, 6, '') // 从JS/API获取数据
-    console.log(apiData)
-
-    // 验证API返回格式
-    if (Array.isArray(apiData.data.data)) {
-      displayedPhotos.value = apiData.data.data // 将API数据赋值给显示列表
-    } else {
-      throw new Error('API返回数据格式错误')
-    }
-  } catch (error) {
-    console.error('加载照片失败:', error)
-    errorMessage.value = '照片加载失败，请稍后重试'
-    ElMessage.error(errorMessage.value)
-  } finally {
-    isLoading.value = false // 结束加载状态
-  }
-}
-
-// 查看更多按钮点击事件
-const handleViewMore = () => {
-  router.push('/news/photo').catch((err) => {
-    ElMessage.error('跳转失败',err)
-  })
-}
-
-// 生命周期
-onMounted(() => {
-  loadPhotos() // 组件挂载后立即加载API数据
-  animate() // 启动旋转动画
-})
-
-onBeforeUnmount(() => {
-  if (animationId) {
-    cancelAnimationFrame(animationId) // 清理动画
-  }
-})
-</script>
-
 <template>
-  <div class="photo-wall-container">
-    <!-- 顶部区域：标题居左，查看更多居右 -->
-    <div class="top-bar">
-      <h1 class="main-title">照片墙</h1>
-      <div class="action-area">
-        <el-button @click="handleViewMore" type="primary" class="view-more-btn">
-          返回
-          <ArrowRight class="btn-icon" />
-        </el-button>
+  <div class="photo-management">
+    <div class="header">
+      <div class="header-left">
+        <el-button
+          type="primary"
+          :icon="ArrowLeft"
+          circle
+          @click="routerBack"
+          class="back-button"
+        />
+        <h2>照片管理</h2>
       </div>
     </div>
 
-    <!-- 照片墙主体 -->
-    <div class="photo-wall" ref="photoWall">
-      <!-- 加载状态 -->
-      <div v-if="isLoading" class="loading-state">
-        <div class="spinner"></div>
-        <p>加载照片中...</p>
-      </div>
+    <!-- 卡片列表 -->
+    <div class="card-grid">
+      <el-card v-for="item in photoList" :key="item.id" class="photo-card" shadow="hover">
+        <div class="card-content">
+          <el-image
+            :src="item.file"
+            fit="cover"
+            class="photo-image"
+            :preview-src-list="[item.file]"
+          >
+            <template #error>
+              <div class="image-error">
+                <el-icon><Picture /></el-icon>
+                <span>图片加载失败</span>
+              </div>
+            </template>
+          </el-image>
 
-      <!-- 错误提示 -->
-      <div v-else-if="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
+          <div class="card-info">
+            <h3 class="title">{{ item.title }}</h3>
+            <p class="detail">{{ item.detail }}</p>
+            <div class="time">
+              <el-icon><Clock /></el-icon>
+              <span>{{ item.time }}</span>
+            </div>
+          </div>
+        </div>
+      </el-card>
+    </div>
 
-      <!-- 照片列表（使用API数据） -->
-      <div
-        v-else
-        v-for="(photo, index) in displayedPhotos"
-        :key="index"
-        class="photo-item"
-        :style="getPhotoStyle(index)"
-      >
-        <img :src="photo.url" :alt="`照片 ${index + 1}`" />
-      </div>
+    <!-- 分页组件 -->
+    <div class="pagination-wrapper">
+      <el-pagination
+        :current-page="pageNum"
+        :page-size="pageSize"
+        :page-sizes="[8, 12, 24, 48]"
+        :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
 
-<style scoped>
-.photo-wall-container {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-  overflow: hidden;
-  perspective: 1200px;
-  padding: 20px;
-  max-width: 1400px;
-  margin: 50px auto;
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import { ElMessage } from 'element-plus'
+import { getPhotoWallImages } from '@/api/photo'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const pageNum = ref(1)
+const pageSize = ref(8)
+const allPhotos = ref([])
+const photoList = computed(() => {
+  const start = (pageNum.value - 1) * pageSize.value
+  const end = start + pageSize.value
+  return allPhotos.value.slice(start, end)
+})
+const total = computed(() => allPhotos.value.length)
+
+const GetPhotoData = async () => {
+  try {
+    const res = await getPhotoWallImages(1, 1000)
+    // console.log(res)
+
+    if (res.code === 1) {
+      allPhotos.value = res.data.data || []
+      ElMessage.success('获取成功')
+    } else {
+      ElMessage.error('获取失败')
+    }
+  } catch (error) {
+    console.error('API call failed:', error)
+    ElMessage.error('网络请求失败')
+  }
 }
 
-/* 顶部栏布局 */
-.top-bar {
-  width: 100%;
+const routerBack = () => {
+  router.back()
+}
+
+onMounted(() => {
+  GetPhotoData()
+})
+
+const handleCurrentChange = (page) => {
+  pageNum.value = page
+}
+
+const handleSizeChange = (size) => {
+  pageSize.value = size
+  pageNum.value = 1
+}
+</script>
+
+<style scoped>
+.photo-management {
+  padding: 24px;
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px;
-  margin-bottom: -30px;
+  margin-bottom: 24px;
 }
 
-.main-title {
-  color: #2d3748;
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.action-area {
+.header-left {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
 
-.view-more-btn {
-  display: inline-flex;
+.back-button {
+  flex-shrink: 0;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.search-bar {
+  display: flex;
   align-items: center;
-  gap: 8px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.btn-icon {
-  width: 1em;
-  height: 1em;
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
 }
 
-/* 照片墙样式 */
-.photo-wall {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  margin: auto;
-  transform-style: preserve-3d;
-  transition: transform 0.3s ease;
+.photo-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* 加载状态样式 */
-.loading-state {
-  width: 100%;
-  height: 100%;
+.photo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #666;
+  gap: 16px;
 }
 
-/* 自定义加载动画 */
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 10px;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* 错误提示样式 */
-.error-message {
+.photo-image {
   width: 100%;
+  height: 200px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.image-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100%;
+  background: #f5f7fa;
+  color: #909399;
+}
+
+.image-error .el-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.title {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #303133;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail {
+  margin: 0;
+  font-size: 14px;
+  color: #606266;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #909399;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #ebeef5;
+}
+
+.card-actions .el-button {
+  flex: 1;
+}
+
+.pagination-wrapper {
   display: flex;
   justify-content: center;
-  align-items: center;
-  color: #e74c3c;
-  font-size: 1.2rem;
-}
-
-/* 照片项样式 */
-.photo-item {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300px;
-  height: 200px;
-  margin: -100px 0 0 -150px;
-  backface-visibility: visible;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  background: white;
   border-radius: 8px;
-  overflow: hidden;
-  cursor: default;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.photo-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 响应式设计 */
 @media (max-width: 768px) {
-  .top-bar {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-bar {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 12px;
   }
 
-  .main-title {
-    font-size: 2rem;
-  }
-
-  .photo-item {
-    width: 220px;
-    height: 150px;
-    margin: -75px 0 0 -110px;
-  }
-
-  .photo-wall {
-    height: 400px;
+  .search-bar .el-input {
+    width: 100% !important;
   }
 }
 </style>

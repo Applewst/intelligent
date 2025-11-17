@@ -22,15 +22,15 @@ export const useCounterStore = defineStore('counter', () => {
   }  //修改用户名和用户类型
 
   const token = ref('')   //token
-  return { 
-    count, 
-    doubleCount, 
+  return {
+    count,
+    doubleCount,
     increment ,
     userName,
     userType,
     isLogin,
     setUser,
     token
-  
+
   }
 })

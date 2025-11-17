@@ -17,12 +17,10 @@ const cleanAvatar = (raw = '') => {
 
 const fetchData = async () => {
   try {
-    console.log(teacherId)
-
     const res = await getTeacherDetail(Number(teacherId))
-    console.log(res)
+    // console.log(res)
 
-    teacher.value = res.data.data
+    teacher.value = res.data
   } catch (e) {
     ElMessage.error(e.message || '获取教师详情失败')
     router.back()
@@ -44,7 +42,7 @@ onMounted(fetchData)
       <div class="right">
         <h1 class="name">{{ teacher.name }}</h1>
         <p class="title">{{ teacher.title }}</p>
-        <p class="intro">{{ teacher.intro || '暂无简介' }}</p>
+        <p class="intro">{{ teacher.detail || '暂无简介' }}</p>
         <div class="contact">
           <el-link :href="'mailto:' + teacher.email" :underline="false" icon="Message">
             {{ teacher.email }}

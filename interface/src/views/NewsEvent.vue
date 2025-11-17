@@ -21,9 +21,9 @@ const loadEvent = async () => {
   console.log(res)
 
   if (res.code === 1) {
-    list.value = res.data
+    list.value = res.data.data
     // <CHANGE> 假设接口返回total字段，如果没有则使用data.length
-    total.value = res.total || res.data.length
+    total.value = res.data.total || res.data.length
   }
   loading.value = false
 }

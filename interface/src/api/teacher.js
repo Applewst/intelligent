@@ -109,7 +109,7 @@ export const getTeacherDetail = async (id) => {
     });
   }
    return service
-    .get("/teacher/detail", { params: { id } }) // 通过 params 传递 id
+    .get("/teacher", { params: { id } }) // 通过 params 传递 id
     .then((res) => ({ data: res.data }))
     .catch((err) => {
       throw new Error(err?.response?.data?.message || "获取教师详情失败")

@@ -25,7 +25,7 @@ onMounted(async () => {
     const response = await getNewsList({
       pageNum: 1,
       pageSize: 4,
-      name: '',
+      title: '',
     })
     // console.log(response)
 

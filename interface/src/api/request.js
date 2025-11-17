@@ -28,6 +28,14 @@ service.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 service.interceptors.response.use(function (response) {
+ if (response.config.responseType === 'blob') {
+  console.log(123);
+
+      // 直接返回整个 response 对象，而不是 response.data
+      // 这样调用方可以同时获取到 blob 数据和响应头（例如文件名可能在 headers 里）
+      return response;
+    }
+
     // 2xx 范围内的状态码都会触发该函数。
     const res = response.data;
 

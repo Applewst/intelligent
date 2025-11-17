@@ -3,7 +3,6 @@ import { ref, onMounted, computed, onUpdated } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { useCounterStore } from '../stores/counter'
-// import { useUserStore } from '../stores/user'
 import { useRouter, useRoute } from 'vue-router'
 
 // const storeuser = useUserStore()

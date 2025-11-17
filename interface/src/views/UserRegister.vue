@@ -1,5 +1,4 @@
 <script setup>
-
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useCounterStore } from '../stores/counter'
@@ -12,7 +11,6 @@ const router = useRouter()
 const currentForm = ref('login')
 // 记住密码状态，初始为不记住密码
 const rememberMe = ref(false)
-
 
 // 登录表单的数据模型
 const loginForm = reactive({
@@ -47,111 +45,109 @@ const loginRules = {
   ],
 }
 
-    // 注册表单的校验规则
-    const registerRules = {
-      username: [
-        { required: true, message: "请输入用户名", trigger: "blur" },
-        {
-          pattern: /^[\u4e00-\u9fa5a-zA-Z0-9_]{2,10}$/,
-          message: "用户名格式不正确！仅允许汉字，字母、数字和下划线，长度为 2-10",
-          trigger: "blur",
-        },
-      ],
-      password: [
-        { required: true, message: "请输入密码", trigger: "blur" },
-        {
-          pattern: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/,
-          message: "密码格式不正确！至少包含一个字母、一个数字，长度为 6-20",
-          trigger: "blur",
-        },
-      ],
-      confirmPassword: [
-        { required: true, message: "请确认密码", trigger: "blur" },
-        {
-          validator: (rule, value, callback) => {
-            // 确认密码与密码一致校验
-            if (value !== registerForm.password) {
-              callback(new Error("两次输入的密码不一致！"));
-            } else {
-              callback();
-            }
-          },
-          trigger: "blur",
-        },
-      ],
-      jurisdiction: [
-        { required: true, message: "请输入权限", trigger: "blur" },
-        {
-          pattern: /^[A-Za-z]{1,20}$/,
-          message: "权限格式不正确！仅允许英文，长度为 5-20",
-          trigger: "blur",
-        },
-      ],
-    };
-
-    // 登录表单引用
-    const loginRef = ref(null);
-    // 注册表单引用
-    const registerRef = ref(null);
-
-
-    
-    // 提交表单处理函数
-    const handleSubmit = async () => {
-      if (currentForm.value === "login") {
-          try {
-            //登录请求
-            console.log(loginForm.username,loginForm.password);
-            
-            const response = await UserLogin(loginForm.username, loginForm.password);
-            console.log('登录成功', response);
-            
-            // 存储token（假设返回数据中有token）
-            if (response) {
-              // store.token = response.data;
-              localStorage.setItem('token', response.data);
-              localStorage.setItem('username', loginForm.username);
-            }
-            
-            // 跳转到首页
-            router.push('/');
-            store.isLogin=true;
-            store.userName=loginForm.username;
-            store.userType='admin';
-            
-            ElMessage.success('登录成功');
-            
-          } catch (error) {
-            console.error('登录失败', error);
-            ElMessage.error(error.response?.data?.message || '登录失败');
-          }
-      } else {
-        try{
-      // 注册表单提交处理
-            const response = await UserRegister(registerForm.username, registerForm.password, registerForm.jurisdiction);
-            console.log('注册成功', response);
-            ElMessage.success('注册成功，请登录');
-            // 切换回登录表单
-            toggleForm('login');
-        }catch(error){
-          console.error('注册失败', error);
-          ElMessage.error(error.response?.data?.message || '注册失败');
+// 注册表单的校验规则
+const registerRules = {
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    {
+      pattern: /^[\u4e00-\u9fa5a-zA-Z0-9_]{2,10}$/,
+      message: '用户名格式不正确！仅允许汉字，字母、数字和下划线，长度为 2-10',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    {
+      pattern: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/,
+      message: '密码格式不正确！至少包含一个字母、一个数字，长度为 6-20',
+      trigger: 'blur',
+    },
+  ],
+  confirmPassword: [
+    { required: true, message: '请确认密码', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        // 确认密码与密码一致校验
+        if (value !== registerForm.password) {
+          callback(new Error('两次输入的密码不一致！'))
+        } else {
+          callback()
         }
+      },
+      trigger: 'blur',
+    },
+  ],
+  jurisdiction: [
+    { required: true, message: '请输入权限', trigger: 'blur' },
+    {
+      pattern: /^[A-Za-z]{1,20}$/,
+      message: '权限格式不正确！仅允许英文，长度为 5-20',
+      trigger: 'blur',
+    },
+  ],
+}
+
+// 登录表单引用
+const loginRef = ref(null)
+// 注册表单引用
+const registerRef = ref(null)
+
+// 提交表单处理函数
+const handleSubmit = async () => {
+  if (currentForm.value === 'login') {
+    try {
+      //登录请求
+      console.log(loginForm.username, loginForm.password)
+
+      const response = await UserLogin(loginForm.username, loginForm.password)
+      console.log('登录成功', response)
+
+      // 存储token（假设返回数据中有token）
+      if (response) {
+        // store.token = response.data;
+        localStorage.setItem('token', response.data)
+        localStorage.setItem('username', loginForm.username)
       }
+
+      // 跳转到首页
+      router.push('/')
+      store.isLogin = true
+      store.userName = loginForm.username
+      store.userType = 'admin'
+
+      ElMessage.success('登录成功')
+    } catch (error) {
+      console.error('登录失败', error)
+      ElMessage.error(error.response?.data?.message || '登录失败')
     }
+  } else {
+    try {
+      // 注册表单提交处理
+      const response = await UserRegister(
+        registerForm.username,
+        registerForm.password,
+        registerForm.jurisdiction
+      )
+      console.log('注册成功', response)
+      ElMessage.success('注册成功，请登录')
+      // 切换回登录表单
+      toggleForm('login')
+    } catch (error) {
+      console.error('注册失败', error)
+      ElMessage.error(error.response?.data?.message || '注册失败')
+    }
+  }
+}
 
-    
-  
-  // jurisdiction: [
-  //   { required: true, message: '请输入权限', trigger: 'blur' },
-  //   {
-  //     pattern: /^[A-Za-z]{1,20}$/,
-  //     message: '权限格式不正确！仅允许英文，长度为 5-20',
-  //     trigger: 'blur',
-  //   },
-  // ],
-  // }
-
+// jurisdiction: [
+//   { required: true, message: '请输入权限', trigger: 'blur' },
+//   {
+//     pattern: /^[A-Za-z]{1,20}$/,
+//     message: '权限格式不正确！仅允许英文，长度为 5-20',
+//     trigger: 'blur',
+//   },
+// ],
+// }
 
 // // 登录表单引用
 // const loginRef = ref(null)
