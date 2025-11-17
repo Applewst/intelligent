@@ -58,14 +58,6 @@ public class HomePageController {
         return loginServiceimpl.login(loginVo);
     }
 
-    /**
-     * 照片墙
-     */
-    @GetMapping("/photos")
-    public Result getPhoto(){
-        return Result.success(teamDynamicServiceImpl.getAllImgs(6));
-    }
-
 }
 
 

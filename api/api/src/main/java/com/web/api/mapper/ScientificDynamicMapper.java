@@ -27,15 +27,11 @@ public interface ScientificDynamicMapper {
      */
      List<ScientificDynamic> selectNewDynamics(@Param("num") int num);
 
-    /**
-     * 获取科研动态列表
-     */
-    List<ScientificDynamic> getDynamicslist(@Param("pageNum") int pageNum, @Param("size") int pageSize);
 
     /**
      *新增科研动态
      */
-    @Insert("insert into web.scientific_dynamic(image, title, detail)"+
+    @Insert("insert into scientific_dynamic(image, title, detail)"+
             "values(#{image},#{title},#{detail})")
     void saveDynamics(@Param("image") String image,
                       @Param("title") String title,

@@ -27,14 +27,9 @@ public interface TeamDynamicMapper {
     List<TeamDynamic> getNewDynamic(@Param("num") int num);
 
     /**
-     * 获取最新num图片链接
-     */
-    List<String> getNewImgs(@Param("num") int num);
-
-    /**
      * 新增活动动态列表
      */
-    @Insert("insert into web.team_dynamic(image, title, detail)"+
+    @Insert("insert into team_dynamic(image, title, detail)"+
             "values(#{image},#{title},#{detail})")
     void saveTeamDynamics(@Param("image") String image,
                       @Param("title") String title,

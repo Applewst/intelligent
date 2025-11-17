@@ -5,8 +5,7 @@
 
 <mapper namespace="com.web.api.mapper.TeamDynamicMapper">
     <select id="getAllDynamics" resultType="com.web.api.pojo.TeamDynamic">
-        select *
-        from team_dynamic
+        select *from team_dynamic
     </select>
     <select id="getNewDynamic" resultType="com.web.api.pojo.TeamDynamic">
         select *
@@ -34,4 +33,5 @@
             </if>
         </where>
     </select>
+
 </mapper>

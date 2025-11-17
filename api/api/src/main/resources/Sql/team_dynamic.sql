@@ -1,10 +1,10 @@
 create table `team_dynamic`
 (
-    `id`    tinyint auto_increment comment 'id编号',
-    `title` varchar(20) default null comment '标题',
-    `desc`  text        default null comment '详情介绍',
-    `time`  datetime    default null comment '日期',
-    `img`   varchar(50) default null comment '图片路径',
+    `id`     int NOT NULL AUTO_INCREMENT,
+    `image`  varchar(50) DEFAULT NULL comment '图片地址',
+    `title`  varchar(20) DEFAULT NULL comment '标题',
+    `detail` text comment '内容',
+    `time`   datetime    DEFAULT NULL comment '时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
