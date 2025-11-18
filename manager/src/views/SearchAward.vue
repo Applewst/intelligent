@@ -92,8 +92,8 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="照片" prop="image">
-          <el-input v-model="form.image" placeholder="请输入照片URL" />
+        <el-form-item label="照片" prop="file">
+          <el-input v-model="form.file" placeholder="请输入照片URL" />
           <div v-if="form.file" style="margin-top: 10px">
             <el-image
               :src="form.file"
@@ -154,7 +154,7 @@ const AddAwardData = async (detail, author, file, time) => {
   const response = await AddAward(detail, author, file, time)
   if (response.code === 1) {
     ElMessage.success('新增获奖成功')
-    GetAllAwardData() // 刷新表格数据
+    GetAllAwardData('','','') // 刷新表格数据
   } else {
     ElMessage.error('新增获奖失败')
   }
@@ -166,7 +166,7 @@ const EditAwardData = async (id, detail, author, file, time) => {
   const response = await UpdateAward(id, detail, author, file, time)
   if (response.code === 1) {
     ElMessage.success('编辑获奖成功')
-    GetAllAwardData() // 刷新表格数据
+    GetAllAwardData('','','') // 刷新表格数据
   } else {
     ElMessage.error('编辑获奖失败')
   }
@@ -178,7 +178,7 @@ const DeleteAwardData = async (id) => {
   const response = await DeleteAward(id)
   if (response.code === 1) {
     ElMessage.success('删除获奖成功')
-    GetAllAwardData() // 刷新表格数据
+    GetAllAwardData('','','') // 刷新表格数据
   } else {
     ElMessage.error('删除获奖失败')
   }

@@ -202,7 +202,7 @@ const handleSearch = () => {
 // 重置
 const handleReset = () => {
   searchForm.name = '';
-  getDevelopList(pageNum,pageSize.value,searchForm.name)
+  getDevelopList(pageNum.value,pageSize.value,searchForm.name)
 };
 
 // 新增

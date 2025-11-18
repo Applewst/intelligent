@@ -49,7 +49,14 @@ function handleMenuSelect(key) {
     window.location.reload()
   }
 }
+// const token = localStorage.getItem('token')
+const handlebehande = () => {
+  const token = localStorage.getItem('token')
+  window.open(`http://localhost:5174?token=${token}`)
+  //怎么跳转为新的页面
 
+
+}
 onUpdated(() => {
   // 每次组件更新时检查登录状态
   isLogin.value = store.isLogin
@@ -69,7 +76,7 @@ onUpdated(() => {
         <el-input placeholder="搜索" size="small" class="search-input" :prefix-icon="Search" />
       </div>
       <div class="header-actions">
-        <el-button type="primary" size="small">English</el-button>
+        <el-button type="primary" size="small" @click="handlebehande">后台管理</el-button>
         <el-dropdown trigger="click" @command="handleMenuSelect">
           <span class="el-dropdown-link">
             <el-avatar
