@@ -45,7 +45,7 @@ export const useCounterStore = defineStore('counter', () => {
     console.log(token);
 
     token.value = authToken
-    localStorage.setItem('token', authToken)
+    sessionStorage.setItem('token', authToken)
 
     const userInfo = decodeToken(authToken)
     userName.value = userInfo.username
