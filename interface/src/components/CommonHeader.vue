@@ -92,7 +92,7 @@ const handleLogout = () => {
 const handleGoToBackend = () => {
   if (store.userType === 'admin') {
     const backendUrl = 'http://localhost:5174/home'
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     window.open(`${backendUrl}?token=${token}`, '_blank')
   }
 }

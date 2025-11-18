@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed ,onMounted,onUnmounted} from 'vue'
 import { defineStore } from 'pinia'
 import { jwtDecode } from 'jwt-decode';
 
@@ -12,7 +12,7 @@ export const useCounterStore = defineStore('counter', () => {
   const userName = ref('')
   const userType = ref('') // 存储解析后的 role
   const isLogin = ref(false)
-  const token = ref(localStorage.getItem('token') || '')
+  const token = ref(sessionStorage.getItem('token') || '')
 
   // 解析 Token 并提取用户信息
   const decodeToken = (authToken) => {
@@ -52,7 +52,6 @@ export const useCounterStore = defineStore('counter', () => {
     userType.value = userInfo.role
     isLogin.value = !!userInfo.username
     console.log(userInfo);
-
   }
 
   // 登出
@@ -61,7 +60,7 @@ export const useCounterStore = defineStore('counter', () => {
     userName.value = ''
     userType.value = ''
     isLogin.value = false
-    localStorage.removeItem('token')
+    sessionStorage.removeItem('token')
   }
 
   return {
