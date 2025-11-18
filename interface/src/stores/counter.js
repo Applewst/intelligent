@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { jwtDecode } from 'jwt-decode';
 
 export const useCounterStore = defineStore('counter', () => {
   const count = ref(0)
@@ -7,30 +8,71 @@ export const useCounterStore = defineStore('counter', () => {
   function increment() {
     count.value++
   }
-  const userName = ref('')   //用户名
-  const userType = ref('')    //用户类型
-  const isLogin = ref(false)  //是否登录
 
+  const userName = ref('')
+  const userType = ref('') // 存储解析后的 role
+  const isLogin = ref(false)
+  const token = ref(localStorage.getItem('token') || '')
 
-  if(localStorage.getItem('token')){
-    isLogin.value=true;
-    userName.value=localStorage.getItem('username')||'';
+  // 解析 Token 并提取用户信息
+  const decodeToken = (authToken) => {
+    if (!authToken) {
+      return { username: '', role: '' }
+    }
+    try {
+      const decoded = jwtDecode(authToken)
+      const userInfo = typeof decoded.user === 'string' ? JSON.parse(decoded.user) : decoded.user
+      return {
+        username: userInfo.username || '',
+        role: userInfo.identity === 'admin' ? 'admin' : 'user'
+      }
+    } catch (error) {
+      console.error("解析 Token 失败:", error)
+      return { username: '', role: '' }
+    }
   }
-  const setUser = (name, type) => {
-    userName.value = name
-    userType.value = type
-  }  //修改用户名和用户类型
 
-  const token = ref('')   //token
+  // 初始化时解析
+  if (token.value) {
+    const userInfo = decodeToken(token.value)
+    userName.value = userInfo.username
+    userType.value = userInfo.role
+    isLogin.value = true
+  }
+
+  // 登录时设置 Token 并解析
+  const setUser = (authToken) => {
+    console.log(token);
+
+    token.value = authToken
+    localStorage.setItem('token', authToken)
+
+    const userInfo = decodeToken(authToken)
+    userName.value = userInfo.username
+    userType.value = userInfo.role
+    isLogin.value = !!userInfo.username
+    console.log(userInfo);
+
+  }
+
+  // 登出
+  const logout = () => {
+    token.value = ''
+    userName.value = ''
+    userType.value = ''
+    isLogin.value = false
+    localStorage.removeItem('token')
+  }
+
   return {
     count,
     doubleCount,
-    increment ,
+    increment,
     userName,
     userType,
     isLogin,
+    token,
     setUser,
-    token
-
+    logout
   }
 })

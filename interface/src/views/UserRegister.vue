@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useCounterStore } from '../stores/counter'
 import { UserLogin } from '../api/login.js'
-import { UserRegister } from '../api/login.js'
+import { UserRegister } from '../api/login.js' //无注册
 const store = useCounterStore()
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -97,16 +97,19 @@ const handleSubmit = async () => {
   if (currentForm.value === 'login') {
     try {
       //登录请求
-      console.log(loginForm.username, loginForm.password)
+      // console.log(loginForm.username, loginForm.password)
 
       const response = await UserLogin(loginForm.username, loginForm.password)
-      console.log('登录成功', response)
+      console.log('登录成功', response.data)
+      const token = response.data
 
       // 存储token（假设返回数据中有token）
-      if (response) {
+      if (response.code === 1 && token) {
+        store.setUser(token)
+        ElMessage.success('登录成功')
         // store.token = response.data;
-        localStorage.setItem('token', response.data)
-        localStorage.setItem('username', loginForm.username)
+        // localStorage.setItem('token', response.data)
+        // localStorage.setItem('username', loginForm.username)
       }
 
       // 跳转到首页
@@ -138,66 +141,6 @@ const handleSubmit = async () => {
     }
   }
 }
-
-// jurisdiction: [
-//   { required: true, message: '请输入权限', trigger: 'blur' },
-//   {
-//     pattern: /^[A-Za-z]{1,20}$/,
-//     message: '权限格式不正确！仅允许英文，长度为 5-20',
-//     trigger: 'blur',
-//   },
-// ],
-// }
-
-// // 登录表单引用
-// const loginRef = ref(null)
-// // 注册表单引用
-// const registerRef = ref(null)
-
-// // 提交表单处理函数
-// const handleSubmit = async () => {
-//   if (currentForm.value === 'login') {
-//     try {
-//       //登录请求
-//       const response = await UserLogin(loginForm.username, loginForm.password)
-//       console.log('登录成功', response.data)
-
-//       // 存储token（假设返回数据中有token）
-//       if (response.data) {
-//         // store.token = response.data;
-//         localStorage.setItem('token', response.data)
-//         localStorage.setItem('username', loginForm.username)
-//       }
-
-//       // 跳转到首页
-//       router.push('/')
-//       store.isLogin = true
-//       store.userName = loginForm.username
-//       store.userType = 'admin'
-
-//       ElMessage.success('登录成功')
-//     } catch (error) {
-//       console.error('登录失败', error)
-//       ElMessage.error(error.response?.data?.message || '登录失败')
-//     }
-//   } else {
-//     try {
-//       // 注册表单提交处理
-//       const response = await UserLogin(
-//         registerForm.username,
-//         registerForm.password,
-//         registerForm.jurisdiction
-//       )
-//       console.log('注册成功', response.data)
-//       ElMessage.success('注册成功，请登录')
-//       // 切换回登录表单
-//       toggleForm('login')
-//     } catch (error) {
-//       console.error('注册失败', error)
-//       ElMessage.error(error.response?.data?.message || '注册失败')
-//     }
-//   }
-// }
 // 切换表单类型函数
 const toggleForm = (formType) => {
   currentForm.value = formType
@@ -305,10 +248,10 @@ const handleForgotPassword = () => {
         </el-form>
 
         <!-- 切换登录/注册表单链接 -->
-        <div class="switch-form">
+        <!-- <div class="switch-form">
           <a href="#" v-if="currentForm === 'login'" @click="toggleForm('register')">注册 →</a>
           <a href="#" v-else @click="toggleForm('login')">返回登录</a>
-        </div>
+        </div> -->
       </el-card>
     </div>
   </div>

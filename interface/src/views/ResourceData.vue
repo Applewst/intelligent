@@ -24,18 +24,16 @@ const getResourceList = async () => {
   loading.value = true
   try {
     const params = {
-      page: pagination.currentPage,
+      pageNum: pagination.currentPage,
       pageSize: pagination.pageSize,
       keyword: searchKeyword.value || '',
     }
-
+    // console.log(params)
     const response = await resourceApi.getResourceList(params)
     console.log(response.data)
 
-    // 核心修改 1: 正确处理分页数据
-    // 假设你的后端返回格式是 { data: [...], total: 100 }
     resourceList.value = response.data.data || []
-    pagination.total = response.data.total || 0 // 将 total 赋值为总记录数
+    pagination.total = response.data.total || 0
   } catch (error) {
     ElMessage.error('获取资源列表失败')
     console.error(error)
@@ -63,12 +61,18 @@ const handleDownload = async (row) => {
   row.downloading = true
 
   try {
-    const blob = await resourceApi.downloadResource(row.id)
-    downloadFile(blob, row.name)
+    // 1. 调用 API，此时返回的是一个 { blob, filename } 对象
+    const downloadData = await resourceApi.downloadResource(row.id)
+
+    // 2. 从返回的对象中解构出 blob 和 filename
+    const { blob, filename } = downloadData
+
+    // 3. 将 blob 和 filename 传递给 downloadFile 函数
+    downloadFile(blob, filename)
 
     ElMessage.success('下载成功')
 
-    // 更新下载次数（这只是前端临时更新，刷新后会恢复）
+    // 更新下载次数（前端临时更新）
     row.downloads++
   } catch (error) {
     ElMessage.error('下载失败，请稍后重试')
@@ -131,10 +135,8 @@ onMounted(() => {
           <el-icon><Search /></el-icon>
         </template>
       </el-input>
-      <el-button type="primary" :icon="Search" @click="handleSearch" style="margin-left: 10px">
-        搜索
-      </el-button>
-      <el-button :icon="Refresh" @click="handleReset"> 重置 </el-button>
+      <el-button type="primary" @click="handleSearch" style="margin-left: 10px"> 搜索 </el-button>
+      <el-button @click="handleReset"> 重置 </el-button>
     </div>
 
     <!-- 资源列表 -->

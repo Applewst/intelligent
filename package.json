@@ -2,5 +2,8 @@
   "devDependencies": {
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.8.0"
+  },
+  "dependencies": {
+    "jwt-decode": "^4.0.0"
   }
 }
