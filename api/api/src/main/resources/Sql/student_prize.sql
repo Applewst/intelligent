@@ -8,6 +8,6 @@ CREATE TABLE `student_prize`
     `detail` text COMMENT '详情',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 3
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='学生获奖'
