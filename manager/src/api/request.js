@@ -12,16 +12,15 @@ const service = axios.create({
 // 添加请求拦截器
 service.interceptors.request.use(config => {
     // 在发送请求之前做些什么
-    //跨端口拿到token
-
     const TOKEN = new URLSearchParams(window.location.search);
-    const token1 = TOKEN.get('token');
+    const token1 = TOKEN.get('token');    
    if (token1) {
-      // 如果URL中包含token，则将其存储在localStorage中
-      localStorage.setItem('token', token1);
+      sessionStorage.setItem('token', token1);
     }
     console.log('是否能拿到token',token1);
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
+    console.log(token);
+    
     // 为所有请求添加 token
     if (token) {
       config.headers['token'] = token;

@@ -1,252 +1,291 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import * as echarts from 'echarts'
-import { getStudentList } from '@/api/student'
-import { getGraduateList } from '@/api/graduate'
-import { GetPaperList } from '@/api/SearchApi'
-import {getResearchList} from '@/api/research'
-const currentDate = ref(new Date())
-const studentChart = ref(null)
-const paperChart = ref(null)
-const activityChart = ref(null)
-const studentDate = ref([])
-const paperData = ref({ years: [], counts: [] })
-const activityData = ref({ months: [], counts: [] })
-const isToday = (date) => {
-  const today = new Date()
-  const checkDate = new Date(date)
-  return today.toDateString() === checkDate.toDateString()
-}
+import { ref, onMounted, watch } from "vue";
+import * as echarts from "echarts";
+import { getStudentList } from "@/api/student";
+import { getGraduateList } from "@/api/graduate";
+import { GetPaperList } from "@/api/SearchApi";
+import { getResearchList } from "@/api/research";
 
-const GetStudentDate = async (pageNum,pageSize,name) => {
-  const res1 = await getStudentList(pageNum,pageSize,name)
-  const res2 = await getGraduateList(pageNum,pageSize,name)
-  console.log('获取在校生和毕业生数据',res1,res2)
-  
-  studentDate.value = [res2.data.total, res1.data.total]
-  console.log(studentDate.value)
-}
+const currentDate = ref(new Date());
+const studentChart = ref(null);
+const paperChart = ref(null);
+const activityChart = ref(null);
+const studentDate = ref([]);
+const paperData = ref({ years: [], counts: [] });
+const activityData = ref({ months: [], counts: [] });
+
+const isToday = (date) => {
+  const today = new Date();
+  const checkDate = new Date(date);
+  return today.toDateString() === checkDate.toDateString();
+};
+
+const GetStudentDate = async (pageNum, pageSize, name) => {
+  const res1 = await getStudentList(pageNum, pageSize, name);
+  const res2 = await getGraduateList(pageNum, pageSize, name);
+  console.log("获取在校生和毕业生数据", res1, res2);
+
+  studentDate.value = [res2.data.total, res1.data.total];
+  console.log(studentDate.value);
+};
 
 //获取论文数据
-const GetPaperData = async (pageNum,pageSize,author,title) => {
+const GetPaperData = async (pageNum, pageSize, author, title) => {
   try {
-    const res = await GetPaperList(pageNum,pageSize,author,title)
-      console.log('获取论文数据文本处：',res)
-      
-      const papers = res.data.data
-      
-      // 按年份统计论文数量
-      const yearMap = {}
-      papers.forEach(paper => {
-        const year = paper.time.substring(0, 4) // 提取年份
-        yearMap[year] = (yearMap[year] || 0) + 1
-      })
-      
-      // 将结果转换为数组并排序
-      const years = Object.keys(yearMap).sort()
-      const counts = years.map(year => yearMap[year])
-      
-      paperData.value = { years, counts }
-      console.log('论文按年份统计:', { years, counts })
-    
+    const res = await GetPaperList(pageNum, pageSize, author, title);
+    console.log("获取论文数据文本处：", res);
+
+    const papers = res.data.data;
+
+    // 按年份统计论文数量
+    const yearMap = {};
+    papers.forEach((paper) => {
+      const year = paper.time.substring(0, 4); // 提取年份
+      yearMap[year] = (yearMap[year] || 0) + 1;
+    });
+
+    // 将结果转换为数组并排序
+    const years = Object.keys(yearMap).sort();
+    const counts = years.map((year) => yearMap[year]);
+
+    paperData.value = { years, counts };
+    console.log("论文按年份统计:", { years, counts });
   } catch (error) {
-    console.error('获取论文数据失败:', error)
+    console.error("获取论文数据失败:", error);
   }
-}
+};
 
 //获取科研动态数据
-const GetActivityData = async (pageNum,pageSize,title) => {
-  const res = await getResearchList(pageNum=1,pageSize='',title='')
-  console.log('获取科研动态数据处：',res)
+const GetActivityData = async (pageNum, pageSize, title) => {
+  const res = await getResearchList(
+    (pageNum = 1),
+    (pageSize = ""),
+    (title = "")
+  );
+  console.log("获取科研动态数据处：", res);
   if (res.data) {
-      const activities = res.data.data
-      
-      // 按月份统计科研动态数量
-      const monthMap = {}
-      activities.forEach(activity => {
-        if (activity.time) {
-          const month = activity.time.substring(5, 7) // 提取月份 (MM)
-          monthMap[month] = (monthMap[month] || 0) + 1
-        }
-      })
-      
-      console.log('[v0] 月份统计 monthMap:', monthMap)
-      
-      // 初始化12个月的数据，没有数据的月份为0
-      const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
-      const counts = months.map(month => monthMap[month] || 0)
-      
-      activityData.value = { months, counts }
-      console.log('[v0] 科研动态按月份统计:', activityData.value)
-    }
-}
-watch(activityData, (newData) => {
-  if (newData.months.length > 0) {
-    initActivityChart()
+    const activities = res.data.data;
+
+    // 按月份统计科研动态数量
+    const monthMap = {};
+    activities.forEach((activity) => {
+      if (activity.time) {
+        const month = activity.time.substring(5, 7); // 提取月份 (MM)
+        monthMap[month] = (monthMap[month] || 0) + 1;
+      }
+    });
+
+    console.log("[v0] 月份统计 monthMap:", monthMap);
+
+    // 初始化12个月的数据，没有数据的月份为0
+    const months = [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+    ];
+    const counts = months.map((month) => monthMap[month] || 0);
+
+    activityData.value = { months, counts };
+    console.log("[v0] 科研动态按月份统计:", activityData.value);
   }
-}, { deep: true })
+};
+watch(
+  activityData,
+  (newData) => {
+    if (newData.months.length > 0) {
+      initActivityChart();
+    }
+  },
+  { deep: true }
+);
 
 onMounted(() => {
-  GetStudentDate('','','')
-  GetPaperData('','','','')
-  GetActivityData('','','')
-})
+  GetStudentDate("", "", "");
+  GetPaperData("", "", "", "");
+  GetActivityData("", "", "");
+});
 
 // 监听 studentDate 的变化，数据获取完成后初始化或更新图表
 watch(studentDate, (newData) => {
   if (newData.length > 0) {
-    initStudentChart()
+    initStudentChart();
   }
-})
+});
 
-watch(paperData, (newData) => {
-  if (newData.years.length > 0) {
-    initPaperChart()
-  }
-}, { deep: true })
+watch(
+  paperData,
+  (newData) => {
+    if (newData.years.length > 0) {
+      initPaperChart();
+    }
+  },
+  { deep: true }
+);
 
 // 初始化学生图表 - 条形图
 const initStudentChart = () => {
-  if (!studentChart.value) return
-  const chart = echarts.init(studentChart.value)
+  if (!studentChart.value) return;
+  const chart = echarts.init(studentChart.value);
   const option = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' }
+      trigger: "axis",
+      axisPointer: { type: "shadow" },
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
     },
     xAxis: {
-      type: 'value',
-      boundaryGap: [0, 0.01]
+      type: "value",
+      boundaryGap: [0, 0.01],
     },
     yAxis: {
-      type: 'category',
-      data: ['毕业生', '在校生']
+      type: "category",
+      data: ["毕业生", "在校生"],
     },
     series: [
       {
-        name: '人数',
-        type: 'bar',
+        name: "人数",
+        type: "bar",
         data: studentDate.value,
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-            { offset: 0, color: '#409EFF' },
-            { offset: 1, color: '#79bbff' }
-          ])
+            { offset: 0, color: "#409EFF" },
+            { offset: 1, color: "#79bbff" },
+          ]),
         },
-        barWidth: '50%'
-      }
-    ]
-  }
-  chart.setOption(option)
-  window.addEventListener('resize', () => chart.resize())
-}
+        barWidth: "50%",
+      },
+    ],
+  };
+  chart.setOption(option);
+  window.addEventListener("resize", () => chart.resize());
+};
 
 const initPaperChart = () => {
-  if (!paperChart.value) return
-  const chart = echarts.init(paperChart.value)
+  if (!paperChart.value) return;
+  const chart = echarts.init(paperChart.value);
   const option = {
     tooltip: {
-      trigger: 'axis'
+      trigger: "axis",
     },
     legend: {
-      data: ['数量'],
-      top: '0%',
-      left: 'center'
+      data: ["数量"],
+      top: "0%",
+      left: "center",
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      top: '15%',
-      containLabel: true
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      top: "15%",
+      containLabel: true,
     },
     xAxis: {
-      type: 'category',
+      type: "category",
       boundaryGap: false,
-      data: paperData.value.years.map(year => year + '年')
+      data: paperData.value.years.map((year) => year + "年"),
     },
     yAxis: {
-      type: 'value',
-      minInterval: 1
+      type: "value",
+      minInterval: 1,
     },
     series: [
       {
-        name: '数量',
-        type: 'line',
+        name: "数量",
+        type: "line",
         data: paperData.value.counts,
         smooth: true,
-        itemStyle: { color: '#66C23A' },
+        itemStyle: { color: "#66C23A" },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(102, 194, 58, 0.3)' },
-            { offset: 1, color: 'rgba(102, 194, 58, 0.05)' }
-          ])
-        }
-      }
-    ]
-  }
-  chart.setOption(option)
-  window.addEventListener('resize', () => chart.resize())
-}
+            { offset: 0, color: "rgba(102, 194, 58, 0.3)" },
+            { offset: 1, color: "rgba(102, 194, 58, 0.05)" },
+          ]),
+        },
+      },
+    ],
+  };
+  chart.setOption(option);
+  window.addEventListener("resize", () => chart.resize());
+};
 
 // 初始化科研活动图表 - 折线图
 const initActivityChart = () => {
-  if (!activityChart.value) return
-  const chart = echarts.init(activityChart.value)
+  if (!activityChart.value) return;
+  const chart = echarts.init(activityChart.value);
   const option = {
     tooltip: {
-      trigger: 'axis'
+      trigger: "axis",
     },
     legend: {
-      data: ['数量'],
-      top: '0%',
-      left: 'center'
+      data: ["数量"],
+      top: "0%",
+      left: "center",
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      top: '15%',
-      containLabel: true
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      top: "15%",
+      containLabel: true,
     },
     xAxis: {
-      type: 'category',
+      type: "category",
       boundaryGap: false,
-      data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+      data: [
+        "1月",
+        "2月",
+        "3月",
+        "4月",
+        "5月",
+        "6月",
+        "7月",
+        "8月",
+        "9月",
+        "10月",
+        "11月",
+        "12月",
+      ],
     },
     yAxis: {
-      type: 'value',
-      minInterval: 1
+      type: "value",
+      minInterval: 1,
     },
     series: [
       {
-        name: '数量',
-        type: 'line',
+        name: "数量",
+        type: "line",
         data: activityData.value.counts,
         smooth: true,
-        itemStyle: { color: '#9370DB' },
+        itemStyle: { color: "#9370DB" },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(147, 112, 219, 0.3)' },
-            { offset: 1, color: 'rgba(147, 112, 219, 0.05)' }
-          ])
-        }
-      }
-    ]
-  }
-  chart.setOption(option)
-  window.addEventListener('resize', () => chart.resize())
-}
+            { offset: 0, color: "rgba(147, 112, 219, 0.3)" },
+            { offset: 1, color: "rgba(147, 112, 219, 0.05)" },
+          ]),
+        },
+      },
+    ],
+  };
+  chart.setOption(option);
+  window.addEventListener("resize", () => chart.resize());
+};
 // 在组件挂载时初始化其他图表
 onMounted(() => {
-  initActivityChart()
-})
+  initActivityChart();
+});
 </script>
 
 <template>
@@ -255,7 +294,10 @@ onMounted(() => {
       <!-- 个人卡片 -->
       <el-card class="user-card" shadow="hover">
         <div class="user-info">
-          <el-avatar :size="80" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+          <el-avatar
+            :size="80"
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          />
           <div class="user-details">
             <h2>张教授</h2>
             <p class="user-role">研究生导师</p>
@@ -319,7 +361,7 @@ onMounted(() => {
         <el-calendar v-model="currentDate">
           <template #date-cell="{ data }">
             <div :class="['calendar-day', { 'is-today': isToday(data.day) }]">
-              {{ data.day.split('-').slice(2).join('-') }}
+              {{ data.day.split("-").slice(2).join("-") }}
             </div>
           </template>
         </el-calendar>
