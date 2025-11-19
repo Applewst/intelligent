@@ -41,6 +41,8 @@ services:
     image: nginx:latest
     container_name: nginx
     restart: always
+    environment:
+      - TZ=Asia/Shanghai
     ports:
       - "80:80"
     volumes:

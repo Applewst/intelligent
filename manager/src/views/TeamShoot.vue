@@ -170,7 +170,7 @@ const AddPhotoList = async (title,file,detail) => {
   const response = await AddShoot(title,file,detail)
   console.log(response)
   
-  if (response.data.code === 1) {
+  if (response.code === 1) {
     ElMessage.success('新增成功')
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
   } else {
@@ -181,7 +181,7 @@ const AddPhotoList = async (title,file,detail) => {
 const UpdatePhotoList = async (id,title,file,detail) => {
   console.log('编辑照片数据文本处：',id,title,file,detail)
   const response = await UpdateShoot(id,title,file)
-  if (response.data.code === 1) {
+  if (response.code === 1) {
     ElMessage.success('编辑成功')
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
   } else {

@@ -264,7 +264,7 @@ export const AddSearchProject = async (title,sort,image) => {
       "data":null
     }
   }
-  return service.post('/search/projects', {
+  return service.post('/search', {
     title,
     sort,
     image
@@ -280,7 +280,7 @@ export const EditSearchProject = async (id,title,sort,image) => {
       "data":null
     }
   }
-  return service.put('/search/projects', {
+  return service.put('/search/project', {
     id,
     title,
     sort,
@@ -297,7 +297,7 @@ export const DeleteSearchProject = async (id) => {
       "data":null
     }
   }
-  return service.delete('/search/projects',  { params: { id } })
+  return service.delete('/search',  { params: { id } })
 }
 //-----------------------------------------------------------
 // 获取论文列表
@@ -351,7 +351,7 @@ export const UpdatePaper = async (id,title,author,detail,file) => {
       "data":null
     }
   }
-  return service.put('/search/paper', {
+  return service.put('/search/papers', {
     id,
     title,
     author,
@@ -411,7 +411,7 @@ export const AddAward = async (detail,author,file,time) => {
     detail,
     author,
     file,
-    // time
+    time
   })
 }
 //修改获奖

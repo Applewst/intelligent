@@ -15,7 +15,7 @@ service.interceptors.request.use(function (config) {
     const token = localStorage.getItem('token')
     //跨端口传token
     // window.location.href = `http://localhost:5174?token=${token}`
-    if (token) {
+    if (token ) {
       // 注意：这里的 header 字段是 'token'，请确保与后端约定一致
       // 有些后端可能使用 'Authorization': `Bearer ${token}`
       config.headers['token'] = token

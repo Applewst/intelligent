@@ -25,7 +25,11 @@
 
     <!-- 数据表格 -->
     <el-table :data="tableData" border class="data-table">
-      <el-table-column prop="id" label="ID" width="80" align="center" />
+      <el-table-column label="ID" width="80" align="center">
+        <template #default="{ $index }">
+          {{ $index + 1 }}
+        </template>
+      </el-table-column>
       <el-table-column prop="detail" label="获奖内容" min-width="200" />
       <el-table-column prop="author" label="论文作者" width="150" />
       <el-table-column prop="file" label="照片" width="120">
@@ -88,7 +92,8 @@
             v-model="form.time"
             type="date"
             placeholder="选择日期"
-            value-format="yyyy-MM-dd"
+            value-format="YYYY-MM-DD"
+            format="YYYY-MM-DD"
             clearable
           />
         </el-form-item>
@@ -257,7 +262,7 @@ const handleAdd = () => {
   isEdit.value = false
   form.detail = ''
   form.author = ''
-  form.image = ''
+  form.file = ''
   form.time = ''  // 添加这行代码
   dialogVisible.value = true
   initQuillEditor()
@@ -274,7 +279,7 @@ const handleEdit = (row) => {
   editId.value = row.id
   form.detail = row.detail
   form.author = row.author
-  form.image = row.file || ''
+  form.file = row.file || ''
   form.time = row.time || ''  // 添加这行代码
   dialogVisible.value = true
   initQuillEditor()
@@ -306,6 +311,17 @@ const handleDialogClose = () => {
   form.author = ''
   form.file = ''
   form.time = ''  // 添加这行代码
+  // 确保日期格式正确
+  if (form.time && typeof form.time === 'string') {
+    // 如果已经是字符串格式，确保格式正确
+    form.time = form.time
+  } else if (form.time instanceof Date) {
+    // 如果是Date对象，格式化为 YYYY-MM-DD
+    const year = form.time.getFullYear()
+    const month = String(form.time.getMonth() + 1).padStart(2, '0')
+    const day = String(form.time.getDate()).padStart(2, '0')
+    form.time = `${year}-${month}-${day}`
+  }
 }
 
 const handleSubmit = () => {
@@ -314,14 +330,27 @@ const handleSubmit = () => {
     return
   }
   
+  // 格式化日期为 YYYY-MM-DD 格式
+  let formattedTime = form.time
+  if (form.time && typeof form.time === 'string') {
+    // 如果已经是字符串格式，确保格式正确
+    formattedTime = form.time
+  } else if (form.time instanceof Date) {
+    // 如果是Date对象，格式化为 YYYY-MM-DD
+    const year = form.time.getFullYear()
+    const month = String(form.time.getMonth() + 1).padStart(2, '0')
+    const day = String(form.time.getDate()).padStart(2, '0')
+    formattedTime = `${year}-${month}-${day}`
+  }
+  
   if (quillInstance) {
     form.content = quillInstance.root.innerHTML
   }
   
   if (isEdit.value) {
-    EditAwardData(editId.value, form.detail, form.author, form.file, form.time)
+    EditAwardData(editId.value, form.detail, form.author, form.file, formattedTime)
   } else {
-    AddAwardData(form.detail, form.author, form.file, form.time)
+    AddAwardData(form.detail, form.author, form.file, formattedTime)
   }
   
   dialogVisible.value = false

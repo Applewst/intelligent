@@ -15,6 +15,9 @@ const directions = ref([]) // 存储项目数据
 const loading = ref(true) // 加载状态
 const error = ref('') // 错误信息
 const errorImage = 'https://picsum.photos/error/200/200' // 图片加载失败占位图
+ const page = ref(1) // 当前页码
+const pageSize = ref(6) // 每页数量
+const total = ref(0) // 总条目数
 
 const fetchDirections = async () => {
   loading.value = true
@@ -22,24 +25,20 @@ const fetchDirections = async () => {
   directions.value = []
 
   try {
-    // 保持你原来的传参方式：传递一个对象
     const response = await getProjectList({
-      pageNum: 1,
-      pageSize: 3,
+      pageNum: page.value,
+      pageSize: pageSize.value,
       name: '',
     })
 
-    // 核心修改：正确地处理返回的数据
     if (response.code === 1) {
-      // API返回的数据结构是 { code: 1, data: { total: ..., data: [...] } }
-      // 我们需要的项目数组在 response.data.data 中
       directions.value = response.data.data || []
+      total.value = response.data.total || 0
 
       if (directions.value.length === 0) {
         ElMessage.info('当前没有项目数据')
       }
     } else {
-      // 如果API返回错误码，显示错误信息
       throw new Error(response.message || '获取项目数据失败')
     }
   } catch (err) {
@@ -77,7 +76,6 @@ const handleCardClick = (projectId) => {
         v-for="direction in directions"
         :key="direction.id"
         class="direction-card"
-        v-else
         @click="handleCardClick(direction.id)"
       >
         <!-- 圆形图片 -->
@@ -107,6 +105,18 @@ const handleCardClick = (projectId) => {
       <p class="error-text">{{ error }}</p>
       <el-button type="text" @click="fetchDirections">重试</el-button>
     </div>
+
+    <el-pagination
+      v-if="total > 0"
+      v-model:current-page="page"
+      v-model:page-size="pageSize"
+      :total="total"
+      :page-sizes="[6, 12, 18, 24]"
+      layout="total, sizes, prev, pager, next, jumper"
+      @current-change="fetchDirections"
+      @size-change="fetchDirections"
+      class="pagination"
+    />
   </div>
 </template>
 
@@ -261,6 +271,11 @@ const handleCardClick = (projectId) => {
 
 .error-text {
   margin-bottom: 1rem;
+}
+
+.pagination {
+  margin-top: 2rem;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {

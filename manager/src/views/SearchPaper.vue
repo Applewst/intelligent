@@ -30,12 +30,16 @@
     </div>
 
     <!-- 数据表格 -->
-    <el-table :data="tableData" border class="data-table">
-      <el-table-column prop="id" label="ID" width="60" align="center" />
-      <el-table-column prop="title" label="论文名称" width="240" />
-      <el-table-column prop="author" label="论文作者" width="100" />
-      <el-table-column prop="detail" label="论文内容" width="600" />
-      <el-table-column prop="files" label="论文文件" width="60">
+      <el-table :data="tableData" border class="data-table">
+        <el-table-column label="ID" width="60" align="center">
+          <template #default="{ $index }">
+            {{ $index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" label="论文名称" width="240" />
+        <el-table-column prop="author" label="论文作者" width="100" />
+        <el-table-column prop="detail" label="论文内容" width="600" />
+        <el-table-column prop="files" label="论文文件" width="60">
         <template #default="{ row }">
           <el-link v-if="row.files" type="primary" :href="row.files" target="_blank" download>下载</el-link>
         </template>
@@ -239,111 +243,111 @@ const rules = reactive({
   files: [{ required: true, message: '请上传论文文件', trigger: 'change' }],
 });
 
-// 上传文件之前的验证
-const beforeUploadFile = (file) => {
-  const isPDF = file.type === 'application/pdf';
-  const isLt100M = file.size / 1024 / 1024 < 100;
-  if (!isPDF) {
-    ElMessage.error('只能上传PDF文件!');
-  }
-  if (!isLt100M) {
-    ElMessage.error('文件大小不能超过100MB!');
-  }
-  return isPDF && isLt100M;
-};
+// // 上传文件之前的验证
+// const beforeUploadFile = (file) => {
+//   const isPDF = file.type === 'application/pdf';
+//   const isLt100M = file.size / 1024 / 1024 < 100;
+//   if (!isPDF) {
+//     ElMessage.error('只能上传PDF文件!');
+//   }
+//   if (!isLt100M) {
+//     ElMessage.error('文件大小不能超过100MB!');
+//   }
+//   return isPDF && isLt100M;
+// };
 
-// 自定义上传文件逻辑
-const uploadFile = (options) => {
-  const formData = new FormData();
-  formData.append('file', options.file);
-  // 假设这是你的上传API地址
-  axios.post('/api/paper/uploadFile', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }).then((response) => {
-    if (response.data.code === 1) {
-      ElMessage.success('上传文件成功');
-      // 将上传成功的文件信息添加到表单中
-      form.files = [{ name: options.file.name, url: response.data.data.url }];
-    } else {
-      ElMessage.error('上传文件失败');
-    }
-  }).catch((error) => {
-    ElMessage.error('上传文件失败');
-    console.error(error);
-  });
-};
+// // 自定义上传文件逻辑
+// const uploadFile = (options) => {
+//   const formData = new FormData();
+//   formData.append('file', options.file);
+//   // 假设这是你的上传API地址
+//   axios.post('/api/paper/uploadFile', formData, {
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//   }).then((response) => {
+//     if (response.data.code === 1) {
+//       ElMessage.success('上传文件成功');
+//       // 将上传成功的文件信息添加到表单中
+//       form.files = [{ name: options.file.name, url: response.data.data.url }];
+//     } else {
+//       ElMessage.error('上传文件失败');
+//     }
+//   }).catch((error) => {
+//     ElMessage.error('上传文件失败');
+//     console.error(error);
+//   });
+// };
 
-// 文件上传成功的处理
-const handleSuccessFile = (response, file, fileList) => {
-  ElMessage.success('文件上传成功');
-  form.files = fileList;
-};
+// // 文件上传成功的处理
+// const handleSuccessFile = (response, file, fileList) => {
+//   ElMessage.success('文件上传成功');
+//   form.files = fileList;
+// };
 
-// 文件上传失败的处理
-const handleErrorFile = (err, file, fileList) => {
-  ElMessage.error('文件上传失败');
-  console.error(err);
-};
+// // 文件上传失败的处理
+// const handleErrorFile = (err, file, fileList) => {
+//   ElMessage.error('文件上传失败');
+//   console.error(err);
+// };
 
-// 文件超出限制时的处理
-const handleExceedFile = (files, fileList) => {
-  ElMessage.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件`);
-};
+// // 文件超出限制时的处理
+// const handleExceedFile = (files, fileList) => {
+//   ElMessage.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件`);
+// };
 
-// 上传图片之前的验证
-const beforeUploadImage = (file) => {
-  const isImage = file.type.startsWith('image/');
-  const isLt10M = file.size / 1024 / 1024 < 10;
-  if (!isImage) {
-    ElMessage.error('只能上传图片文件!');
-  }
-  if (!isLt10M) {
-    ElMessage.error('文件大小不能超过10MB!');
-  }
-  return isImage && isLt10M;
-};
+// // 上传图片之前的验证
+// const beforeUploadImage = (file) => {
+//   const isImage = file.type.startsWith('image/');
+//   const isLt10M = file.size / 1024 / 1024 < 10;
+//   if (!isImage) {
+//     ElMessage.error('只能上传图片文件!');
+//   }
+//   if (!isLt10M) {
+//     ElMessage.error('文件大小不能超过10MB!');
+//   }
+//   return isImage && isLt10M;
+// };
 
-// 自定义上传图片逻辑
-const uploadImage = (options) => {
-  const formData = new FormData();
-  formData.append('image', options.file);
-  // 假设这是你的上传API地址
-  axios.post('/api/paper/uploadImage', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }).then((response) => {
-    if (response.data.code === 1) {
-      ElMessage.success('上传图片成功');
-      // 将上传成功的文件信息添加到表单中
-      form.file = [{ name: options.file.name, url: response.data.data.url }];
-    } else {
-      ElMessage.error('上传图片失败');
-    }
-  }).catch((error) => {
-    ElMessage.error('上传图片失败');
-    console.error(error);
-  });
-};
+// // 自定义上传图片逻辑
+// const uploadImage = (options) => {
+//   const formData = new FormData();
+//   formData.append('image', options.file);
+//   // 假设这是你的上传API地址
+//   axios.post('/api/paper/uploadImage', formData, {
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//   }).then((response) => {
+//     if (response.data.code === 1) {
+//       ElMessage.success('上传图片成功');
+//       // 将上传成功的文件信息添加到表单中
+//       form.file = [{ name: options.file.name, url: response.data.data.url }];
+//     } else {
+//       ElMessage.error('上传图片失败');
+//     }
+//   }).catch((error) => {
+//     ElMessage.error('上传图片失败');
+//     console.error(error);
+//   });
+// };
 
-// 图片上传成功的处理
-const handleSuccessImage = (response, file, fileList) => {
-  ElMessage.success('图片上传成功');
-  form.file = fileList;
-};
+// // 图片上传成功的处理
+// const handleSuccessImage = (response, file, fileList) => {
+//   ElMessage.success('图片上传成功');
+//   form.file = fileList;
+// };
 
-// 图片上传失败的处理
-const handleErrorImage = (err, file, fileList) => {
-  ElMessage.error('图片上传失败');
-  console.error(err);
-};
+// // 图片上传失败的处理
+// const handleErrorImage = (err, file, fileList) => {
+//   ElMessage.error('图片上传失败');
+//   console.error(err);
+// };
 
-// 图片超出限制时的处理
-const handleExceedImage = (files, fileList) => {
-  ElMessage.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件`);
-};
+// // 图片超出限制时的处理
+// const handleExceedImage = (files, fileList) => {
+//   ElMessage.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件`);
+// };
 
 // 提交表单
 const handleSubmit = () => {
@@ -416,7 +420,7 @@ const handleEdit = (row) => {
   editId.value = row.id;
   form.title = row.title;
   form.file = row.file 
-  form.files = row.files ? [{ name: row.files, url: row.files }] : [];
+  // form.files = row.files ? [{ name: row.files, url: row.files }] : [];
   form.author = row.author;
   form.detail = row.detail || '';
   dialogVisible.value = true;
