@@ -57,7 +57,7 @@ CREATE TABLE `paper`
 (
     `id`     int         NOT NULL AUTO_INCREMENT COMMENT 'id编号',
     `title`  varchar(35) NOT NULL COMMENT '标题',
-    `author` varchar(30) DEFAULT NULL COMMENT '作者',
+    `author` varchar(30)  DEFAULT NULL COMMENT '作者',
     `file`   varchar(255) DEFAULT NULL COMMENT '文件URL',
     `time`   date comment '发表时间',
     `detail` text COMMENT '描述',
@@ -143,8 +143,8 @@ VALUES ('f1a2b3c4d5e6', '用户手册.pdf', '2.3MB', 'pdf', 'C:/uploads/20251111
        ('b6c7d8e9f0a1', '测试数据.csv', '540KB', 'csv', 'C:/uploads/20251111/测试数据.csv', '2025-11-06 17:54:33', 31),
        ('c7d8e9f0a1b2', '系统架构图.png', '980KB', 'png', 'C:/uploads/20251111/系统架构图.png', '2025-11-07 13:42:19',
         76),
-       ('V4dpnYuR', '圆头耄耋', '402KB', 'png', '/resources / 20251118 / fb2af1acf3f145a19317f2c636763156.png',
-        '2025 - 11 - 19 01:26:56', 4);
+       ('V4dpnYuR', '圆头耄耋', '402KB', 'png', '/resources/20251118/fb2af1acf3f145a19317f2c636763156.png',
+        '2025-11-19 01:26:56', 4);
 
 
 -- 科研团队动态
@@ -152,9 +152,9 @@ CREATE TABLE `scientific_dynamic`
 (
     `id`     INT NOT NULL AUTO_INCREMENT,
     `image`  VARCHAR(255) DEFAULT NULL COMMENT '图片地址',
-    `title`  VARCHAR(20) DEFAULT NULL COMMENT '标题',
+    `title`  VARCHAR(20)  DEFAULT NULL COMMENT '标题',
     `detail` TEXT COMMENT '内容',
-    `time`   DATETIME    DEFAULT NULL COMMENT '时间',
+    `time`   DATETIME     DEFAULT NULL COMMENT '时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -289,9 +289,9 @@ create table `team_dynamic`
 (
     `id`     int NOT NULL AUTO_INCREMENT,
     `image`  varchar(255) DEFAULT NULL comment '图片地址',
-    `title`  varchar(20) DEFAULT NULL comment '标题',
+    `title`  varchar(20)  DEFAULT NULL comment '标题',
     `detail` text comment '内容',
-    `time`   datetime    DEFAULT NULL comment '时间',
+    `time`   datetime     DEFAULT NULL comment '时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
