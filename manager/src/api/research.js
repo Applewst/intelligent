@@ -154,7 +154,7 @@ export const mockDelete = (id) => {
 
 // 真实API接口
 export const getResearchList = (pageNum, pageSize, title = "") => {
-  console.log('获取科研API',pageNum,pageSize,title)
+  // console.log('获取科研API',pageNum,pageSize,title)
   
   return request.get("/new/list", {
     params: { pageNum, pageSize, title },

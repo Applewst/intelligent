@@ -256,7 +256,7 @@ const formRules = {
 };
 
 const fetchTeacherList = async () => {
-  loading.value = true;
+  loading.value = false;
   try {
     if (USE_MOCK_DATA.value) {
       // 使用模拟数据
@@ -282,6 +282,7 @@ const fetchTeacherList = async () => {
         pageSize: pagination.pageSize,
         name: searchForm.name,
       });
+      // console.log(res);
 
       tableData.value = res.data.data || [];
       pagination.total = res.data.total || 0;
@@ -330,7 +331,6 @@ const handleEdit = async (row) => {
       // 调用获取详情的接口
       const response = await getTeacherDetail(row.id);
 
-      // 假设接口返回的数据结构是 { code: 1, data: { ...教师详情 } }
       if (response.code === 1 && response.data) {
         // 使用接口返回的数据填充表单
         Object.assign(formData, response.data);

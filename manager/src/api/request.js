@@ -17,7 +17,7 @@ service.interceptors.request.use(config => {
    if (token1) {
       sessionStorage.setItem('token', token1);
     }
-    console.log('是否能拿到token',token1);
+    // console.log('是否能拿到token',token1);
     const token = sessionStorage.getItem('token');
     console.log(token);
     

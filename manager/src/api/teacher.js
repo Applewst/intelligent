@@ -18,7 +18,7 @@ export function getTeacherDetail(id) {
   return request({
     url: '/teacher', 
     method: 'get',
-    params:id
+    params:{id}
   });
 }
 

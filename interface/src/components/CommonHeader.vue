@@ -1,110 +1,3 @@
-<script setup>
-import { ref, watch } from 'vue'
-import { ElMessage } from 'element-plus'
-import { useCounterStore } from '../stores/counter'
-import { useRouter, useRoute } from 'vue-router'
-
-const router = useRouter()
-const route = useRoute()
-const store = useCounterStore()
-
-// 组件内只需要定义与自身UI相关的状态
-const isMobileMenuOpen = ref(false) // 移动端菜单是否展开
-const isLoading = ref(false) // 加载状态
-
-const activeKey = ref('')
-// 根据路径设置激活的key
-const setActiveKeyByPath = (path) => {
-  const menuItems = [
-    '/',
-    '/team/introduction',
-    '/search/project',
-    '/search/paper',
-    '/search/award',
-    '/news/activity',
-    '/news/event',
-    '/news/student',
-    '/news/photo',
-    '/member/teacher',
-    '/member/studentlist',
-    '/member/alumni',
-    '/link/contact',
-    '/resource',
-    '/admin/dashboard',
-  ]
-
-  // 1. 优先匹配完全相等的路径
-  let matchedKey = menuItems.find((item) => path === item)
-
-  // 2. 如果没有完全匹配，再匹配父路径
-  if (!matchedKey) {
-    const parentPaths = [
-      { path: '/search', key: '/search' },
-      { path: '/news', key: '/news' },
-      { path: '/member', key: '/member' },
-    ]
-    const matchedParent = parentPaths.find((item) => path.startsWith(item.path))
-    matchedKey = matchedParent ? matchedParent.key : path
-  }
-
-  // 3. 【新增】处理动态路由，让 /member/teacher/xxx 也高亮 /member/teacher
-  if (path.startsWith('/member/teacher/')) {
-    matchedKey = '/member/teacher'
-  }
-
-  activeKey.value = matchedKey
-}
-watch(
-  () => route.path,
-  (newPath) => {
-    setActiveKeyByPath(newPath)
-  },
-  { immediate: true } // 立即执行一次
-)
-
-// 处理菜单选择
-const handleMenuSelect = (key) => {
-  if (key === 'logout') {
-    handleLogout()
-  } else {
-    activeKey.value = key
-    router.push(key)
-    isMobileMenuOpen.value = false
-  }
-}
-
-// 处理登出：调用 store 的 action
-const handleLogout = () => {
-  isLoading.value = true
-  setTimeout(() => {
-    store.logout()
-    ElMessage.success('已退出登录')
-    // 登出后重置激活状态
-    activeKey.value = ''
-    if (route.path !== '/') {
-      router.push('/')
-    }
-    isLoading.value = false
-  }, 500)
-}
-
-// 处理“后台管理”跳转
-const handleGoToBackend = () => {
-  if (store.userType === 'admin') {
-    const backendUrl = 'http://localhost:5174/home'
-    const token = sessionStorage.getItem('token')
-    window.open(`${backendUrl}?token=${token}`, '_blank')
-  }
-}
-
-// 处理用户区域点击
-const handleUserClick = () => {
-  if (!store.isLogin) {
-    router.push('/login')
-  }
-}
-</script>
-
 <template>
   <div class="allheader">
     <div class="header-top">
@@ -116,16 +9,6 @@ const handleUserClick = () => {
           @click="router.push('/')"
         />
       </div>
-
-      <!-- 桌面端搜索框 -->
-      <!-- <div class="search-center">
-        <el-input
-          placeholder="搜索研究成果、团队成员..."
-          size="small"
-          class="search-input"
-          :prefix-icon="Search"
-        />
-      </div> -->
 
       <div class="header-actions">
         <!-- 后台管理按钮 - 仅管理员可见 -->
@@ -247,6 +130,129 @@ const handleUserClick = () => {
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, watch, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { useCounterStore } from '../stores/counter'
+import { useRouter, useRoute } from 'vue-router'
+import { Menu, Close, ArrowRight } from '@element-plus/icons-vue'
+
+const router = useRouter()
+const route = useRoute()
+const store = useCounterStore()
+
+// 组件内只需要定义与自身UI相关的状态
+const isMobileMenuOpen = ref(false) // 移动端菜单是否展开
+const isLoading = ref(false) // 加载状态
+
+const activeKey = ref('')
+// 根据路径设置激活的key
+const setActiveKeyByPath = (path) => {
+  const menuItems = [
+    '/',
+    '/team/introduction',
+    '/search/project',
+    '/search/paper',
+    '/search/award',
+    '/news/activity',
+    '/news/event',
+    '/news/student',
+    '/news/photo',
+    '/member/teacher',
+    '/member/studentlist',
+    '/member/alumni',
+    '/link/contact',
+    '/resource',
+    '/admin/dashboard',
+  ]
+
+  // 1. 优先匹配完全相等的路径
+  let matchedKey = menuItems.find((item) => path === item)
+
+  // 2. 如果没有完全匹配，再匹配父路径
+  if (!matchedKey) {
+    const parentPaths = [
+      { path: '/search', key: '/search' },
+      { path: '/news', key: '/news' },
+      { path: '/member', key: '/member' },
+    ]
+    const matchedParent = parentPaths.find((item) => path.startsWith(item.path))
+    matchedKey = matchedParent ? matchedParent.key : path
+  }
+
+  // 3. 【新增】处理动态路由，让 /member/teacher/xxx 也高亮 /member/teacher
+  if (path.startsWith('/member/teacher/')) {
+    matchedKey = '/member/teacher'
+  }
+
+  activeKey.value = matchedKey
+}
+watch(
+  () => route.path,
+  (newPath) => {
+    setActiveKeyByPath(newPath)
+  },
+  { immediate: true } // 立即执行一次
+)
+
+// 处理菜单选择
+const handleMenuSelect = (key) => {
+  if (key === 'logout') {
+    handleLogout()
+  } else {
+    activeKey.value = key
+    router.push(key)
+    isMobileMenuOpen.value = false
+  }
+}
+
+// 处理登出：调用 store 的 action
+const handleLogout = () => {
+  isLoading.value = true
+  setTimeout(() => {
+    store.logout()
+    ElMessage.success('已退出登录')
+    // 登出后重置激活状态
+    activeKey.value = ''
+    if (route.path !== '/') {
+      router.push('/')
+    }
+    isLoading.value = false
+  }, 500)
+}
+
+// 处理“后台管理”跳转
+const handleGoToBackend = () => {
+  if (store.userType === 'admin') {
+    const backendUrl = 'http://localhost:5174/home'
+    const token = sessionStorage.getItem('token')
+    window.open(`${backendUrl}?token=${token}`, '_blank')
+  }
+}
+
+// 处理用户区域点击
+const handleUserClick = () => {
+  if (!store.isLogin) {
+    router.push('/login')
+  }
+}
+
+// 在组件挂载后刷新页面，确保状态正确
+onMounted(() => {
+  // 使用一个标记来防止无限刷新
+  const hasRefreshed = sessionStorage.getItem('headerRefreshed')
+  if (!hasRefreshed) {
+    // 标记为已刷新
+    sessionStorage.setItem('headerRefreshed', 'true')
+    // 刷新页面
+    location.reload()
+  } else {
+    // 如果已经刷新过，清除标记，以便下次登录时能再次触发刷新
+    sessionStorage.removeItem('headerRefreshed')
+  }
+})
+</script>
 
 <style scoped lang="less">
 .allheader {

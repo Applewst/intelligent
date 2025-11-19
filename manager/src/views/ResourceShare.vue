@@ -56,7 +56,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="uploadTime"
+          prop="updateTime"
           label="上传时间"
           width="180"
           align="center"
@@ -96,7 +96,7 @@
         <el-pagination
           v-model:current-page="pagination.page"
           v-model:page-size="pagination.pageSize"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[5, 10, 20, 50, 100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
@@ -144,6 +144,28 @@
             <el-option label="其他" value="OTHER" />
           </el-select>
         </el-form-item>
+
+        <el-form-item label="文件上传" prop="url">
+          <el-upload
+            class="upload-resource"
+            :http-request="handleFileUpload"
+            :disabled="!!formData.url"
+            :auto-upload="true"
+            accept="*"
+            :show-file-list="false"
+          >
+            <el-button size="small" type="primary">
+              <el-icon><Upload /></el-icon>
+              点击上传
+            </el-button>
+            <div style="margin-top: 10px">
+              <span style="color: #666" v-if="formData.url">
+                <i class="el-icon-check"></i> 文件已上传:
+                {{ formData.fileName || formData.name }}
+              </span>
+            </div>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -156,6 +178,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+// 引入你的通用上传接口
+import { uploadImage } from "@/api/upload";
 import {
   getResourceList,
   addResource,
@@ -173,7 +197,7 @@ const loading = ref(false);
 // 分页
 const pagination = reactive({
   page: 1,
-  pageSize: 10,
+  pageSize: 5,
   total: 0,
 });
 
@@ -186,6 +210,8 @@ const formData = reactive({
   name: "",
   size: "",
   type: "",
+  url: "", // 用于存储上传后返回的 URL
+  fileName: "", // 用于显示已上传的文件名
 });
 
 // 表单验证规则
@@ -193,6 +219,7 @@ const formRules = {
   name: [{ required: true, message: "请输入文件名", trigger: "blur" }],
   size: [{ required: true, message: "请输入文件大小", trigger: "blur" }],
   type: [{ required: true, message: "请选择文件类型", trigger: "change" }],
+  url: [{ required: true, message: "请上传文件", trigger: "change" }], // URL 为必填项
 };
 
 // 获取资源列表
@@ -204,8 +231,8 @@ const fetchResourceList = async () => {
       pagination.pageSize,
       searchKeyword.value
     );
-    if (res.code === 200) {
-      tableData.value = res.data.list;
+    if (res.code === 1) {
+      tableData.value = res.data.data;
       pagination.total = res.data.total;
     }
   } catch (error) {
@@ -224,13 +251,21 @@ const handleSearch = () => {
 // 添加
 const handleAdd = () => {
   dialogTitle.value = "添加资源";
+  // 重置表单，特别是 url 和 fileName
+  // formRef.value?.resetFields();
+  formData.id = "";
+  formData.url = "";
+  formData.fileName = "";
   dialogVisible.value = true;
 };
 
 // 编辑
 const handleEdit = (row) => {
   dialogTitle.value = "编辑资源";
+  // 将行数据赋值给表单
   Object.assign(formData, row);
+  // 假设后端返回的 URL 字段名为 'url'，如果不是，请修改
+  // formData.url = row.fileUrl;
   dialogVisible.value = true;
 };
 
@@ -244,7 +279,7 @@ const handleDelete = (row) => {
     .then(async () => {
       try {
         const res = await deleteResource(row.id);
-        if (res.code === 200) {
+        if (res.code === 1) {
           ElMessage.success("删除成功");
           fetchResourceList();
         }
@@ -257,26 +292,51 @@ const handleDelete = (row) => {
     });
 };
 
+const handleFileUpload = async (options) => {
+  const file = options.file;
+  try {
+    // 直接调用你导入的通用上传接口
+    const res = await uploadImage(file);
+
+    if (res.code === 1) {
+      // 注意：你的接口返回成功码是 1
+      formData.url = res.data; // 将接口返回的 URL 字符串赋值给 formData.url
+      formData.fileName = file.name; // 保存原始文件名用于显示
+      ElMessage.success("文件上传成功");
+    } else {
+      ElMessage.error(res.message || "文件上传失败");
+    }
+  } catch (error) {
+    console.error("文件上传失败:", error);
+    ElMessage.error("文件上传失败，请稍后重试");
+  }
+};
+
 // 提交表单
 const handleSubmit = () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
       try {
+        // 准备提交的数据
+        const submitData = {
+          name: formData.name,
+          size: formData.size,
+          type: formData.type,
+          url: formData.url, // 将上传好的 URL 包含在提交数据中
+        };
+
         if (formData.id) {
           // 编辑
-          const res = await updateResource(formData.id, formData);
-          if (res.code === 200) {
+          const res = await updateResource(formData.id, submitData);
+          if (res.code === 1) {
             ElMessage.success("更新成功");
             dialogVisible.value = false;
             fetchResourceList();
           }
         } else {
-          const res = await addResource({
-            name: formData.name,
-            size: formData.size,
-            type: formData.type,
-          });
-          if (res.code === 200) {
+          // 新增
+          const res = await addResource(submitData);
+          if (res.code === 1) {
             ElMessage.success("添加成功");
             dialogVisible.value = false;
             fetchResourceList();
@@ -291,11 +351,11 @@ const handleSubmit = () => {
 
 // 对话框关闭
 const handleDialogClose = () => {
-  formRef.value.resetFields();
+  // 重置表单，特别是 url 和 fileName
+  formRef.value?.resetFields();
   formData.id = "";
-  formData.name = "";
-  formData.size = "";
-  formData.type = "";
+  formData.url = "";
+  formData.fileName = "";
 };
 
 // 分页大小改变
@@ -311,6 +371,11 @@ const handleCurrentChange = () => {
 
 // 获取类型颜色
 const getTypeColor = (type) => {
+  // 首先，检查 type 是否存在且为字符串
+  if (!type || typeof type !== "string") {
+    return ""; // 如果 type 是 null, undefined 或其他类型，返回空字符串
+  }
+
   const colorMap = {
     PDF: "danger",
     DOCX: "primary",
@@ -320,7 +385,9 @@ const getTypeColor = (type) => {
     JPG: "info",
     MD: "",
     SQL: "danger",
+    // ... 其他你需要的类型
   };
+
   return colorMap[type] || "";
 };
 

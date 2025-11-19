@@ -51,8 +51,8 @@ const loadData = async () => {
       pageSize: pageSize.value,
       title: searchName.value,
     });
-    eventList.value = response.list;
-    total.value = response.total;
+    eventList.value = response.data.data;
+    total.value = response.data.total;
   } catch (error) {
     ElMessage.error("加载活动列表失败");
   } finally {

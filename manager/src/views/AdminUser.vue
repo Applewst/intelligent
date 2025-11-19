@@ -165,7 +165,7 @@ const getList = async () => {
   loading.value = true;
   try {
     const res = await getUserList(queryParams);
-    userList.value = res.data.list;
+    userList.value = res.data.data;
     total.value = res.data.total;
   } catch (error) {
     ElMessage.error("获取数据失败");
@@ -191,7 +191,10 @@ const handleReset = () => {
 const handleAdd = () => {
   dialogTitle.value = "新增人员";
   dialogVisible.value = true;
-  resetForm();
+  formData.id = null;
+  formData.username = "";
+  formData.password = null;
+  formData.identity = "";
 };
 
 // 编辑

@@ -12,12 +12,13 @@ const service = axios.create({
 // 添加请求拦截器
 service.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     //跨端口传token
     // window.location.href = `http://localhost:5174?token=${token}`
     if (token ) {
       // 注意：这里的 header 字段是 'token'，请确保与后端约定一致
       // 有些后端可能使用 'Authorization': `Bearer ${token}`
+      // console.log("有token");
       config.headers['token'] = token
     }
     return config;
@@ -31,7 +32,7 @@ service.interceptors.request.use(function (config) {
 // 添加响应拦截器
 service.interceptors.response.use(function (response) {
  if (response.config.responseType === 'blob') {
-  console.log(123);
+  // console.log(123);
 
       // 直接返回整个 response 对象，而不是 response.data
       // 这样调用方可以同时获取到 blob 数据和响应头（例如文件名可能在 headers 里）
@@ -66,7 +67,7 @@ service.interceptors.response.use(function (response) {
       case 401:
         ElMessage.error('登录状态已过期，请重新登录');
         // 可以在这里添加跳转到登录页的逻辑
-        // router.push('/login');
+        router.push('/login');
         break;
       case 403:
         ElMessage.error('您没有足够的权限执行此操作');

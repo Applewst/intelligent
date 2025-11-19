@@ -208,6 +208,7 @@ const handleAdd = () => {
 const handleEdit = (row) => {
   dialogTitle.value = "编辑毕业生";
   dialogVisible.value = true;
+  // console.log(formData);
   Object.assign(formData, { ...row });
   formRef.value?.clearValidate();
 };
@@ -227,7 +228,7 @@ const handleDelete = async (row) => {
     );
 
     const res = await deleteGraduate({ id: row.id });
-    if (res.code === 200) {
+    if (res.code === 1) {
       ElMessage.success("删除成功");
       fetchGraduateList();
     }
@@ -246,7 +247,7 @@ const handleSubmit = async () => {
     const apiFunc = formData.id ? updateGraduate : addGraduate;
     const res = await apiFunc({ ...formData });
 
-    if (res.code === 200) {
+    if (res.code === 1) {
       ElMessage.success(formData.id ? "更新成功" : "添加成功");
       dialogVisible.value = false;
       fetchGraduateList();

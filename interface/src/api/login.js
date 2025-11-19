@@ -6,7 +6,7 @@ import service from "./request";
 //登录请求
 export const UserLogin = async (username,password) =>{
   // const useMock = false;
-  console.log('登录的参数：',typeof username,typeof password)
+  // console.log('登录的参数：',typeof username,typeof password)
 
   // if(useMock){
   //     return {

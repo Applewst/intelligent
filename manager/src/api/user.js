@@ -75,7 +75,7 @@ export function updateUser(data) {
   }
   
   return request({
-    url: "/api/user",
+    url: "/user",
     method: 'put',
     data
   });
@@ -94,7 +94,8 @@ export function deleteUser(id) {
   }
   
   return request({
-    url: "/api/user",
-    method: 'delete'
+    url: "/user",
+    method: 'delete',
+    params: { id } 
   });
 }

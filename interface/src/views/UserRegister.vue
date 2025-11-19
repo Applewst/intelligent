@@ -100,7 +100,7 @@ const handleSubmit = async () => {
       // console.log(loginForm.username, loginForm.password)
 
       const response = await UserLogin(loginForm.username, loginForm.password)
-      console.log('登录成功', response.data)
+      // console.log('登录成功', response.data)
       const token = response.data
 
       // 存储token（假设返回数据中有token）
@@ -110,15 +110,12 @@ const handleSubmit = async () => {
         // store.token = response.data;
         // localStorage.setItem('token', response.data)
         // localStorage.setItem('username', loginForm.username)
+        // 跳转到首页
+        router.push('/')
+        store.isLogin = true
+        store.userName = loginForm.username
+        store.userType = 'admin'
       }
-
-      // 跳转到首页
-      router.push('/')
-      store.isLogin = true
-      store.userName = loginForm.username
-      store.userType = 'admin'
-
-      ElMessage.success('登录成功')
     } catch (error) {
       console.error('登录失败', error)
       ElMessage.error(error.response?.data?.message || '登录失败')

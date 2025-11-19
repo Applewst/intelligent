@@ -231,6 +231,8 @@ const handleAdd = () => {
 const handleEdit = (row) => {
   dialogTitle.value = "编辑学生";
   dialogVisible.value = true;
+  console.log(formData);
+
   Object.assign(formData, row);
 };
 

@@ -150,7 +150,7 @@ const rules = {
   ],
   location: [
     { required: true, message: "请输入科研地点", trigger: "blur" },
-    { min: 5, message: "地点名称至少5个字符", trigger: "blur" },
+    { min: 2, message: "地点名称至少2个字符", trigger: "blur" },
   ],
   locationImage: [
     { required: true, message: "请上传科研地点图片", trigger: "change" },
@@ -200,8 +200,10 @@ const handleLocationImageUpload = async (options) => {
 
     // 调用通用文件上传接口
     const response = await uploadImage(file);
-    if (response.code === 200) {
-      formData.locationImage = response.data.url; // 存储图片 URL
+    console.log(response);
+
+    if (response.code === 1) {
+      formData.locationImage = response.data; // 存储图片 URL
       ElMessage.success("科研地点图片上传成功");
     } else {
       ElMessage.error(response.message || "科研地点图片上传失败");
@@ -230,7 +232,7 @@ const handleQrCodeUpload = async (options) => {
 
     // 调用通用文件上传接口
     const response = await uploadImage(file);
-    if (response.code === 200) {
+    if (response.code === 1) {
       formData.wechatQrCode = response.data.url; // 存储图片 URL
       ElMessage.success("微信二维码上传成功");
     } else {
@@ -252,7 +254,7 @@ const handleSubmit = async () => {
       try {
         // 传递包含图片 URL 的表单数据
         const response = await updateContactInfo(formData);
-        if (response.code === 200) {
+        if (response.code === 1) {
           ElMessage.success("保存成功");
           Object.assign(originalData, formData);
         } else {

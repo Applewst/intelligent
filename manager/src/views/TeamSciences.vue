@@ -178,6 +178,7 @@ const loadData = async () => {
     );
     tableData.value = response.data.data;
     total.value = response.data.total;
+    console.log(response.data.total);
   } catch (error) {
     ElMessage.error("加载数据失败");
     console.error(error);
@@ -237,7 +238,7 @@ const submitForm = async () => {
           await updateResearch(formData);
           ElMessage.success("更新成功");
         } else {
-          await addResearch({ formData: title });
+          await addResearch({ formData });
           ElMessage.success("添加成功");
         }
         dialogVisible.value = false;

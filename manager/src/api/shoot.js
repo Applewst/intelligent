@@ -74,7 +74,7 @@ const shootList = [
   }
 ]
 const useMock = false
-const token = localStorage.getItem('token')
+const token = sessionStorage.getItem('token')
 //获取照片墙列表
 export const GetShootList = (pageNum, pageSize, title) => {
   console.log('获取照片墙列表API', pageNum, pageSize, title)

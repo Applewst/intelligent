@@ -42,7 +42,7 @@ export const useCounterStore = defineStore('counter', () => {
 
   // 登录时设置 Token 并解析
   const setUser = (authToken) => {
-    console.log(token);
+    // console.log(authToken);
 
     token.value = authToken
     sessionStorage.setItem('token', authToken)

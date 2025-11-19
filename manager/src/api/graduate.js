@@ -118,7 +118,7 @@ export function addGraduate(data) {
   }
 
   return request({
-    url: "/graduates/add",
+    url: "/graduates",
     method: "post",
     data,
   })
@@ -143,7 +143,7 @@ export function updateGraduate(data) {
   }
 
   return request({
-    url: "/graduates/update",
+    url: "/graduates",
     method: "put",
     data,
   })
@@ -169,7 +169,7 @@ export function deleteGraduate(params) {
   }
 
   return request({
-    url: "/graduate/delete",
+    url: "/graduates",
     method: "delete",
     params,
   })

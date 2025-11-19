@@ -108,11 +108,11 @@ const mockRequest = (page, pageSize, keyword) => {
  * @param {number} pageSize - 每页数量
  * @param {string} keyword - 搜索关键字
  */
-export const getResourceList = (page, pageSize, keyword) => {
+export const getResourceList = (pageNum, pageSize, keyword) => {
   return request({
     url: "/resources",
     method: "get",
-    params: { page, pageSize, keyword },
+    params: { pageNum, pageSize, keyword },
   })
 
   // 模拟数据（开发调试使用，取消注释可切换）

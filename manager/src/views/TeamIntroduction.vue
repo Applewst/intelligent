@@ -63,9 +63,9 @@ const handleImageUpload = async (options) => {
 
     // 调用通用文件上传接口
     const response = await uploadImage(file);
-    if (response.code === 200) {
-      imageUrl.value = response.data.url; // 存储图片 URL
-      formData.imageUrl = response.data.url; // 赋值给表单
+    if (response.code === 1) {
+      imageUrl.value = response.data; // 存储图片 URL
+      formData.imageUrl = response.data; // 赋值给表单
       ElMessage.success("图片上传成功");
     } else {
       ElMessage.error(response.message || "图片上传失败");
@@ -85,6 +85,8 @@ const handleSubmit = async () => {
       submitting.value = true;
       try {
         // 传递包含图片 URL 的表单数据
+        console.log(formData);
+
         const response = await updateTeamIntroduction(formData);
 
         if (response.code === 1) {
