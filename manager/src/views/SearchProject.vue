@@ -23,18 +23,22 @@
     </div>
 
     <!-- 数据表格 -->
-    <el-table :data="tableData" border class="data-table">
-      <el-table-column prop="id" label="编号" width="80" align="center" />
-      <el-table-column prop="title" label="项目名称" min-width="300" />
-      <el-table-column prop="time" label="上传时间" width="150" sortable />
-      <el-table-column prop="image" label="照片" width="120">
+      <el-table :data="tableData" border class="data-table">
+        <el-table-column label="编号" width="80" align="center">
+          <template #default="{ $index }">
+            {{ $index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" label="项目名称" min-width="300" />
+        <el-table-column prop="time" label="上传时间" width="150" sortable />
+        <el-table-column prop="image" label="照片" width="120">
           <template #default="{ row }">
-            <el-image
-              :src="row.image"
-              :preview-src-list="[row.image]"
-              fit="cover"
-              style="width: 60px; height: 60px; border-radius: 4px"
-            />
+              <el-image
+                :src="'https://example.com/' + row.image"
+                :preview-src-list="['https://example.com/' + row.image]"
+                fit="cover"
+                style="width: 60px; height: 60px; border-radius: 4px"
+              />
           </template>
         </el-table-column>    
       <el-table-column label="操作" width="180" align="center">
@@ -81,11 +85,11 @@
         <el-form-item label="照片" prop="image">
           <el-input v-model="form.image" placeholder="请输入照片URL" />
           <div v-if="form.image" style="margin-top: 10px">
-            <el-image
-              :src="form.image"
-              fit="cover"
-              style="width: 100px; height: 100px; border-radius: 4px"
-            />
+              <el-image
+                :src="'https://example.com/' + form.image"
+                fit="cover"
+                style="width: 100px; height: 100px; border-radius: 4px"
+              />
           </div>
         </el-form-item>
         <!-- <el-form-item label="项目内容" class="editor-form-item">

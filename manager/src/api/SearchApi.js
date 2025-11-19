@@ -411,7 +411,7 @@ export const AddAward = async (detail,author,file,time) => {
     detail,
     author,
     file,
-    // time
+    time
   })
 }
 //修改获奖

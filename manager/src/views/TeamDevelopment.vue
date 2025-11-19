@@ -19,12 +19,16 @@
     </div>
 
     <!-- 数据表格 -->
-    <el-table :data="DevelopData" border class="data-table">
-      <el-table-column prop="id" label="ID" width="80" align="center" />
-      <el-table-column prop="name" label="姓名" width="150" />
-      <el-table-column prop="time" label="时间" width="150" />
-      <el-table-column prop="detail" label="详细" width="700" />
-      <el-table-column prop="file" label="照片" width="150">
+      <el-table :data="DevelopData" border class="data-table">
+        <el-table-column label="ID" width="80" align="center">
+          <template #default="{ $index }">
+            {{ $index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="姓名" width="150" />
+        <el-table-column prop="time" label="时间" width="150" />
+        <el-table-column prop="detail" label="详细" width="700" />
+        <el-table-column prop="file" label="照片" width="150">
         <template #default="{ row }">
           <el-image
             :src="row.file"
