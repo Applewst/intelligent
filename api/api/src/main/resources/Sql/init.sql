@@ -100,7 +100,7 @@ VALUES ('迎新晚会', 'https://example.com/pic1.jpg', '2025-09-01', '新生欢
 CREATE TABLE `research_direction`
 (
     `id`    INT NOT NULL AUTO_INCREMENT COMMENT 'id编号',
-    `image` VARCHAR(128) DEFAULT NULL COMMENT '图片地址',
+    `image` VARCHAR(255) DEFAULT NULL COMMENT '图片地址',
     `title` VARCHAR(20)  DEFAULT NULL COMMENT '标题',
     `time`  DATETIME     DEFAULT NULL,
     PRIMARY KEY (`id`)
@@ -151,7 +151,7 @@ VALUES ('f1a2b3c4d5e6', '用户手册.pdf', '2.3MB', 'pdf', 'C:/uploads/20251111
 CREATE TABLE `scientific_dynamic`
 (
     `id`     INT NOT NULL AUTO_INCREMENT,
-    `image`  VARCHAR(50) DEFAULT NULL COMMENT '图片地址',
+    `image`  VARCHAR(255) DEFAULT NULL COMMENT '图片地址',
     `title`  VARCHAR(20) DEFAULT NULL COMMENT '标题',
     `detail` TEXT COMMENT '内容',
     `time`   DATETIME    DEFAULT NULL COMMENT '时间',
