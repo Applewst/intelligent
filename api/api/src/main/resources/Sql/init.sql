@@ -58,7 +58,7 @@ CREATE TABLE `paper`
     `id`     int         NOT NULL AUTO_INCREMENT COMMENT 'id编号',
     `title`  varchar(35) NOT NULL COMMENT '标题',
     `author` varchar(30) DEFAULT NULL COMMENT '作者',
-    `file`   varchar(60) DEFAULT NULL COMMENT '文件URL',
+    `file`   varchar(255) DEFAULT NULL COMMENT '文件URL',
     `time`   date comment '发表时间',
     `detail` text COMMENT '描述',
     PRIMARY KEY (`id`)
@@ -100,7 +100,7 @@ VALUES ('迎新晚会', 'https://example.com/pic1.jpg', '2025-09-01', '新生欢
 CREATE TABLE `research_direction`
 (
     `id`    INT NOT NULL AUTO_INCREMENT COMMENT 'id编号',
-    `image` VARCHAR(128) DEFAULT NULL COMMENT '图片地址',
+    `image` VARCHAR(255) DEFAULT NULL COMMENT '图片地址',
     `title` VARCHAR(20)  DEFAULT NULL COMMENT '标题',
     `time`  DATETIME     DEFAULT NULL,
     PRIMARY KEY (`id`)
@@ -150,7 +150,7 @@ VALUES ('f1a2b3c4d5e6', '用户手册.pdf', '2.3MB', 'pdf', 'C:/uploads/20251111
 CREATE TABLE `scientific_dynamic`
 (
     `id`     INT NOT NULL AUTO_INCREMENT,
-    `image`  VARCHAR(50) DEFAULT NULL COMMENT '图片地址',
+    `image`  VARCHAR(255) DEFAULT NULL COMMENT '图片地址',
     `title`  VARCHAR(20) DEFAULT NULL COMMENT '标题',
     `detail` TEXT COMMENT '内容',
     `time`   DATETIME    DEFAULT NULL COMMENT '时间',
@@ -273,7 +273,7 @@ CREATE TABLE `team`
     `id`           INT         NOT NULL AUTO_INCREMENT COMMENT 'id',
     `team_name`    VARCHAR(20) NOT NULL COMMENT '团队名称',
     `introduction` TEXT COMMENT '团队介绍',
-    `image_url`    VARCHAR(50) DEFAULT NULL COMMENT '图片',
+    `image_url`    VARCHAR(255) DEFAULT NULL COMMENT '图片',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -289,7 +289,7 @@ VALUES ('AI创新团队', '致力于人工智能应用开发', 'https://example.
 create table `team_dynamic`
 (
     `id`     int NOT NULL AUTO_INCREMENT,
-    `image`  varchar(50) DEFAULT NULL comment '图片地址',
+    `image`  varchar(255) DEFAULT NULL comment '图片地址',
     `title`  varchar(20) DEFAULT NULL comment '标题',
     `detail` text comment '内容',
     `time`   datetime    DEFAULT NULL comment '时间',
@@ -319,7 +319,7 @@ CREATE TABLE `user`
 (
     `id`          int          NOT NULL AUTO_INCREMENT,
     `username`    varchar(15)  NOT NULL,
-    `password`    varchar(256) NOT NULL,
+    `password`    varchar(255) NOT NULL,
     `salt`        varchar(256) DEFAULT NULL,
     `identity`    varchar(20)  DEFAULT NULL,
     `is_disabled` tinyint(1)   DEFAULT '0',

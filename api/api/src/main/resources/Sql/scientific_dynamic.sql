@@ -1,7 +1,7 @@
 CREATE TABLE `scientific_dynamic`
 (
     `id`     int NOT NULL AUTO_INCREMENT,
-    `image`  varchar(50) DEFAULT NULL comment '图片地址',
+    `image`  varchar(255) DEFAULT NULL comment '图片地址',
     `title`  varchar(20) DEFAULT NULL comment '标题',
     `detail` text comment '内容',
     `time`   datetime    DEFAULT NULL comment '时间',
