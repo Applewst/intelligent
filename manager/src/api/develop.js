@@ -124,7 +124,7 @@ export const DeleteDevelop = (id) => {
       }
   }
   return service.delete('/team/developments',{
-    param:{
+    params:{
       id
     }
   })

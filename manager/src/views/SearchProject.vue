@@ -9,12 +9,10 @@
     <!-- 搜索表单 -->
     <div class="search-form">
       <div class="search-item">
-        <label>类别</label>
-         <el-select
+        <label>项目名称</label>
+         <el-input
           v-model="SearchVal"
-          :options="options"
-          :props="props"
-          placeholder="请选择类别"
+          placeholder="请输入项目名称"
           style="width: 240px"
         />
       </div>
@@ -28,7 +26,6 @@
     <el-table :data="tableData" border class="data-table">
       <el-table-column prop="id" label="编号" width="80" align="center" />
       <el-table-column prop="title" label="项目名称" min-width="300" />
-      <el-table-column prop="sort" label="项目类别" width="150" />
       <el-table-column prop="time" label="上传时间" width="150" sortable />
       <el-table-column prop="image" label="照片" width="120">
           <template #default="{ row }">
@@ -80,15 +77,6 @@
       <el-form :model="form" label-width="80px">
         <el-form-item label="项目名称">
           <el-input v-model="form.title" placeholder="请输入项目名称" />
-        </el-form-item>
-        <el-form-item label="项目类别">
-          <el-select
-            v-model="form.sort"
-            :options="options"
-            :props="props"
-            placeholder="Select"
-            style="width: 240px"
-          />
         </el-form-item>
         <el-form-item label="照片" prop="image">
           <el-input v-model="form.image" placeholder="请输入照片URL" />
@@ -167,21 +155,11 @@ const GetAllSearchProject = async (pageNum, pageSize,name)=>{
   
   console.log('获取项目列表文本处',pageNum, pageSize,name)
   tableData.value = response.data.data
-  var num = 1
-  tableData.value.filter(item=>{
-    if(item.num===1){
-      return item.sort = "服务推荐"
-    }else if(item.num===2){
-      return item.sort = "自然语言大模型"
-    }else if(item.num===3){
-      return item.sort = "图像处理"
-    }
-  })
 }
 //新增项目
-const AddAllSearchProject = async (title,sort,image)=>{
-  const response = await AddSearchProject(title,sort,image);
-  console.log("新增项目文本处",title,sort,image)
+const AddAllSearchProject = async (title,image)=>{
+  const response = await AddSearchProject(title,image);
+  console.log("新增项目文本处",title,image)
   if(response.code===1){
     ElMessage.success('新增成功');
   }else{
@@ -189,9 +167,9 @@ const AddAllSearchProject = async (title,sort,image)=>{
   }
 }
 //编辑项目
-const EditAllSearchProject = async (id,title,sort,image)=>{
-  const response = await EditSearchProject(id,title,sort,image);
-  console.log("编辑项目文本处",id,title,sort,image)
+const EditAllSearchProject = async (id,title,image)=>{
+  const response = await EditSearchProject(id,title,image);
+  console.log("编辑项目文本处",id,title,image)
   if(response.code===1){
     ElMessage.success('编辑成功');
   }else{
@@ -228,7 +206,6 @@ let quillInstance = null
 
 const form = reactive({
   title: '',
-  sort: '',
   image: '',
 })
 
@@ -278,7 +255,6 @@ const handleAdd = () => {
   dialogTitle.value = '新增论文'
   isEdit.value = false
   form.title = ''
-  form.sort = ''
   form.image = ''
   dialogVisible.value = true
   initQuillEditor()
@@ -294,7 +270,6 @@ const handleEdit = (row) => {
   isEdit.value = true
   editId.value = row.id
   form.title = row.title
-  form.sort = row.sort
   form.image = row.image
   dialogVisible.value = true
   initQuillEditor()
@@ -323,13 +298,12 @@ const handleDialogClose = () => {
   }
   // Reset form
   form.title = ''
-  form.sort = ''
   form.image = ''
 }
 
 const handleSubmit = () => {
-  if (!form.title || !form.sort) {
-    ElMessage.warning('请填写项目名称和项目类别')
+  if (!form.title) {
+    ElMessage.warning('请填写项目名称')
     return
   }
   
@@ -339,10 +313,10 @@ const handleSubmit = () => {
   
   if (isEdit.value) {
     console.log('编辑论文文本处:', form)
-    EditAllSearchProject(editId.value,form.title,form.sort,form.image);
+    EditAllSearchProject(editId.value,form.title,form.image);
   } else {
     console.log('新增论文文本处:', form)
-    AddAllSearchProject(form.title,form.sort,form.image);
+    AddAllSearchProject(form.title,form.image);
   }
   
   dialogVisible.value = false
