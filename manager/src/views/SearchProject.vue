@@ -86,7 +86,7 @@
           <el-input v-model="form.image" placeholder="请输入照片URL" />
           <div v-if="form.image" style="margin-top: 10px">
               <el-image
-                :src="'https://example.com/' + form.image"
+                :src="form.image"
                 fit="cover"
                 style="width: 100px; height: 100px; border-radius: 4px"
               />
@@ -117,22 +117,6 @@ const props = {
   disabled: 'disabled'
 }
 const SearchVal = ref(null);
-const options = [
-  {
-    id:1,
-    label: '服务推荐',
-  },
-  {
-    id:2,
-    label: '自然语言大模型',
-  },
-  {
-    id:3,
-    label: '图像处理',
-  }
-  
-]
-
 
 // 搜索表单
 const searchForm = reactive({
@@ -166,6 +150,7 @@ const AddAllSearchProject = async (title,image)=>{
   console.log("新增项目文本处",title,image)
   if(response.code===1){
     ElMessage.success('新增成功');
+    GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
   }else{
     ElMessage.error('新增失败');
   }
@@ -176,6 +161,7 @@ const EditAllSearchProject = async (id,title,image)=>{
   console.log("编辑项目文本处",id,title,image)
   if(response.code===1){
     ElMessage.success('编辑成功');
+    GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
   }else{
     ElMessage.error('编辑失败');
   }
@@ -187,6 +173,7 @@ const DeleteAllSearchProject = async (id)=>{
   
   if(response.code===1){
     ElMessage.success('删除成功');
+    GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
   }else{
     ElMessage.error('删除失败');
   }
