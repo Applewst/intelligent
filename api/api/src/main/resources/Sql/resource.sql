@@ -4,7 +4,7 @@ CREATE TABLE resource
     name        VARCHAR(255) NOT NULL COMMENT '文件名称',
     size        VARCHAR(50) COMMENT '文件大小（例如：12MB）',
     type        VARCHAR(50) COMMENT '文件类型（如：pdf、jpg、mp4等）',
-    url         VARCHAR(500) COMMENT '文件存储路径',
+    url         VARCHAR(255) COMMENT '文件存储路径',
     update_time DATETIME COMMENT '更新时间',
     downloads   INT DEFAULT 0 COMMENT '下载次数'
 ) COMMENT ='资源文件信息表';

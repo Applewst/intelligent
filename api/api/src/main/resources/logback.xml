@@ -11,8 +11,8 @@
     <!-- 文件输出：每天滚动，保留 30 天 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 容器里的日志目录必须写 /app/logs -->
-        <!--<file>/app/logs/app.log</file>-->
-        <file>D:\logs\app.log</file>
+        <file>/app/logs/app.log</file>
+        <!--<file>D:\logs\app.log</file>-->
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 每天一个日志文件 -->

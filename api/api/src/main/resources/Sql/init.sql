@@ -57,8 +57,8 @@ CREATE TABLE `paper`
 (
     `id`     int         NOT NULL AUTO_INCREMENT COMMENT 'id编号',
     `title`  varchar(35) NOT NULL COMMENT '标题',
-    `author` varchar(30) DEFAULT NULL COMMENT '作者',
-    `file`   varchar(60) DEFAULT NULL COMMENT '文件URL',
+    `author` varchar(30)  DEFAULT NULL COMMENT '作者',
+    `file`   varchar(255) DEFAULT NULL COMMENT '文件URL',
     `time`   date comment '发表时间',
     `detail` text COMMENT '描述',
     PRIMARY KEY (`id`)
@@ -100,7 +100,7 @@ VALUES ('迎新晚会', 'https://example.com/pic1.jpg', '2025-09-01', '新生欢
 CREATE TABLE `research_direction`
 (
     `id`    INT NOT NULL AUTO_INCREMENT COMMENT 'id编号',
-    `image` VARCHAR(128) DEFAULT NULL COMMENT '图片地址',
+    `image` VARCHAR(255) DEFAULT NULL COMMENT '图片地址',
     `title` VARCHAR(20)  DEFAULT NULL COMMENT '标题',
     `time`  DATETIME     DEFAULT NULL,
     PRIMARY KEY (`id`)
@@ -122,7 +122,7 @@ CREATE TABLE resource
     name        VARCHAR(255) NOT NULL COMMENT '文件名称',
     size        VARCHAR(50) COMMENT '文件大小（例如：12MB）',
     type        VARCHAR(50) COMMENT '文件类型（如：pdf、jpg、mp4等）',
-    url         VARCHAR(500) COMMENT '文件存储路径',
+    url         VARCHAR(255) COMMENT '文件存储路径',
     update_time DATETIME COMMENT '更新时间',
     downloads   INT DEFAULT 0 COMMENT '下载次数'
 ) COMMENT ='资源文件信息表';
@@ -143,17 +143,18 @@ VALUES ('f1a2b3c4d5e6', '用户手册.pdf', '2.3MB', 'pdf', 'C:/uploads/20251111
        ('b6c7d8e9f0a1', '测试数据.csv', '540KB', 'csv', 'C:/uploads/20251111/测试数据.csv', '2025-11-06 17:54:33', 31),
        ('c7d8e9f0a1b2', '系统架构图.png', '980KB', 'png', 'C:/uploads/20251111/系统架构图.png', '2025-11-07 13:42:19',
         76),
-       ('d8e9f0a1b2c3', '使用指南.txt', '48KB', 'txt', 'C:/uploads/20251111/使用指南.txt', '2025-11-08 20:11:08', 22);
+       ('V4dpnYuR', '圆头耄耋', '402KB', 'png', '/resources/20251118/fb2af1acf3f145a19317f2c636763156.png',
+        '2025-11-19 01:26:56', 4);
 
 
 -- 科研团队动态
 CREATE TABLE `scientific_dynamic`
 (
     `id`     INT NOT NULL AUTO_INCREMENT,
-    `image`  VARCHAR(50) DEFAULT NULL COMMENT '图片地址',
-    `title`  VARCHAR(20) DEFAULT NULL COMMENT '标题',
+    `image`  VARCHAR(255) DEFAULT NULL COMMENT '图片地址',
+    `title`  VARCHAR(20)  DEFAULT NULL COMMENT '标题',
     `detail` TEXT COMMENT '内容',
-    `time`   DATETIME    DEFAULT NULL COMMENT '时间',
+    `time`   DATETIME     DEFAULT NULL COMMENT '时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -270,29 +271,27 @@ VALUES ('祁婷婷', '神经网络', 'ob5j6i_gl4ivm@qq.com', 'https://avatars.gi
 -- 团队介绍
 CREATE TABLE `team`
 (
-    `id`           INT         NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `team_name`    VARCHAR(20) NOT NULL COMMENT '团队名称',
-    `introduction` TEXT COMMENT '团队介绍',
-    `image_url`    VARCHAR(50) DEFAULT NULL COMMENT '图片',
+    `id`           int         NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `team_name`    varchar(20) NOT NULL COMMENT '团队名称',
+    `introduction` text COMMENT '团队介绍',
+    `image_url`    varchar(255) DEFAULT NULL COMMENT '图片',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci
-    COMMENT ='团队介绍';
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='团队介绍';
 
 -- 示例数据
 INSERT INTO `team` (`team_name`, `introduction`, `image_url`)
-VALUES ('AI创新团队', '致力于人工智能应用开发', 'https://example.com/team1.jpg'),
-       ('数据分析团队', '专注于大数据分析和可视化', 'https://example.com/team2.jpg');
+VALUES ('AI创新团队', '致力于人工智能应用开发', 'https://example.com/team1.jpg');
 
 -- 团队动态
 create table `team_dynamic`
 (
     `id`     int NOT NULL AUTO_INCREMENT,
-    `image`  varchar(50) DEFAULT NULL comment '图片地址',
-    `title`  varchar(20) DEFAULT NULL comment '标题',
+    `image`  varchar(255) DEFAULT NULL comment '图片地址',
+    `title`  varchar(20)  DEFAULT NULL comment '标题',
     `detail` text comment '内容',
-    `time`   datetime    DEFAULT NULL comment '时间',
+    `time`   datetime     DEFAULT NULL comment '时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

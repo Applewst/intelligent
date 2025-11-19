@@ -30,12 +30,16 @@
     </div>
 
     <!-- 数据表格 -->
-    <el-table :data="tableData" border class="data-table">
-      <el-table-column prop="id" label="ID" width="60" align="center" />
-      <el-table-column prop="title" label="论文名称" width="240" />
-      <el-table-column prop="author" label="论文作者" width="100" />
-      <el-table-column prop="detail" label="论文内容" width="600" />
-      <el-table-column prop="files" label="论文文件" width="60">
+      <el-table :data="tableData" border class="data-table">
+        <el-table-column label="ID" width="60" align="center">
+          <template #default="{ $index }">
+            {{ $index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" label="论文名称" width="240" />
+        <el-table-column prop="author" label="论文作者" width="100" />
+        <el-table-column prop="detail" label="论文内容" width="600" />
+        <el-table-column prop="files" label="论文文件" width="60">
         <template #default="{ row }">
           <el-link v-if="row.files" type="primary" :href="row.files" target="_blank" download>下载</el-link>
         </template>
