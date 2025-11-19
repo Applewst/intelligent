@@ -143,7 +143,8 @@ VALUES ('f1a2b3c4d5e6', '用户手册.pdf', '2.3MB', 'pdf', 'C:/uploads/20251111
        ('b6c7d8e9f0a1', '测试数据.csv', '540KB', 'csv', 'C:/uploads/20251111/测试数据.csv', '2025-11-06 17:54:33', 31),
        ('c7d8e9f0a1b2', '系统架构图.png', '980KB', 'png', 'C:/uploads/20251111/系统架构图.png', '2025-11-07 13:42:19',
         76),
-       ('d8e9f0a1b2c3', '使用指南.txt', '48KB', 'txt', 'C:/uploads/20251111/使用指南.txt', '2025-11-08 20:11:08', 22);
+       ('V4dpnYuR', '圆头耄耋', '402KB', 'png', '/resources / 20251118 / fb2af1acf3f145a19317f2c636763156.png',
+        '2025 - 11 - 19 01:26:56', 4);
 
 
 -- 科研团队动态
@@ -282,8 +283,7 @@ CREATE TABLE `team`
 
 -- 示例数据
 INSERT INTO `team` (`team_name`, `introduction`, `image_url`)
-VALUES ('AI创新团队', '致力于人工智能应用开发', 'https://example.com/team1.jpg'),
-       ('数据分析团队', '专注于大数据分析和可视化', 'https://example.com/team2.jpg');
+VALUES ('AI创新团队', '致力于人工智能应用开发', 'https://example.com/team1.jpg');
 
 -- 团队动态
 create table `team_dynamic`
