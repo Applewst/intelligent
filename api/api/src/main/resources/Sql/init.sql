@@ -58,7 +58,7 @@ CREATE TABLE `paper`
     `id`     int         NOT NULL AUTO_INCREMENT COMMENT 'id编号',
     `title`  varchar(35) NOT NULL COMMENT '标题',
     `author` varchar(30) DEFAULT NULL COMMENT '作者',
-    `file`   varchar(60) DEFAULT NULL COMMENT '文件URL',
+    `file`   varchar(255) DEFAULT NULL COMMENT '文件URL',
     `time`   date comment '发表时间',
     `detail` text COMMENT '描述',
     PRIMARY KEY (`id`)
@@ -122,7 +122,7 @@ CREATE TABLE resource
     name        VARCHAR(255) NOT NULL COMMENT '文件名称',
     size        VARCHAR(50) COMMENT '文件大小（例如：12MB）',
     type        VARCHAR(50) COMMENT '文件类型（如：pdf、jpg、mp4等）',
-    url         VARCHAR(500) COMMENT '文件存储路径',
+    url         VARCHAR(255) COMMENT '文件存储路径',
     update_time DATETIME COMMENT '更新时间',
     downloads   INT DEFAULT 0 COMMENT '下载次数'
 ) COMMENT ='资源文件信息表';
@@ -274,7 +274,7 @@ CREATE TABLE `team`
     `id`           int         NOT NULL AUTO_INCREMENT COMMENT 'id',
     `team_name`    varchar(20) NOT NULL COMMENT '团队名称',
     `introduction` text COMMENT '团队介绍',
-    `image_url`    varchar(256) DEFAULT NULL COMMENT '图片',
+    `image_url`    varchar(255) DEFAULT NULL COMMENT '图片',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -288,7 +288,7 @@ VALUES ('AI创新团队', '致力于人工智能应用开发', 'https://example.
 create table `team_dynamic`
 (
     `id`     int NOT NULL AUTO_INCREMENT,
-    `image`  varchar(50) DEFAULT NULL comment '图片地址',
+    `image`  varchar(255) DEFAULT NULL comment '图片地址',
     `title`  varchar(20) DEFAULT NULL comment '标题',
     `detail` text comment '内容',
     `time`   datetime    DEFAULT NULL comment '时间',
