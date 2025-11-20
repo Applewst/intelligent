@@ -140,6 +140,12 @@
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
     </el-dialog>
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该人员吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -150,7 +156,9 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import axios from 'axios';
 import { GetPaperList, AddPaper, UpdatePaper, DeletePaper } from '@/api/SearchApi.js';
-
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 // 搜索表单
 const searchForm = reactive({
   title: '',
@@ -208,6 +216,10 @@ const DeleteSearchPaper = async (id) => {
   } else {
     ElMessage.error('删除失败');
   }
+};
+const handleDelete = (row) => {
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
 };
 
 onMounted(() => {
@@ -362,20 +374,9 @@ const handleSubmit = () => {
 }
 
 // 删除
-const handleDelete = (row) => {
-  ElMessageBox.confirm(
-    `确定要删除论文"${row.title}"吗？`,
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }
-  ).then(() => {
-    DeleteSearchPaper(row.id);
-  }).catch(() => {
-    ElMessage.info('已取消删除');
-  });
+const confirmDelete = () => {
+  DeleteSearchPaper(currentDeleteRow.value.id)
+  deleteDialogVisible.value = false;
 };
 
 // 分页变化

@@ -113,6 +113,12 @@
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
     </el-dialog>
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该人员吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -122,7 +128,9 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetAwardList, AddAward, UpdateAward, DeleteAward } from '@/api/SearchApi.js'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
-
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 // 搜索表单
 const searchForm = reactive({
   detail: '',
@@ -188,7 +196,10 @@ const DeleteAwardData = async (id) => {
     ElMessage.error('删除获奖失败')
   }
 }
-
+const handleDelete = (row) => {
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+}
 onMounted(() => {
   GetAllAwardData(pageNum.value, pageSize.value, searchForm.author)
 })
@@ -357,20 +368,9 @@ const handleSubmit = () => {
 }
 
 // 删除
-const handleDelete = (row) => {
-  ElMessageBox.confirm(
-    `确定要删除论文"${row.detail}"吗？`,
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }
-  ).then(() => {
-    DeleteAwardData(row.id)
-  }).catch(() => {
-    ElMessage.info('已取消删除')
-  })
+const confirmDelete = () => {
+  DeleteAwardData(currentDeleteRow.value.id)
+  deleteDialogVisible.value = false
 }
 
 

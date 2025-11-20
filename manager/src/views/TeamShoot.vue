@@ -122,6 +122,13 @@
         <el-button type="primary" @click="handleSave">保存</el-button>
       </template>
     </el-dialog>
+    <!-- 删除确认对话框 -->
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该人员吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -130,6 +137,9 @@ import { ref, computed, onMounted,watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Edit, Delete, Picture } from '@element-plus/icons-vue'
 import {GetShootList, AddShoot, UpdateShoot, DeleteShoot} from '@/api/shoot.js'
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 // 搜索关键词
 const searchTitle = ref('')
 
@@ -192,7 +202,7 @@ const UpdatePhotoList = async (id,title,file,detail) => {
 const DeletePhotoList = async (id) => {
   console.log('删除照片数据文本处：',typeof id)
   const response = await DeleteShoot(id)
-  if (response.data.code === 1) {
+  if (response.code === 1) {
     ElMessage.success('删除成功')
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
   } else {
@@ -251,15 +261,14 @@ const handleEdit = (item) => {
 }
 
 // 删除
-const handleDelete = (id) => {
-  ElMessageBox.confirm('确定要删除这条记录吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    DeletePhotoList(id)
-  }).catch(() => {})
-}
+const handleDelete = (row) => {
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+};
+const confirmDelete = async () => {
+  DeletePhotoList(currentDeleteRow.value)
+  deleteDialogVisible.value = false;
+};
 
 
 // 保存

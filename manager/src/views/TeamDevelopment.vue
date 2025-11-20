@@ -107,6 +107,14 @@
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 确认删除对话框 -->
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该人员吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -115,6 +123,9 @@ import { ref, reactive, computed, onMounted,watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import { GetDevelopList,AddDevelop,UpdateDevelop,DeleteDevelop } from '@/api/develop';
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 // 搜索表单
 const searchForm = reactive({
   name: ''
@@ -228,16 +239,12 @@ const handleEdit = (row) => {
 
 // 删除
 const handleDelete = (row) => {
-  ElMessageBox.confirm('确定要删除该学生吗?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    DeleteDevelopData(row.id)
-    
-  }).catch(() => {
-    ElMessage.info('已取消删除');
-  });
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+};
+const confirmDelete = async () => {
+  DeleteDevelopData(currentDeleteRow.value.id)
+  deleteDialogVisible.value = false;
 };
 
 // 提交表单
