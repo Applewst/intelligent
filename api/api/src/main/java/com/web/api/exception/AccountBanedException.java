@@ -8,6 +8,6 @@ import org.apache.shiro.authc.AuthenticationException;
  */
 public class AccountBanedException extends AuthenticationException {
     public AccountBanedException(String message) {
-        super(Error.NOACCOUNT.toString());
+        super(Error.ACCOUNTBAN.toString());
     }
 }
