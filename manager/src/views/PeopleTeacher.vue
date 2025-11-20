@@ -102,7 +102,7 @@
         <el-form-item label="性别" prop="gender">
           <el-radio-group v-model="formData.gender">
             <el-radio :label="1">男</el-radio>
-            <el-radio :label="2">女</el-radio>
+            <el-radio :label="0">女</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -111,12 +111,19 @@
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
     </el-dialog>
+
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该人员吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
+import { ElMessage, ElLoading } from "element-plus";
 import {
   getTeacherList as realGetTeacherList,
   addTeacher as realAddTeacher,
@@ -124,6 +131,9 @@ import {
   deleteTeacher as realDeleteTeacher,
   getTeacherDetail,
 } from "@/api/teacher";
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 
 // 模拟数据开关：true=使用模拟数据，false=使用真实API
 const USE_MOCK_DATA = ref(false);
@@ -355,38 +365,18 @@ const handleEdit = async (row) => {
   }
 };
 
-const handleDelete = async (row) => {
+const handleDelete = (row) => {
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+};
+
+const confirmDelete = async () => {
   try {
-    await ElMessageBox.confirm(
-      `确定要删除教师 "${row.name}" 吗？删除后将无法恢复！`,
-      "删除确认",
-      {
-        confirmButtonText: "确认删除",
-        cancelButtonText: "取消",
-        type: "warning",
-        center: true,
-      }
-    );
-
-    if (USE_MOCK_DATA.value) {
-      // 模拟删除
-      await mockDelay(300);
-      const index = mockTeachers.value.findIndex((item) => item.id === row.id);
-      if (index > -1) {
-        mockTeachers.value.splice(index, 1);
-      }
-    } else {
-      // 真实API删除
-      await realDeleteTeacher(row.id);
-    }
-
+    await realDeleteTeacher(currentDeleteRow.value.id);
     ElMessage.success("删除成功");
     fetchTeacherList();
   } catch (error) {
-    if (error !== "cancel") {
-      console.error("删除失败:", error);
-      ElMessage.error("删除失败");
-    }
+    ElMessage.error("删除失败");
   }
 };
 

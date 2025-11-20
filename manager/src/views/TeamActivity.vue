@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ref, onMounted, watch } from "vue";
+import { ElMessage } from "element-plus";
 import {
   getEventList,
   createEvent,
@@ -8,12 +8,16 @@ import {
   deleteEvent,
 } from "../api/events.js";
 
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
+
 // 搜索参数
 const searchName = ref("");
 
 // 分页参数
 const pageNum = ref(1);
-const pageSize = ref(10);
+const pageSize = ref(5);
 const total = ref(0);
 
 // 数据列表
@@ -31,16 +35,23 @@ const formData = ref({
   title: "",
   image: "",
   detail: "",
-  time: "",
+  time: "", // 编辑时会填充，新增时为空
 });
 
-// 表单验证规则
-const formRules = {
+// 表单验证规则（改为 ref 以便动态修改）
+const formRules = ref({
   title: [{ required: true, message: "请输入活动标题", trigger: "blur" }],
   image: [{ required: true, message: "请输入图片URL", trigger: "blur" }],
   detail: [{ required: true, message: "请输入活动详情", trigger: "blur" }],
-  time: [{ required: true, message: "请选择活动时间", trigger: "change" }],
-};
+  time: [
+    { required: false, message: "请选择活动时间", trigger: "change" }, // 默认不必填
+  ],
+});
+
+// 监听 isEdit 变化，动态更新 time 字段的验证规则
+watch(isEdit, (newVal) => {
+  formRules.value.time[0].required = newVal; // 编辑时必填，新增时不必填
+});
 
 // 加载数据
 const loadData = async () => {
@@ -82,6 +93,7 @@ const handleSizeChange = (size) => {
 const handleAdd = () => {
   isEdit.value = false;
   dialogTitle.value = "添加新活动";
+  // 重置表单数据，确保 id 和 time 为空
   formData.value = {
     title: "",
     image: "",
@@ -95,8 +107,9 @@ const handleAdd = () => {
 const handleEdit = (row) => {
   isEdit.value = true;
   dialogTitle.value = "编辑活动";
+  // 填充表单数据，包括 id 和 time
   formData.value = {
-    id: row.id,
+    id: row.id, // 仅内部使用，不显示在表单中
     title: row.title,
     image: row.image,
     detail: row.detail,
@@ -106,21 +119,18 @@ const handleEdit = (row) => {
 };
 
 // 删除
-const handleDelete = async (row) => {
-  try {
-    await ElMessageBox.confirm("确定要删除此活动吗？", "警告", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      type: "warning",
-    });
+const handleDelete = (row) => {
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+};
 
-    await deleteEvent(row.id);
-    ElMessage.success("活动删除成功");
+const confirmDelete = async () => {
+  try {
+    await deleteEvent(currentDeleteRow.value.id);
+    ElMessage.success("删除成功");
     loadData();
   } catch (error) {
-    if (error !== "cancel") {
-      ElMessage.error("删除活动失败");
-    }
+    ElMessage.error("删除失败");
   }
 };
 
@@ -130,12 +140,21 @@ const handleSubmit = async () => {
 
   await formRef.value.validate(async (valid) => {
     if (valid) {
+      // 深拷贝表单数据，避免修改原对象
+      const submitData = { ...formData.value };
+
+      if (!isEdit.value) {
+        // 新增时：删除 id 和 time 字段，不传递给后端
+        delete submitData.id;
+        delete submitData.time;
+      }
+
       try {
-        if (isEdit.value && formData.value.id) {
-          await updateEvent(formData.value);
+        if (isEdit.value && submitData.id) {
+          await updateEvent(submitData);
           ElMessage.success("活动更新成功");
         } else {
-          await createEvent(formData.value);
+          await createEvent(submitData);
           ElMessage.success("活动创建成功");
         }
         dialogVisible.value = false;
@@ -222,8 +241,6 @@ onMounted(() => {
         class="admin-table"
         stripe
       >
-        <el-table-column prop="id" label="ID" width="60" />
-
         <el-table-column label="图片" width="120">
           <template #default="{ row }">
             <img :src="row.image" :alt="row.title" class="event-image" />
@@ -331,7 +348,7 @@ onMounted(() => {
           />
         </el-form-item>
 
-        <el-form-item label="活动时间" prop="time">
+        <el-form-item label="活动时间" prop="time" v-if="isEdit">
           <el-date-picker
             v-model="formData.time"
             type="datetime"
@@ -351,6 +368,13 @@ onMounted(() => {
         </div>
       </template>
     </el-dialog>
+
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该活动吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 

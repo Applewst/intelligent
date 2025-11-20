@@ -29,7 +29,6 @@
       style="width: 100%"
       class="data-table"
     >
-      <el-table-column prop="id" label="ID" width="80" align="center" />
       <el-table-column label="封面图" width="120" align="center">
         <template #default="{ row }">
           <el-image
@@ -105,7 +104,7 @@
             placeholder="请输入详细内容"
           />
         </el-form-item>
-        <el-form-item label="发布时间" prop="time">
+        <el-form-item label="发布时间" prop="time" v-if="isEdit">
           <el-date-picker
             v-model="formData.time"
             type="datetime"
@@ -121,18 +120,28 @@
         <el-button type="primary" @click="submitForm">确定</el-button>
       </template>
     </el-dialog>
+
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该动态吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ref, reactive, onMounted, watch } from "vue";
+import { ElMessage } from "element-plus";
 import {
   getResearchList,
   addResearch,
   updateResearch,
   deleteResearch,
 } from "../api/research";
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 
 // 表格数据
 const tableData = ref([]);
@@ -153,20 +162,28 @@ const isEdit = ref(false);
 // 表单数据
 const formRef = ref();
 const formData = reactive({
-  id: undefined,
   title: "",
   image: "",
   detail: "",
-  time: "",
 });
 
 // 表单验证规则
-const formRules = {
+const formRules = ref({
   title: [{ required: true, message: "请输入标题", trigger: "blur" }],
   image: [{ required: true, message: "请输入图片URL", trigger: "blur" }],
   detail: [{ required: true, message: "请输入详细内容", trigger: "blur" }],
-  time: [{ required: true, message: "请选择发布时间", trigger: "change" }],
-};
+  time: [
+    {
+      required: false, // 默认设为 false，后续动态修改
+      message: "请选择发布时间",
+      trigger: "change",
+    },
+  ],
+});
+
+watch(isEdit, (newVal) => {
+  formRules.value.time[0].required = newVal;
+});
 
 const loadData = async () => {
   loading.value = true;
@@ -208,24 +225,18 @@ const handleEdit = (row) => {
 };
 
 const handleDelete = (row) => {
-  ElMessageBox.confirm("确定要删除这条科研动态吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(async () => {
-      try {
-        await deleteResearch(row.id);
-        ElMessage.success("删除成功");
-        loadData();
-      } catch (error) {
-        ElMessage.error("删除失败");
-        console.error(error);
-      }
-    })
-    .catch(() => {
-      // 取消删除
-    });
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+};
+
+const confirmDelete = async () => {
+  try {
+    await deleteResearch(currentDeleteRow.value.id);
+    ElMessage.success("删除成功");
+    loadData();
+  } catch (error) {
+    ElMessage.error("删除失败");
+  }
 };
 
 const submitForm = async () => {
@@ -233,12 +244,20 @@ const submitForm = async () => {
 
   await formRef.value.validate(async (valid) => {
     if (valid) {
+      // 深拷贝表单数据，避免修改原对象
+      const submitData = { ...formData };
+
+      if (!isEdit.value) {
+        // 新增时：删除 time 字段，不传递给后端
+        delete submitData.time;
+      }
+
       try {
         if (isEdit.value) {
-          await updateResearch(formData);
+          await updateResearch(submitData);
           ElMessage.success("更新成功");
         } else {
-          await addResearch({ formData });
+          await addResearch(submitData); // 新增接口无 time 字段
           ElMessage.success("添加成功");
         }
         dialogVisible.value = false;

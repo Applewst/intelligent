@@ -105,7 +105,7 @@
         <el-form-item label="性别" prop="gender">
           <el-radio-group v-model="formData.gender">
             <el-radio :label="1">男</el-radio>
-            <el-radio :label="2">女</el-radio>
+            <el-radio :label="0">女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="照片" prop="avatar">
@@ -130,6 +130,13 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该人员吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -142,6 +149,9 @@ import {
   updateStudent,
   deleteStudent,
 } from "@/api/student";
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 
 // 搜索表单
 const searchForm = reactive({
@@ -238,24 +248,18 @@ const handleEdit = (row) => {
 
 // 删除
 const handleDelete = (row) => {
-  ElMessageBox.confirm(`确定要删除学生 "${row.name}" 吗？`, "删除确认", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-    center: true,
-  })
-    .then(async () => {
-      try {
-        await deleteStudent({ id: row.id });
-        ElMessage.success("删除成功");
-        fetchStudentList();
-      } catch (error) {
-        ElMessage.error("删除失败");
-      }
-    })
-    .catch(() => {
-      // 取消删除
-    });
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+};
+
+const confirmDelete = async () => {
+  try {
+    await deleteStudent({ id: currentDeleteRow.value.id });
+    ElMessage.success("删除成功");
+    fetchStudentList();
+  } catch (error) {
+    ElMessage.error("删除失败");
+  }
 };
 
 // 提交表单

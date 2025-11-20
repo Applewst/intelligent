@@ -162,6 +162,8 @@ export const getResearchList = (pageNum, pageSize, title = "") => {
 }
 
 export const addResearch = (data) => {
+  console.log(data);
+  
   return request.post("/news", data)
 }
 
