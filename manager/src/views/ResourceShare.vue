@@ -172,12 +172,19 @@
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
     </el-dialog>
+
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该资源吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 // 引入你的通用上传接口
 import { uploadImage } from "@/api/upload";
 import {
@@ -186,6 +193,10 @@ import {
   updateResource,
   deleteResource,
 } from "../api/resource";
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 
 // 搜索关键字
 const searchKeyword = ref("");
@@ -271,25 +282,20 @@ const handleEdit = (row) => {
 
 // 删除
 const handleDelete = (row) => {
-  ElMessageBox.confirm("确定要删除这个资源吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(async () => {
-      try {
-        const res = await deleteResource(row.id);
-        if (res.code === 1) {
-          ElMessage.success("删除成功");
-          fetchResourceList();
-        }
-      } catch (error) {
-        console.error("删除失败:", error);
-      }
-    })
-    .catch(() => {
-      ElMessage.info("已取消删除");
-    });
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+};
+
+const confirmDelete = async () => {
+  try {
+    const res = await deleteResource(currentDeleteRow.value.id);
+    if (res.code === 1) {
+      ElMessage.success("删除成功");
+      fetchResourceList();
+    }
+  } catch (error) {
+    console.error("删除失败:", error);
+  }
 };
 
 const handleFileUpload = async (options) => {

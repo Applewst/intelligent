@@ -61,6 +61,11 @@ const handleImageUpload = async (options) => {
       return;
     }
 
+    // 1. 创建临时 URL 用于预览，并立即更新到 formData
+    const tempUrl = URL.createObjectURL(file);
+    imageUrl.value = tempUrl;
+    formData.imageUrl = tempUrl;
+
     // 调用通用文件上传接口
     const response = await uploadImage(file);
     if (response.code === 1) {

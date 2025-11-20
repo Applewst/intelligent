@@ -112,13 +112,26 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!--  添加确认删除对话框组件 -->
+    <ConfirmDeleteDialog
+      v-model="deleteDialogVisible"
+      title="删除确认"
+      message="确定要删除该人员吗？删除后将无法恢复。"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 import { getUserList, addUser, updateUser, deleteUser } from "@/api/user";
+import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+
+//  添加删除相关的状态
+const deleteDialogVisible = ref(false);
+const currentDeleteRow = ref(null);
 
 // 查询参数
 const queryParams = reactive({
@@ -205,21 +218,21 @@ const handleEdit = (row) => {
   Object.assign(formData, { ...row, password: null });
 };
 
-// 删除
+//  修改删除方法，使用自定义确认删除组件替代 ElMessageBox
 const handleDelete = (row) => {
-  ElMessageBox.confirm("确定要删除该人员吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  }).then(async () => {
-    try {
-      await deleteUser(row.id);
-      ElMessage.success("删除成功");
-      getList();
-    } catch (error) {
-      ElMessage.error("删除失败");
-    }
-  });
+  currentDeleteRow.value = row;
+  deleteDialogVisible.value = true;
+};
+
+//  添加确认删除的回调函数
+const confirmDelete = async () => {
+  try {
+    await deleteUser(currentDeleteRow.value.id);
+    ElMessage.success("删除成功");
+    getList(); //  调用 getList 函数
+  } catch (error) {
+    ElMessage.error("删除失败");
+  }
 };
 
 // 提交表单
