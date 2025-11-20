@@ -10,6 +10,8 @@ import com.web.api.service.TeamDynamicService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -49,6 +51,7 @@ public class TeamDynamicServiceImpl implements TeamDynamicService {
     @Override
     public void saveDynamics(TeamDynamic teamDynamic) {
     log.info("新增团队动态");
+    teamDynamic.setTime(LocalDateTime.now());
     teamDynamicMapper.saveTeamDynamics(teamDynamic);
     }
 
