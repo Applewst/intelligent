@@ -12,15 +12,20 @@
     </select>
 
     <select id="getAllDynamics" resultType="com.web.api.pojo.ScientificDynamic">
-        select * from scientific_dynamic
+        select *
+        from scientific_dynamic
     </select>
     <select id="getDynamicslist" resultType="com.web.api.pojo.ScientificDynamic">
-       select * FROM scientific_dynamic
-        ORDER BY time DESC limit #{start}, #{pageSize}
+        select *
+        FROM scientific_dynamic
+        ORDER BY time DESC
+        limit #{start}, #{pageSize}
     </select>
-    <delete id="deleteDynamics" >
+    <delete id="deleteDynamics">
 
-        delete  from scientific_dynamic where id = #{id}
+        delete
+        from scientific_dynamic
+        where id = #{id}
     </delete>
     <update id="updateDynamics">
         UPDATE scientific_dynamic
@@ -28,6 +33,7 @@
             <if test="image != null and image != ''">image = #{image},</if>
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="detail != null and detail != ''">detail = #{detail},</if>
+            <if test="time != null">`time` = #{time},</if>
         </set>
         WHERE id = #{id}
     </update>

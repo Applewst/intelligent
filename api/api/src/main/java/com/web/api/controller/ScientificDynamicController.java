@@ -1,11 +1,8 @@
 package com.web.api.controller;
 
-import com.web.api.mapper.ScientificDynamicMapper;
-import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Result;
 import com.web.api.pojo.ScientificDynamic;
-import com.web.api.service.DynamicService;
 import com.web.api.service.impl.ScientificDynamicServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +32,10 @@ public class ScientificDynamicController {
     @GetMapping("/new/list")
     public Result getAllDynamics(@RequestParam(defaultValue = "1") int pageNum,
                                  @RequestParam(defaultValue = "10") int pageSize,
-                                 @RequestParam String title)
-    {
-    log.info("分页查询默认值pageNum:{},pageSize:{},title:{}",pageNum,pageSize,title );
-        PageResult pageResult =scientificDynamicServiceImpl.pageQuery(pageNum,pageSize,title);
-    return Result.success(pageResult);
+                                 @RequestParam String title) {
+        log.info("分页查询默认值pageNum:{},pageSize:{},title:{}", pageNum, pageSize, title);
+        PageResult pageResult = scientificDynamicServiceImpl.pageQuery(pageNum, pageSize, title);
+        return Result.success(pageResult);
     }
 
     /**
@@ -47,7 +43,7 @@ public class ScientificDynamicController {
      */
     @PostMapping("/news")
     public Result saveScientificDynamic(@RequestBody ScientificDynamic scientificDynamic) {
-        log.info("新增科研动态 scientificDynamic:{}", scientificDynamic );
+        log.info("新增科研动态 scientificDynamic:{}", scientificDynamic);
         scientificDynamicServiceImpl.saveDynamics(scientificDynamic);
         return Result.success();
     }
@@ -57,12 +53,12 @@ public class ScientificDynamicController {
      */
     @DeleteMapping("/news/all")
     public Result deleteScientificDynamic(@RequestParam("id") Integer id) {
-        log.info("删除科研动态 id:{}",id);
-        if(id == null) {
+        log.info("删除科研动态 id:{}", id);
+        if (id == null) {
             log.error("id为空,删除错误");
-        }else {
-            scientificDynamicServiceImpl.deleteDynamics(id);
+            return Result.error("id不能为空");
         }
+        scientificDynamicServiceImpl.deleteDynamics(id);
         return Result.success();
     }
 
