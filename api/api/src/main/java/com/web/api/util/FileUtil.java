@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -106,14 +107,30 @@ public class FileUtil {
             throw new FileNotFoundException("文件不存在：" + filePath);
         }
 
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         String fileName = file.getName();
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-                .contentLength(file.length())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
+        // 自动探测 Content-Type
+        String contentType = Files.probeContentType(file.toPath());
+        if (contentType == null) {
+            // 探测不到就给个默认值
+            contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+        }
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+        // 构建响应
+        ResponseEntity.BodyBuilder builder = ResponseEntity.ok()
+                .contentLength(file.length());
+        if (contentType.startsWith("image/")) {
+            // 图片：直接预览，不加 attachment
+            builder.contentType(MediaType.parseMediaType(contentType));
+        } else {
+            // 其他文件：沿用原来的下载逻辑
+            builder.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM);
+        }
+
+        return builder.body(resource);
     }
 
     /**
