@@ -22,6 +22,7 @@
             <if test="image != null and image != ''">image = #{image},</if>
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="detail != null and detail != ''">detail = #{detail},</if>
+            <if test="time != null"> time = #{time},</if>
         </set>
         Where id =#{id}
     </update>
