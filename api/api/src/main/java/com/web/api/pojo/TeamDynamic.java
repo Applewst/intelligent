@@ -1,7 +1,10 @@
 package com.web.api.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * 团队活动类
@@ -17,5 +20,6 @@ public class TeamDynamic {
     /** 发布时间 */
     private String detail;
     /** 图片路径 */
-    private String time;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime time;
 }

@@ -33,9 +33,7 @@ public interface ScientificDynamicMapper {
      */
     @Insert("insert into scientific_dynamic(image, title, detail)"+
             "values(#{image},#{title},#{detail})")
-    void saveDynamics(@Param("image") String image,
-                      @Param("title") String title,
-                      @Param("detail") String detail);
+    void saveDynamics(ScientificDynamic scientificDynamic);
 
     /**
      * 根据id删除科研动态
@@ -44,11 +42,7 @@ public interface ScientificDynamicMapper {
     /**
      *根据id修改科研动态
      */
-    void updateDynamics(@RequestParam int id,
-                        @RequestParam String image,
-                        @RequestParam String title,
-                        @RequestParam String detail,
-                        @RequestParam String time);
+    void updateDynamics(ScientificDynamic scientificDynamic);
 
     /**
      * 返回列表

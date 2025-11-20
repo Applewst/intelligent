@@ -1,5 +1,6 @@
 package com.web.api.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,6 @@ public class ScientificDynamic {
     /** 详情介绍 */
     private String detail;
     /** 发布时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
 }

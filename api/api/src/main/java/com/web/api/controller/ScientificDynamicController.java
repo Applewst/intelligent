@@ -46,11 +46,9 @@ public class ScientificDynamicController {
      * 新增科研动态
      */
     @PostMapping("/news")
-    public Result addScientificDynamic(@RequestParam("title") String title,
-                                       @RequestParam("image") String image ,
-                                       @RequestParam("detail") String detail) {
-        log.info("新增科研动态 image :{},title :{},detail :{}", image, title, detail);
-        scientificDynamicServiceImpl.saveDynamics(image, title, detail);
+    public Result saveScientificDynamic(@RequestBody ScientificDynamic scientificDynamic) {
+        log.info("新增科研动态 scientificDynamic:{}", scientificDynamic );
+        scientificDynamicServiceImpl.saveDynamics(scientificDynamic);
         return Result.success();
     }
 
@@ -58,9 +56,13 @@ public class ScientificDynamicController {
      * 删除科研动态
      */
     @DeleteMapping("/news/all")
-    public Result deleteScientificDynamic(@RequestParam("id") int id) {
+    public Result deleteScientificDynamic(@RequestParam("id") Integer id) {
         log.info("删除科研动态 id:{}",id);
-        scientificDynamicServiceImpl.deleteDynamics(id);
+        if(id == null) {
+            log.error("id为空,删除错误");
+        }else {
+            scientificDynamicServiceImpl.deleteDynamics(id);
+        }
         return Result.success();
     }
 
@@ -68,13 +70,9 @@ public class ScientificDynamicController {
      * 修改科研动态
      */
     @PutMapping("/news/Pall")
-    public Result updateScientificDynamic(@RequestParam int id,
-                                          @RequestParam String title,
-                                          @RequestParam String image,
-                                          @RequestParam String detail,
-                                          @RequestParam String time) {
+    public Result updateScientificDynamic(@RequestBody ScientificDynamic scientificDynamic) {
         log.info("修改科研动态");
-        scientificDynamicServiceImpl.updateDynamics(id,title,image,detail,time);
+        scientificDynamicServiceImpl.updateDynamics(scientificDynamic);
         return Result.success();
     }
 }

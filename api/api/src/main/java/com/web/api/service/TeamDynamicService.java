@@ -23,7 +23,7 @@ public interface TeamDynamicService {
      * @param
      */
 
-    void updateDynamics(int id,String title,String image,String detail,String time);
+    void updateDynamics(TeamDynamic teamDynamic);
 
     /**
      * 删除动态
@@ -36,7 +36,7 @@ public interface TeamDynamicService {
      *新增动态
      */
 
-    void saveDynamics(String image, String title, String detail);
+    void saveDynamics(TeamDynamic teamDynamic);
 
     /**
      * 分页查询

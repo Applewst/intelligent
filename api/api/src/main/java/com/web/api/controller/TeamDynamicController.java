@@ -3,6 +3,7 @@ package com.web.api.controller;
 import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Result;
+import com.web.api.pojo.TeamDynamic;
 import com.web.api.service.impl.TeamDynamicServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,9 @@ public class TeamDynamicController {
      * 新增科研动态
      */
     @PostMapping("/events")
-    public Result addScientificDynamic(@RequestParam("title") String title,
-                                       @RequestParam("image") String image ,
-                                       @RequestParam("detail") String detail) {
-        log.info("新增团队动态 image :{},title :{},detail :{}", image, title, detail);
-        teamDynamicServiceImpl.saveDynamics(image, title, detail);
+    public Result saveScientificDynamic(@RequestBody TeamDynamic teamDynamic) {
+        log.info("新增团队动态 teamDynamic:{},title:{}",teamDynamic,teamDynamic.getTitle());
+        teamDynamicServiceImpl.saveDynamics(teamDynamic);
         return Result.success();
     }
 
@@ -61,13 +60,9 @@ public class TeamDynamicController {
      * 修改科研动态
      */
     @PutMapping("/event")
-    public Result updateScientificDynamic(@RequestParam int id,
-                                          @RequestParam String title,
-                                          @RequestParam String image,
-                                          @RequestParam String detail,
-                                          @RequestParam String time) {
+    public Result updateScientificDynamic(@RequestBody TeamDynamic teamDynamic) {
         log.info("修改团队动态");
-        teamDynamicServiceImpl.updateDynamics(id,title,image,detail,time);
+        teamDynamicServiceImpl.updateDynamics(teamDynamic);
         return Result.success();
     }
 }

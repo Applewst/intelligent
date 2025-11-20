@@ -31,9 +31,7 @@ public interface TeamDynamicMapper {
      */
     @Insert("insert into team_dynamic(image, title, detail)"+
             "values(#{image},#{title},#{detail})")
-    void saveTeamDynamics(@Param("image") String image,
-                      @Param("title") String title,
-                      @Param("detail") String detail);
+    void saveTeamDynamics(TeamDynamic teamDynamic);
 
     /**
      * 删除团队动态
@@ -43,7 +41,7 @@ public interface TeamDynamicMapper {
     /**
      *修改团队动态
      */
-    void updateTeamDynamic(int id,String title,String image,String detail,String time);
+    void updateTeamDynamic(TeamDynamic teamDynamic);
 
     /**
      * 返回列表数据

@@ -23,20 +23,20 @@ public interface ScientificDynamicService {
      * @param
      */
 
-    void updateDynamics(int id,String title,String image,String detail,String time);
+    void updateDynamics(ScientificDynamic scientificDynamic);
 
     /**
      * 删除动态
      * @param
      */
 
-    void deleteDynamics(int id);
+    void deleteDynamics(Integer id);
 
     /**
      *新增动态
      */
 
-    void saveDynamics(String image, String title, String detail);
+    void saveDynamics(ScientificDynamic scientificDynamic);
 
     /**
      * 分页查询

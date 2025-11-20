@@ -2,6 +2,7 @@ package com.web.api.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.web.api.exception.NoIdException;
 import com.web.api.mapper.ScientificDynamicMapper;
 import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
@@ -36,21 +37,29 @@ public class ScientificDynamicServiceImpl implements ScientificDynamicService {
     }
 
     @Override
-    public void updateDynamics(int id,String title,String image,String detail,String time) {
-        scientificDynamicMapper.updateDynamics(id,title,image,detail,time);
+    public void updateDynamics(ScientificDynamic scientificDynamic) {
+        scientificDynamicMapper.updateDynamics(scientificDynamic);
         log.info("更新科研动态");
     }
 
     @Override
-    public void deleteDynamics(int id) {
-    log.info("删除科研动态");
-    scientificDynamicMapper.deleteDynamics(id);
+    public void deleteDynamics(Integer id) {
+        if( id == null ){
+            log.error("id为空删除,删除错误");
+            throw new NoIdException();
+        } else if (id<=0) {
+            log.error("id错误");
+            throw new IllegalArgumentException("无效的ID: " + id);
+        } else{
+            log.info("删除科研动态");
+              scientificDynamicMapper.deleteDynamics(id);
+        }
     }
 
     @Override
-    public void saveDynamics(@Param("image") String image,@Param("title") String title,@Param("detail") String detail) {
+    public void saveDynamics(ScientificDynamic scientificDynamic) {
     log.info("新增科研动态");
-    scientificDynamicMapper.saveDynamics(image,title,detail);
+    scientificDynamicMapper.saveDynamics(scientificDynamic);
     }
 
     @Override

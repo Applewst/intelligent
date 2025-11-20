@@ -35,9 +35,9 @@ public class TeamDynamicServiceImpl implements TeamDynamicService {
     }
 
     @Override
-    public void updateDynamics(int id,String title,String image,String detail,String time) {
+    public void updateDynamics(TeamDynamic teamDynamic) {
         log.info("修改团队动态");
-        teamDynamicMapper.updateTeamDynamic(id,title,image,detail,time);
+        teamDynamicMapper.updateTeamDynamic(teamDynamic);
     }
 
     @Override
@@ -47,9 +47,9 @@ public class TeamDynamicServiceImpl implements TeamDynamicService {
     }
 
     @Override
-    public void saveDynamics(String image, String title, String detail) {
+    public void saveDynamics(TeamDynamic teamDynamic) {
     log.info("新增团队动态");
-    teamDynamicMapper.saveTeamDynamics(image, title, detail);
+    teamDynamicMapper.saveTeamDynamics(teamDynamic);
     }
 
     @Override
