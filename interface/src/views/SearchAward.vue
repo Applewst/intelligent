@@ -30,7 +30,7 @@ onMounted(()=>{
       <el-col v-for="item in list" :key="item.id" :xs="24" :sm="12" class="item-box">
         <el-card style="max-width: 520px; margin-bottom: 20px;" shadow="hover">
           <div class="item-content">
-            <img src="../assets/images/1.jpg" alt="获奖图片" />
+            <img :src="item.file" alt="获奖图片" />
             <div class="item-infor">
               <h3>{{item.name}}</h3>
               <p>获奖人：{{item.author}}</p>

@@ -34,8 +34,8 @@
         <el-table-column prop="image" label="照片" width="120">
           <template #default="{ row }">
               <el-image
-                :src="'https://example.com/' + row.image"
-                :preview-src-list="['https://example.com/' + row.image]"
+                :src="row.image"
+                
                 fit="cover"
                 style="width: 60px; height: 60px; border-radius: 4px"
               />
@@ -266,7 +266,7 @@ const handleAdd = () => {
 }
 
 const handleEdit = (row) => {
-  dialogTitle.value = '编辑论文'
+  dialogTitle.value = '编辑研究项目'
   isEdit.value = true
   editId.value = row.id
   form.title = row.title

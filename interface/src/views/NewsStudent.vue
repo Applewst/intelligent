@@ -55,7 +55,7 @@ const handleSizeChange = (size) => {
     <div v-loading="loading" class="wall-body">
       <div class="cards">
         <div v-for="e in list" :key="e.id" class="card">
-          <el-image :src="e.image" fit="cover" class="pic" lazy />
+          <el-image :src="e.file" fit="cover" class="pic" lazy />
           <div class="info">
             <div class="title">{{ e.title }}</div>
             <div class="desc">{{ e.detail }}</div>
@@ -114,11 +114,13 @@ const handleSizeChange = (size) => {
     transform: translateY(-4px);
   }
 
-  .pic {
-    width: 100%;
-    height: 160px;
-    display: block;
-  }
+	  .pic {
+	    width: 100%;
+	    max-height: 300px;
+	    aspect-ratio: 16/9;
+	    display: block;
+	    object-fit: contain;
+	  }
 
   .info {
     padding: 14px 16px 16px;

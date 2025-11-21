@@ -271,8 +271,8 @@ export const AddSearchProject = async (title,sort,image) => {
    })
 }
 //编辑项目
-export const EditSearchProject = async (id,title,sort,image) => {
-  console.log("编辑项目API",id,title,sort,image)
+export const EditSearchProject = async (id,title,image) => {
+  console.log("编辑项目API",id,title,image)
   if(useMock){
     return {
       "code":1,
@@ -283,7 +283,6 @@ export const EditSearchProject = async (id,title,sort,image) => {
   return service.put('/search/project', {
     id,
     title,
-    sort,
     image
    })
 }
