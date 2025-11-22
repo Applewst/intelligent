@@ -20,7 +20,7 @@
                 wechat_account = #{wechatAccount},
             </if>
             <if test="wechatQrCode != null and wechatQrCode != ''">
-                wechat_qc_code = #{wechatQrCode},
+                wechat_qr_code = #{wechatQrCode},
             </if>
         </set>
         where id = 1
