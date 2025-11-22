@@ -10,8 +10,10 @@ const pageSize = ref(6)
 const total = ref(0)
 
 const cleanAvatar = (raw = '') => {
-  const match = raw.match(/https:\/\/picsum\.photos\/id\/\d+\/\d+\/\d+/)
-  return match ? match[0] : ''
+  if (!raw) {
+    return 'https://picsum.photos/200/200' // 临时用 picsum 占位，后续可替换为你的默认图
+  }
+  return raw
 }
 
 const fetchTeachers = async () => {
