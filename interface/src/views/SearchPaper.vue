@@ -1,6 +1,6 @@
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref,  watch, onMounted } from 'vue';
 import { GetsearchPapers } from '@/api/search'
 import { ElMessage } from 'element-plus';
 // 模拟数据
@@ -159,9 +159,13 @@ watch([pageSize,pageNum], () => {
 }
 
 .paper-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: 260px;
+  // height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  //完全展示
+  object-position: center;
 }
 
 .paper-content {

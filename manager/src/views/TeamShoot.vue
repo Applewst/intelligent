@@ -23,48 +23,49 @@
 
     <!-- 卡片列表 -->
     <div class="card-grid">
-   <el-card 
-        v-for="item in photoList" 
-        :key="item.id" 
-        class="photo-card"
-        shadow="hover"
-      >
-        <div class="card-content">
-          <el-image
-            :src="item.file"
-            fit="cover"
-            class="photo-image"
-            :preview-src-list="[item.file]"
-          >
-            <template #error>
-              <div class="image-error">
-                <el-icon><Picture /></el-icon>
-                <span>图片加载失败</span>
+     <el-card 
+          v-for="(item, index) in computedPhotoList" 
+          :key="item.id" 
+          class="photo-card"
+          shadow="hover"
+        >
+          <div class="card-content">
+            <el-image
+              :src="item.file"
+              fit="cover"
+              class="photo-image"
+              :preview-src-list="[item.file]"
+            >
+              <template #error>
+                <div class="image-error">
+                  <el-icon><Picture /></el-icon>
+                  <span>图片加载失败</span>
+                </div>
+              </template>
+            </el-image>
+            
+            <div class="card-info">
+              <div class="id">ID: {{ item.displayId }}</div>
+              <h3 class="title">{{ item.title }}</h3>
+              <!-- <p class="detail">{{ item.detail }}</p> -->
+              <div class="time">
+                <el-icon><Clock /></el-icon>
+                <span>{{ item.time }}</span>
               </div>
-            </template>
-          </el-image>
-          
-          <div class="card-info">
-            <h3 class="title">{{ item.title }}</h3>
-            <!-- <p class="detail">{{ item.detail }}</p> -->
-            <div class="time">
-              <el-icon><Clock /></el-icon>
-              <span>{{ item.time }}</span>
+            </div>
+
+            <div class="card-actions">
+              <el-button type="primary" size="small" @click="handleEdit(item)">
+                <el-icon><Edit /></el-icon>
+                编辑
+              </el-button>
+              <el-button type="danger" size="small" @click="handleDelete(item.id)">
+                <el-icon><Delete /></el-icon>
+                删除
+              </el-button>
             </div>
           </div>
-
-          <div class="card-actions">
-            <el-button type="primary" size="small" @click="handleEdit(item)">
-              <el-icon><Edit /></el-icon>
-              编辑
-            </el-button>
-            <el-button type="danger" size="small" @click="handleDelete(item.id)">
-              <el-icon><Delete /></el-icon>
-              删除
-            </el-button>
-          </div>
-        </div>
-      </el-card>
+        </el-card>
     </div>
 
     <!-- 分页组件 -->
@@ -90,9 +91,7 @@
         <el-form-item label="主题">
           <el-input v-model="formData.title" placeholder="请输入主题" />
         </el-form-item>
-        <el-form-item label="照片URL">
-          <el-input v-model="formData.file" placeholder="请输入照片URL" />
-        </el-form-item>
+        
         <el-form-item label="详细">
           <el-input
             v-model="formData.detail"
@@ -101,20 +100,22 @@
             placeholder="请输入详细信息"
           />
         </el-form-item>
-        <el-form-item label="预览">
-          <el-image
-            v-if="formData.file"
-            :src="formData.file"
-            fit="cover"
-            style="width: 200px; height: 150px"
+         <el-form-item label="封面图" prop="file">
+          <el-upload
+            class="upload-demo"
+            :before-upload="beforeUpload"
+            :show-file-list="false"
           >
-            <template #error>
-              <div class="image-error" style="width: 200px; height: 150px">
-                <el-icon><Picture /></el-icon>
-                <span>图片加载失败</span>
-              </div>
-            </template>
-          </el-image>
+            <el-button type="primary">选择图片</el-button>
+          </el-upload>
+          <!-- 实时显示上传的图片 -->
+          <div v-if="formData.file" style="margin-top: 10px">
+            <el-image
+              :src="formData.file"
+              fit="cover"
+              style="width: 100px; height: 80px; border-radius: 4px"
+            />
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -135,9 +136,10 @@
 <script setup>
 import { ref, computed, onMounted,watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Edit, Delete, Picture } from '@element-plus/icons-vue'
+import { Search, Edit, Delete, Picture, Clock } from '@element-plus/icons-vue'
 import {GetShootList, AddShoot, UpdateShoot, DeleteShoot} from '@/api/shoot.js'
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+import { uploadImage } from "@/api/upload";
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
 // 搜索关键词
@@ -158,10 +160,16 @@ const formData = ref({
   detail: ''
 })
 
-// 模拟数据
-const photoList = ref([
+// 照片列表数据
+const photoList = ref([])
 
-])
+// 计算带连续ID的照片列表
+const computedPhotoList = computed(() => {
+  return photoList.value.map((item, index) => ({
+    ...item,
+    displayId: (pageNum.value - 1) * pageSize.value + index + 1
+  }))
+})
 
 
 //获取照片数据
@@ -182,6 +190,7 @@ const AddPhotoList = async (title,file,detail) => {
   
   if (response.code === 1) {
     ElMessage.success('新增成功')
+    pageNum.value = 1
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
   } else {
     ElMessage.error('新增失败')
@@ -204,12 +213,41 @@ const DeletePhotoList = async (id) => {
   const response = await DeleteShoot(id)
   if (response.code === 1) {
     ElMessage.success('删除成功')
+    pageNum.value = 1
     GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
   } else {
     ElMessage.error('删除失败')
   }
 }
+const beforeUpload = async (rawFile) => {
+  // 示例：校验文件格式和大小
+  const isImage = rawFile.type.startsWith("image/");
+  if (!isImage) {
+    ElMessage.error("只能上传图片文件！");
+    return false;
+  }
 
+  const isLt2M = rawFile.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    ElMessage.error("图片大小不能超过 2MB！");
+    return false;
+  }
+
+  // 校验通过后手动上传
+  try {
+    const response = await uploadImage(rawFile);
+    if (response && response.data) {
+      formData.value.file = response.data;
+      // console.log('查看图像是否渲染成功',formData.file)
+      
+      ElMessage.success("图片上传成功!");
+    }
+  } catch (error) {
+    ElMessage.error("图片上传失败!");
+    console.error(error);
+  }
+  return false;
+};
 
 onMounted(() => {
   GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
@@ -217,8 +255,6 @@ onMounted(() => {
 watch([pageNum, pageSize],()=>{
   GetAllhotoList(pageNum.value, pageSize.value, searchTitle.value)
 })
-
-
 
 
 // 页码改变时的处理
@@ -369,59 +405,37 @@ const handleSave = () => {
   flex: 1;
 }
 
-.title {
-  margin: 0 0 8px 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: #303133;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.card-info .id {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
 }
 
-.detail {
+.card-info .title {
   margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.card-info .time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 14px;
-  color: #606266;
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  color: #999;
+  margin-top: 8px;
 }
 
 .card-actions {
   display: flex;
   gap: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #ebeef5;
-}
-
-.card-actions .el-button {
-  flex: 1;
+  justify-content: flex-end;
 }
 
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  padding: 24px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-@media (max-width: 768px) {
-  .card-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .search-bar {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .search-bar .el-input {
-    width: 100% !important;
-  }
+  margin-top: 24px;
 }
 </style>

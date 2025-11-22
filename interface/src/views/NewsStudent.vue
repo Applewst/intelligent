@@ -116,10 +116,12 @@ const handleSizeChange = (size) => {
 
 	  .pic {
 	    width: 100%;
-	    max-height: 300px;
+      height: auto;
+	    max-height: 100%;
 	    aspect-ratio: 16/9;
+
 	    display: block;
-	    object-fit: contain;
+	  object-fit: contain;
 	  }
 
   .info {

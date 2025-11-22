@@ -22,7 +22,7 @@
       <el-table :data="DevelopData" border class="data-table">
         <el-table-column label="ID" width="80" align="center">
           <template #default="{ $index }">
-            {{ $index + 1 }}
+            {{ (pageNum - 1) * pageSize + $index + 1 }}
           </template>
         </el-table-column>
         <el-table-column prop="name" label="姓名" width="150" />
@@ -83,23 +83,23 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="照片URL">
-          <el-input v-model="formData.file" placeholder="请输入照片URL" />
-        </el-form-item>
-       <el-form-item label="预览">
-          <el-image
-            v-if="formData.file"
-            :src="formData.file"
-            fit="cover"
-            style="width: 200px; height: 150px"
+        
+       <el-form-item label="封面图" prop="file">
+          <el-upload
+            class="upload-demo"
+            :before-upload="beforeUpload"
+            :show-file-list="false"
           >
-            <template #error>
-              <div class="image-error" style="width: 200px; height: 150px">
-                <el-icon><Picture /></el-icon>
-                <span>图片加载失败</span>
-              </div>
-            </template>
-          </el-image>
+            <el-button type="primary">选择图片</el-button>
+          </el-upload>
+          <!-- 实时显示上传的图片 -->
+          <div v-if="formData.file" style="margin-top: 10px">
+            <el-image
+              :src="formData.file"
+              fit="cover"
+              style="width: 100px; height: 80px; border-radius: 4px"
+            />
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -124,6 +124,8 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import { GetDevelopList,AddDevelop,UpdateDevelop,DeleteDevelop } from '@/api/develop';
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+import { uploadImage } from "@/api/upload";
+
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
 // 搜索表单
@@ -195,6 +197,34 @@ const DeleteDevelopData = async (id) => {
     ElMessage.error('删除失败')
   }
 }
+const beforeUpload = async (rawFile) => {
+  // 示例：校验文件格式和大小
+  const isImage = rawFile.type.startsWith("image/");
+  if (!isImage) {
+    ElMessage.error("只能上传图片文件！");
+    return false;
+  }
+
+  const isLt2M = rawFile.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    ElMessage.error("图片大小不能超过 2MB！");
+    return false;
+  }
+
+  // 校验通过后手动上传
+  try {
+    const response = await uploadImage(rawFile);
+    if (response && response.data) {
+      formData.file = response.data;
+      ElMessage.success("图片上传成功!");
+    }
+  } catch (error) {
+    ElMessage.error("图片上传失败!");
+    console.error(error);
+  }
+
+  return false;
+};
 
 onMounted(()=>{
   getDevelopList(pageNum.value,pageSize.value,searchForm.name)
@@ -202,10 +232,7 @@ onMounted(()=>{
 watch([pageNum,pageSize],()=>{
   getDevelopList(pageNum.value,pageSize.value,searchForm.name)
 })
-// // 过滤后的学生数据
-// const filteredStudents = computed(() => {
-//   return students.value;
-// });
+
 
 
 // 搜索

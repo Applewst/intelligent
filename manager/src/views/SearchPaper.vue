@@ -31,11 +31,11 @@
 
     <!-- 数据表格 -->
       <el-table :data="tableData" border class="data-table">
-        <el-table-column label="ID" width="60" align="center">
-          <template #default="{ $index }">
-            {{ $index + 1 }}
-          </template>
-        </el-table-column>
+      <el-table-column label="ID" width="60" align="center">
+        <template #default="{ row }">
+          {{ row.calculatedIndex }}
+        </template>
+      </el-table-column>
         <el-table-column prop="title" label="论文名称" width="240" />
         <el-table-column prop="author" label="论文作者" width="100" />
         <el-table-column prop="detail" label="论文内容" width="600" />
@@ -100,37 +100,24 @@
         <el-form-item label="论文作者" prop="author">
           <el-input v-model="form.author" placeholder="请输入作者名称" />
         </el-form-item>
-        <el-form-item label="照片" prop="file">
-          <el-input v-model="form.file" placeholder="请输入照片URL" />
+        <el-form-item label="封面图" prop="file">
+          <el-upload
+            class="upload-demo"
+            :before-upload="beforeUpload"
+            :show-file-list="false"
+          >
+            <el-button type="primary">选择图片</el-button>
+          </el-upload>
+          <!-- 实时显示上传的图片 -->
           <div v-if="form.file" style="margin-top: 10px">
             <el-image
               :src="form.file"
               fit="cover"
-              style="width: 100px; height: 100px; border-radius: 4px"
+              style="width: 100px; height: 80px; border-radius: 4px"
             />
           </div>
         </el-form-item>
-        <!-- <el-form-item label="论文文件" prop="files">
-          <el-upload
-            class="upload-demo"
-            action=""
-            :http-request="uploadFile"
-            :before-upload="beforeUploadFile"
-            :on-success="handleSuccessFile"
-            :on-error="handleErrorFile"
-            :file-list="form.files"
-            accept=".pdf"
-            :limit="1"
-            :on-exceed="handleExceedFile"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-            <template #tip>
-              <div class="el-upload__tip">
-                只能上传PDF文件，且不超过100MB
-              </div>
-            </template>
-          </el-upload>
-        </el-form-item> -->
+        
         <el-form-item label="论文内容" prop="detail" class="editor-form-form">
           <div ref="quillEditor" class="quill-editor"></div>
         </el-form-item>
@@ -157,6 +144,7 @@ import 'quill/dist/quill.snow.css';
 import axios from 'axios';
 import { GetPaperList, AddPaper, UpdatePaper, DeletePaper } from '@/api/SearchApi.js';
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+import { uploadImage } from "@/api/upload";
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
 // 搜索表单
@@ -178,7 +166,10 @@ const GetAllSearchProject = async (pageNum, pageSize, author, title) => {
   const response = await GetPaperList(pageNum, pageSize, author, title);
   console.log('获取论文列表文本处',response)
   
-  tableData.value = response.data.data;
+  tableData.value = response.data.data.map((item, index) => ({
+    ...item,
+    calculatedIndex: (pageNum - 1) * pageSize + index + 1
+  }));
   total.value = response.data.total;
 };
 
@@ -188,6 +179,7 @@ const AddSearchPaper = async (title, author, detail, file, files) => {
   const response = await AddPaper(title, author, detail, file, files);
   if (response.code === 1) {
     ElMessage.success('新增成功');
+    pageNum.value = 1;
     GetAllSearchProject(pageNum.value, pageSize.value, searchForm.author, searchForm.title);
   } else {
     ElMessage.error('新增失败');
@@ -212,6 +204,7 @@ const DeleteSearchPaper = async (id) => {
   const response = await DeletePaper(id);
   if (response.code === 1) {
     ElMessage.success('删除成功');
+    pageNum.value = 1;
     GetAllSearchProject(pageNum.value, pageSize.value, searchForm.author, searchForm.title);
   } else {
     ElMessage.error('删除失败');
@@ -229,6 +222,7 @@ onMounted(() => {
 
 // 监视每页页数和当前页数
 watch([pageNum, pageSize, searchForm.author, searchForm.title], () => {
+
   console.log('获取每次分页参数', pageNum.value, pageSize.value, searchForm.author, searchForm.title);
   GetAllSearchProject(pageNum.value, pageSize.value, searchForm.author, searchForm.title);
 });
@@ -245,7 +239,6 @@ const form = reactive({
   author: '',
   detail: '',
   file: '', // 论文图片列表
-  files: [] // 论文文件列表
 });
 
 const rules = reactive({
@@ -255,112 +248,35 @@ const rules = reactive({
   files: [{ required: true, message: '请上传论文文件', trigger: 'change' }],
 });
 
-// // 上传文件之前的验证
-// const beforeUploadFile = (file) => {
-//   const isPDF = file.type === 'application/pdf';
-//   const isLt100M = file.size / 1024 / 1024 < 100;
-//   if (!isPDF) {
-//     ElMessage.error('只能上传PDF文件!');
-//   }
-//   if (!isLt100M) {
-//     ElMessage.error('文件大小不能超过100MB!');
-//   }
-//   return isPDF && isLt100M;
-// };
 
-// // 自定义上传文件逻辑
-// const uploadFile = (options) => {
-//   const formData = new FormData();
-//   formData.append('file', options.file);
-//   // 假设这是你的上传API地址
-//   axios.post('/api/paper/uploadFile', formData, {
-//     headers: {
-//       'Content-Type': 'multipart/form-data',
-//     },
-//   }).then((response) => {
-//     if (response.data.code === 1) {
-//       ElMessage.success('上传文件成功');
-//       // 将上传成功的文件信息添加到表单中
-//       form.files = [{ name: options.file.name, url: response.data.data.url }];
-//     } else {
-//       ElMessage.error('上传文件失败');
-//     }
-//   }).catch((error) => {
-//     ElMessage.error('上传文件失败');
-//     console.error(error);
-//   });
-// };
+const beforeUpload = async (rawFile) => {
+  // 示例：校验文件格式和大小
+  const isImage = rawFile.type.startsWith("image/");
+  if (!isImage) {
+    ElMessage.error("只能上传图片文件！");
+    return false;
+  }
 
-// // 文件上传成功的处理
-// const handleSuccessFile = (response, file, fileList) => {
-//   ElMessage.success('文件上传成功');
-//   form.files = fileList;
-// };
+  const isLt2M = rawFile.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    ElMessage.error("图片大小不能超过 2MB！");
+    return false;
+  }
 
-// // 文件上传失败的处理
-// const handleErrorFile = (err, file, fileList) => {
-//   ElMessage.error('文件上传失败');
-//   console.error(err);
-// };
+  // 校验通过后手动上传
+  try {
+    const response = await uploadImage(rawFile);
+    if (response && response.data) {
+      form.file = response.data;
+      ElMessage.success("图片上传成功!");
+    }
+  } catch (error) {
+    ElMessage.error("图片上传失败!");
+    console.error(error);
+  }
 
-// // 文件超出限制时的处理
-// const handleExceedFile = (files, fileList) => {
-//   ElMessage.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件`);
-// };
-
-// // 上传图片之前的验证
-// const beforeUploadImage = (file) => {
-//   const isImage = file.type.startsWith('image/');
-//   const isLt10M = file.size / 1024 / 1024 < 10;
-//   if (!isImage) {
-//     ElMessage.error('只能上传图片文件!');
-//   }
-//   if (!isLt10M) {
-//     ElMessage.error('文件大小不能超过10MB!');
-//   }
-//   return isImage && isLt10M;
-// };
-
-// // 自定义上传图片逻辑
-// const uploadImage = (options) => {
-//   const formData = new FormData();
-//   formData.append('image', options.file);
-//   // 假设这是你的上传API地址
-//   axios.post('/api/paper/uploadImage', formData, {
-//     headers: {
-//       'Content-Type': 'multipart/form-data',
-//     },
-//   }).then((response) => {
-//     if (response.data.code === 1) {
-//       ElMessage.success('上传图片成功');
-//       // 将上传成功的文件信息添加到表单中
-//       form.file = [{ name: options.file.name, url: response.data.data.url }];
-//     } else {
-//       ElMessage.error('上传图片失败');
-//     }
-//   }).catch((error) => {
-//     ElMessage.error('上传图片失败');
-//     console.error(error);
-//   });
-// };
-
-// // 图片上传成功的处理
-// const handleSuccessImage = (response, file, fileList) => {
-//   ElMessage.success('图片上传成功');
-//   form.file = fileList;
-// };
-
-// // 图片上传失败的处理
-// const handleErrorImage = (err, file, fileList) => {
-//   ElMessage.error('图片上传失败');
-//   console.error(err);
-// };
-
-// // 图片超出限制时的处理
-// const handleExceedImage = (files, fileList) => {
-//   ElMessage.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件`);
-// };
-
+  return false;
+};
 // 提交表单
 const handleSubmit = () => {
   

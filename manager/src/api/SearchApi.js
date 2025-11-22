@@ -255,8 +255,8 @@ export const GetSearchProject = async (pageNum, pageSize, name) => {
   })
 }
 //新增项目
-export const AddSearchProject = async (title,sort,image) => {
-  console.log("新增项目API",title,sort,image)
+export const AddSearchProject = async (title,image) => {
+  console.log("新增项目API",title,image)
   if(useMock){
     return {
       "code":1,
@@ -266,7 +266,6 @@ export const AddSearchProject = async (title,sort,image) => {
   }
   return service.post('/search', {
     title,
-    sort,
     image
    })
 }

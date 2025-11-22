@@ -26,7 +26,7 @@
       <el-table :data="tableData" border class="data-table">
         <el-table-column label="编号" width="80" align="center">
           <template #default="{ $index }">
-            {{ $index + 1 }}
+            {{ (pageNum - 1) * pageSize + $index + 1 }}
           </template>
         </el-table-column>
         <el-table-column prop="title" label="项目名称" min-width="300" />
@@ -82,14 +82,21 @@
         <el-form-item label="项目名称">
           <el-input v-model="form.title" placeholder="请输入项目名称" />
         </el-form-item>
-        <el-form-item label="照片" prop="image">
-          <el-input v-model="form.image" placeholder="请输入照片URL" />
+        <el-form-item label="封面图" prop="image">
+          <el-upload
+            class="upload-demo"
+            :before-upload="beforeUpload"
+            :show-file-list="false"
+          >
+            <el-button type="primary">选择图片</el-button>
+          </el-upload>
+          <!-- 实时显示上传的图片 -->
           <div v-if="form.image" style="margin-top: 10px">
-              <el-image
-                :src="form.image"
-                fit="cover"
-                style="width: 100px; height: 100px; border-radius: 4px"
-              />
+            <el-image
+              :src="form.image"
+              fit="cover"
+              style="width: 100px; height: 80px; border-radius: 4px"
+            />
           </div>
         </el-form-item>
         <!-- <el-form-item label="项目内容" class="editor-form-item">
@@ -117,6 +124,7 @@ import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 import { GetSearchProject,AddSearchProject,DeleteSearchProject,EditSearchProject } from '../api/SearchApi'
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
+import { uploadImage } from "@/api/upload";
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
 
@@ -137,7 +145,7 @@ const searchForm = reactive({
 // 分页参数
 const pageNum = ref(1)
 const pageSize = ref(3)
-const total = ref(5)
+var total = ref(5)
 
 // 表格数据
 
@@ -152,6 +160,7 @@ const GetAllSearchProject = async (pageNum, pageSize,name)=>{
   
   console.log('获取项目列表文本处',pageNum, pageSize,name)
   tableData.value = response.data.data
+  total = response.data.total
 }
 //新增项目
 const AddAllSearchProject = async (title,image)=>{
@@ -159,6 +168,7 @@ const AddAllSearchProject = async (title,image)=>{
   console.log("新增项目文本处",title,image)
   if(response.code===1){
     ElMessage.success('新增成功');
+    pageNum.value = 1
     GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
   }else{
     ElMessage.error('新增失败');
@@ -182,13 +192,43 @@ const DeleteAllSearchProject = async (id)=>{
   
   if(response.code===1){
     ElMessage.success('删除成功');
+    pageNum.value=1
     GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
   }else{
     ElMessage.error('删除失败');
   }
 }
 
+const beforeUpload = async (rawFile) => {
+  // 示例：校验文件格式和大小
+  const isImage = rawFile.type.startsWith("image/");
+  if (!isImage) {
+    ElMessage.error("只能上传图片文件！");
+    return false;
+  }
 
+  const isLt2M = rawFile.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    ElMessage.error("图片大小不能超过 2MB！");
+    return false;
+  }
+
+  // 校验通过后手动上传
+  try {
+    const response = await uploadImage(rawFile);
+    if (response && response.data) {
+      form.image = response.data
+      // console.log('图片上传成功!', form.image)
+      
+      ElMessage.success("图片上传成功!");
+    }
+  } catch (error) {
+    ElMessage.error("图片上传失败!");
+    console.error(error);
+  }
+
+  return false;
+};
 onMounted(() => {
   GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
 })
@@ -247,6 +287,7 @@ const initQuillEditor = () => {
 
 // 搜索
 const handleSearch = () => {
+  pageNum.value = 1
   GetAllSearchProject(pageNum.value,pageSize.value,SearchVal.value);
   SearchVal.value = ''
 }

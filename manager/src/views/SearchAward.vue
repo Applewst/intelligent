@@ -26,8 +26,8 @@
     <!-- 数据表格 -->
     <el-table :data="tableData" border class="data-table">
       <el-table-column label="ID" width="80" align="center">
-        <template #default="{ $index }">
-          {{ $index + 1 }}
+        <template #default="{ row }">
+          {{ row.calculatedIndex }}
         </template>
       </el-table-column>
       <el-table-column prop="detail" label="获奖内容" min-width="200" />
@@ -97,13 +97,20 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="照片" prop="file">
-          <el-input v-model="form.file" placeholder="请输入照片URL" />
+      <el-form-item label="封面图" prop="file">
+          <el-upload
+            class="upload-demo"
+            :before-upload="beforeUpload"
+            :show-file-list="false"
+          >
+            <el-button type="primary">选择图片</el-button>
+          </el-upload>
+          <!-- 实时显示上传的图片 -->
           <div v-if="form.file" style="margin-top: 10px">
             <el-image
               :src="form.file"
               fit="cover"
-              style="width: 100px; height: 100px; border-radius: 4px"
+              style="width: 100px; height: 80px; border-radius: 4px"
             />
           </div>
         </el-form-item>
@@ -127,6 +134,7 @@ import { ref, reactive, nextTick, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetAwardList, AddAward, UpdateAward, DeleteAward } from '@/api/SearchApi.js'
 import Quill from 'quill'
+import { uploadImage } from "@/api/upload";
 import 'quill/dist/quill.snow.css'
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
 const deleteDialogVisible = ref(false);
@@ -152,8 +160,12 @@ const GetAllAwardData = async (pageNum, pageSize, author) => {
   const response = await GetAwardList(pageNum, pageSize, author)
   console.log('response:',response)
   
-  tableData.value = response.data.data 
+  tableData.value = response.data.data.map((item, index) => ({
+    ...item,
+    calculatedIndex: (pageNum - 1) * pageSize + index + 1
+  }))
   total.value = response.data.total  // 假设返回的总条数在 total 字段中
+
   if (response.code === 1) {
     ElMessage.success('获取获奖列表成功')
   } else {
@@ -167,7 +179,8 @@ const AddAwardData = async (detail, author, file, time) => {
   const response = await AddAward(detail, author, file, time)
   if (response.code === 1) {
     ElMessage.success('新增获奖成功')
-    GetAllAwardData('','','') // 刷新表格数据
+    pageNum.value = 1  
+    GetAllAwardData(pageNum.value,pageSize.value,'') // 刷新表格数据
   } else {
     ElMessage.error('新增获奖失败')
   }
@@ -179,7 +192,7 @@ const EditAwardData = async (id, detail, author, file, time) => {
   const response = await UpdateAward(id, detail, author, file, time)
   if (response.code === 1) {
     ElMessage.success('编辑获奖成功')
-    GetAllAwardData('','','') // 刷新表格数据
+    GetAllAwardData(1,pageSize.value,'') // 刷新表格数据
   } else {
     ElMessage.error('编辑获奖失败')
   }
@@ -191,7 +204,8 @@ const DeleteAwardData = async (id) => {
   const response = await DeleteAward(id)
   if (response.code === 1) {
     ElMessage.success('删除获奖成功')
-    GetAllAwardData('','','') // 刷新表格数据
+    pageNum.value = 1  
+    GetAllAwardData(pageNum.value,pageSize.value,'') // 刷新表格数据
   } else {
     ElMessage.error('删除获奖失败')
   }
@@ -205,8 +219,42 @@ onMounted(() => {
 })
 
 watch([pageNum, pageSize], () => {
+
   GetAllAwardData(pageNum.value, pageSize.value, searchForm.author)
 })
+
+
+const beforeUpload = async (rawFile) => {
+  // 示例：校验文件格式和大小
+  const isImage = rawFile.type.startsWith("image/");
+  if (!isImage) {
+    ElMessage.error("只能上传图片文件！");
+    return false;
+  }
+
+  const isLt2M = rawFile.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    ElMessage.error("图片大小不能超过 2MB！");
+    return false;
+  }
+
+  // 校验通过后手动上传
+  try {
+    const response = await uploadImage(rawFile);
+    if (response && response.data) {
+      form.file = response.data;
+      ElMessage.success("图片上传成功!");
+    }
+  } catch (error) {
+    ElMessage.error("图片上传失败!");
+    console.error(error);
+  }
+
+  return false;
+};
+
+
+
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
