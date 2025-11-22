@@ -93,9 +93,25 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="formData.title" placeholder="请输入标题" />
         </el-form-item>
+
         <el-form-item label="封面图" prop="image">
-          <el-input v-model="formData.image" placeholder="请输入图片URL" />
+          <el-upload
+            class="upload-demo"
+            :before-upload="beforeUpload"
+            :show-file-list="false"
+          >
+            <el-button type="primary">选择图片</el-button>
+          </el-upload>
+          <!-- 实时显示上传的图片 -->
+          <div v-if="formData.image" style="margin-top: 10px">
+            <el-image
+              :src="formData.image"
+              fit="cover"
+              style="width: 100px; height: 80px; border-radius: 4px"
+            />
+          </div>
         </el-form-item>
+
         <el-form-item label="详情" prop="detail">
           <el-input
             v-model="formData.detail"
@@ -139,6 +155,7 @@ import {
   updateResearch,
   deleteResearch,
 } from "../api/research";
+import { uploadImage } from "@/api/upload";
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
@@ -184,6 +201,35 @@ const formRules = ref({
 watch(isEdit, (newVal) => {
   formRules.value.time[0].required = newVal;
 });
+
+const beforeUpload = async (rawFile) => {
+  // 示例：校验文件格式和大小
+  const isImage = rawFile.type.startsWith("image/");
+  if (!isImage) {
+    ElMessage.error("只能上传图片文件！");
+    return false;
+  }
+
+  const isLt2M = rawFile.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    ElMessage.error("图片大小不能超过 2MB！");
+    return false;
+  }
+
+  // 校验通过后手动上传
+  try {
+    const response = await uploadImage(rawFile);
+    if (response && response.data) {
+      formData.image = response.data;
+      ElMessage.success("图片上传成功!");
+    }
+  } catch (error) {
+    ElMessage.error("图片上传失败!");
+    console.error(error);
+  }
+
+  return false;
+};
 
 const loadData = async () => {
   loading.value = true;
@@ -282,7 +328,6 @@ const resetForm = () => {
   });
 };
 
-// 初始化加载
 onMounted(() => {
   loadData();
 });

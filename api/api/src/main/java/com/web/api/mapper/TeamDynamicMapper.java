@@ -29,8 +29,8 @@ public interface TeamDynamicMapper {
     /**
      * 新增活动动态列表
      */
-    @Insert("insert into team_dynamic(image, title, detail)"+
-            "values(#{image},#{title},#{detail})")
+    @Insert("insert into team_dynamic(image, title, detail,time)"+
+            "values(#{image},#{title},#{detail},#{time})")
     void saveTeamDynamics(TeamDynamic teamDynamic);
 
     /**

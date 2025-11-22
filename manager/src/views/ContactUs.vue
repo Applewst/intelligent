@@ -200,7 +200,7 @@ const handleLocationImageUpload = async (options) => {
 
     // 调用通用文件上传接口
     const response = await uploadImage(file);
-    console.log(response);
+    // console.log(response);
 
     if (response.code === 1) {
       formData.locationImage = response.data; // 存储图片 URL
@@ -233,7 +233,7 @@ const handleQrCodeUpload = async (options) => {
     // 调用通用文件上传接口
     const response = await uploadImage(file);
     if (response.code === 1) {
-      formData.wechatQrCode = response.data.url; // 存储图片 URL
+      formData.wechatQrCode = response.data; // 存储图片 URL
       ElMessage.success("微信二维码上传成功");
     } else {
       ElMessage.error(response.message || "微信二维码上传失败");

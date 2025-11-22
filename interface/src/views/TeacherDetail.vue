@@ -11,8 +11,10 @@ const teacher = ref({})
 const loading = ref(true)
 
 const cleanAvatar = (raw = '') => {
-  const match = raw.match(/https:\/\/picsum\.photos\/id\/\d+\/\d+\/\d+/)
-  return match ? match[0] : ''
+  if (raw) {
+    return raw
+  }
+  return 'https://picsum.photos/200'
 }
 
 const fetchData = async () => {

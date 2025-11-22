@@ -11,7 +11,7 @@ const fetchContactInfo = async () => {
   loading.value = true
   try {
     const response = await getContactInfo()
-    // console.log(response)
+    console.log(response)
 
     if (response.code === 1) {
       contactInfo.value = response.data
