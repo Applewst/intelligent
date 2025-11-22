@@ -32,7 +32,7 @@ public interface ScientificDynamicMapper {
      *新增科研动态
      */
     @Insert("insert into scientific_dynamic(image, title, detail,time)"+
-            "values(#{image},#{title},#{detail},{time})")
+            "values(#{image},#{title},#{detail},#{time})")
     void saveDynamics(ScientificDynamic scientificDynamic);
 
     /**
