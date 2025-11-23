@@ -3,7 +3,6 @@ package com.web.api.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.web.api.mapper.TeamDynamicMapper;
-import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.TeamDynamic;
 import com.web.api.service.TeamDynamicService;
@@ -44,20 +43,20 @@ public class TeamDynamicServiceImpl implements TeamDynamicService {
 
     @Override
     public void deleteDynamics(int id) {
-    log.info("删除团队动态");
-    teamDynamicMapper.deleteTeamDynamic(id);
+        log.info("删除团队动态");
+        teamDynamicMapper.deleteTeamDynamic(id);
     }
 
     @Override
     public void saveDynamics(TeamDynamic teamDynamic) {
-    log.info("新增团队动态");
-    teamDynamic.setTime(LocalDateTime.now());
-    teamDynamicMapper.saveTeamDynamics(teamDynamic);
+        log.info("新增团队动态");
+        teamDynamic.setTime(LocalDateTime.now());
+        teamDynamicMapper.saveTeamDynamics(teamDynamic);
     }
 
     @Override
-    public PageResult pageQuery(int pageNum,int pageSize,String title) {
-        PageHelper.startPage(pageNum,pageSize);
+    public PageResult pageQuery(int pageNum, int pageSize, String title) {
+        PageHelper.startPage(pageNum, pageSize);
         Page<TeamDynamic> page = teamDynamicMapper.pageQuery(title);
         log.info("返回分页结果");
         return new PageResult(page.getTotal(), page.getResult());

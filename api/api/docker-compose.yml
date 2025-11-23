@@ -32,9 +32,12 @@ services:
       SPRING_DATASOURCE_PASSWORD: 4178QqAA
       JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
       TZ: Asia/Shanghai
-    command: [ "--file.resource-dir=/resources/" ]
+    command:
+      - "--file.resource-dir=/resources/"
+      - "--file.access-domain=http://blog.kkstar.online"
+      - "--file.access-perfix=/files/"
     volumes:
-      - /root/resources/:/resources/
+      - /data/resources:/resources
       - /root/application/app/logs/:/app/logs
 
   nginx:
@@ -50,6 +53,7 @@ services:
       - ./nginx/logs:/var/log/nginx  # 映射日志目录
       - /var/www/static:/usr/share/nginx/html
       - /root/application/app/logs:/app/logs
+      - /data/resources:/resources
     depends_on:
       - app
 

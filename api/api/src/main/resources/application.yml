@@ -19,6 +19,8 @@ server:
 
 file:
   resource-dir: D:/resources/
+  access-domain: http://localhost:8080
+  access-prefix: /files/
 
 mybatis:
   configuration:

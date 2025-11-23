@@ -1,6 +1,5 @@
 package com.web.api.controller;
 
-import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Result;
 import com.web.api.pojo.TeamDynamic;
@@ -23,16 +22,16 @@ public class TeamDynamicController {
     public Result getAllTeamDynamics() {
         return Result.success(teamDynamicServiceImpl.getAllDynamics());
     }
+
     /**
      * 获取科研动态列表
      */
     @GetMapping("/event/list")
     public Result getAllDynamics(@RequestParam(defaultValue = "1") int pageNum,
                                  @RequestParam(defaultValue = "10") int pageSize,
-                                 @RequestParam String title)
-    {
-        log.info("分页查询默认值pageNum:{},pageSize:{},title:{}",pageNum,pageSize,title );
-        PageResult pageResult =teamDynamicServiceImpl.pageQuery(pageNum,pageSize,title);
+                                 @RequestParam String title) {
+        log.info("分页查询默认值pageNum:{},pageSize:{},title:{}", pageNum, pageSize, title);
+        PageResult pageResult = teamDynamicServiceImpl.pageQuery(pageNum, pageSize, title);
         return Result.success(pageResult);
     }
 
@@ -41,7 +40,7 @@ public class TeamDynamicController {
      */
     @PostMapping("/events")
     public Result saveScientificDynamic(@RequestBody TeamDynamic teamDynamic) {
-        log.info("新增团队动态 teamDynamic:{},title:{}",teamDynamic,teamDynamic.getTitle());
+        log.info("新增团队动态 teamDynamic:{},title:{}", teamDynamic, teamDynamic.getTitle());
         teamDynamicServiceImpl.saveDynamics(teamDynamic);
         return Result.success();
     }
@@ -51,7 +50,7 @@ public class TeamDynamicController {
      */
     @DeleteMapping("/events")
     public Result deleteScientificDynamic(@RequestParam("id") int id) {
-        log.info("删除团队动态 id:{}",id);
+        log.info("删除团队动态 id:{}", id);
         teamDynamicServiceImpl.deleteDynamics(id);
         return Result.success();
     }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -23,10 +22,24 @@ public class FileUtil {
 
     // 注入资源目录配置
     private static String RESOURCE_DIR;
+    // 注入访问域名配置
+    private static String ACCESS_DOMAIN;
+    // 注入访问前缀配置
+    private static String ACCESS_PREFIX;
 
     @Value("${file.resource-dir}")
     public void setResourceDir(String resourceDir) {
         RESOURCE_DIR = resourceDir;
+    }
+
+    @Value("${file.access-domain}")
+    public void setAccessDomain(String accessDomain) {
+        ACCESS_DOMAIN = accessDomain;
+    }
+
+    @Value("${file.access-prefix}")
+    public void setAccessPrefix(String accessPrefix) {
+        ACCESS_PREFIX = accessPrefix;
     }
 
     /**
@@ -67,9 +80,9 @@ public class FileUtil {
     /**
      * 上传文件
      *
-     * @param file MultipartFile对象
-     * @return 保存路径
-     * @throws IOException 文件上传异常
+     * @param file 上传的文件
+     * @return 文件访问路径
+     * @throws IOException 文件保存异常
      */
     public static String uploadFile(MultipartFile file) throws java.io.IOException {
 
@@ -90,47 +103,44 @@ public class FileUtil {
         // 保存文件
         file.transferTo(new File(savePath));
 
-        // 返回保存路径
-        return savePath;
+        // 构造可访问 URL，例如 http://localhost:8080/files/20251120/xxx.png
+        String urlPath = dateDir + File.separator + newName;
+        return ACCESS_DOMAIN + ACCESS_PREFIX + urlPath;
     }
 
     /**
      * 下载文件
      *
      * @param filePath 文件路径
-     * @return ResponseEntity包含文件流
+     * @return 响应实体
      * @throws IOException 文件读取异常
      */
     public static ResponseEntity<InputStreamResource> downloadFile(String filePath) throws IOException {
+        // 1. 校验并去掉域名+前缀
+        String prefix = ACCESS_DOMAIN + ACCESS_PREFIX; // 如 http://localhost:8080/files/
+        if (!filePath.startsWith(prefix)) {
+            throw new IllegalArgumentException("无效的文件地址");
+        }
+        // 剩下的相对路径：20251120/xxx.png
+        String relativePath = filePath.substring(prefix.length());
+
+        // 2. 还原成本地磁盘路径
+        filePath = RESOURCE_DIR + relativePath.replace("/", File.separator);
+
+        // 3. 读取文件
         File file = new File(filePath);
         if (!file.exists()) {
             throw new FileNotFoundException("文件不存在：" + filePath);
         }
-
         String fileName = file.getName();
-
-        // 自动探测 Content-Type
-        String contentType = Files.probeContentType(file.toPath());
-        if (contentType == null) {
-            // 探测不到就给个默认值
-            contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-        }
-
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
-        // 构建响应
-        ResponseEntity.BodyBuilder builder = ResponseEntity.ok()
-                .contentLength(file.length());
-        if (contentType.startsWith("image/")) {
-            // 图片：直接预览，不加 attachment
-            builder.contentType(MediaType.parseMediaType(contentType));
-        } else {
-            // 其他文件：沿用原来的下载逻辑
-            builder.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM);
-        }
-
-        return builder.body(resource);
+        // 4. 构建响应
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
     /**
