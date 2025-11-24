@@ -26,7 +26,7 @@ dromara:
         enable-storage: true  # 启用存储
         access-key: ${MINIO_ACCESS_KEY} # MinIO访问key环境变量
         secret-key: ${MINIO_SECRET_KEY} # MinIO访问secret环境变量
-        end-point: ${MINIO_ENDPOINT} # MinIO访问节点环境变量
+        end-point: ${MINIO_END_POINT} # MinIO访问节点环境变量
         bucket-name: intelligent
         domain: ${MINIO_DOMAIN} # 访问域名，注意“/”结尾，例如：http://minio.abc.com/abc/
         base-path: intelligent-resources/ # 基础路径

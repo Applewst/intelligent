@@ -3,7 +3,6 @@ package com.web.api.util.file;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.FileStorageService;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,75 +10,88 @@ import org.springframework.http.ResponseEntity;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 
 public class FileUtils {
 
     /**
-     * 下载文件
+     * 下载文件（不依赖 FileRecorder，只用 URL）
      *
      * @param fileStorageService 文件存储服务
-     * @param fileUrl            文件 URL
-     * @return ResponseEntity 包含文件流
-     * @throws IOException 如果文件读取失败
+     * @param fileUrl            文件 URL（minio/x-file-storage 返回的 url）
      */
-    public static ResponseEntity<InputStreamResource> downloadFile(FileStorageService fileStorageService
-            , String fileUrl) throws IOException {
-        // 1. 从 url 查询文件信息
-        FileInfo fileInfo = fileStorageService.getFileInfoByUrl(fileUrl);
-        if (fileInfo == null) {
+    public static ResponseEntity<InputStreamResource> downloadFile(
+            FileStorageService fileStorageService,
+            String fileUrl) throws IOException {
+
+        // 1. URL -> FileInfo
+        FileInfo fileInfo = FileInfoUtil.buildFileInfoFromUrl(fileUrl);
+
+        // 2. 判断文件是否存在
+        boolean exists = fileStorageService.exists(fileInfo);
+        if (!exists) {
             throw new FileNotFoundException("文件不存在：" + fileUrl);
         }
 
-        // 2. 用 bytes() 直接拿到文件内容
+        // 3. 下载
         byte[] bytes = fileStorageService.download(fileInfo).bytes();
-
-        // 3. 包一层 InputStreamResource
         InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
 
-        // 4. 组装文件名
-        String filename = Optional.ofNullable(fileInfo.getOriginalFilename())
-                .orElse(Optional.ofNullable(fileInfo.getFilename()).orElse("file"));
+        // 4. 文件名带后缀
+        String filename = fileInfo.getFilename();
 
-        // 5. 统一下载（二进制流）
+        // 5. 构造 HTTP Header
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentDisposition(
-                ContentDisposition.attachment()
-                        .filename(filename, StandardCharsets.UTF_8)
-                        .build()
-        );
+        // URL 编码 UTF-8，给 filename*
+        String encoded = URLEncoder.encode(filename, StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20");
+        String contentDisposition =
+                "attachment; filename=\"" + filename + "\"; filename*=UTF-8''" + encoded;
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
 
+        // 6. 返回响应
         return ResponseEntity.ok()
                 .headers(headers)
-                .contentLength(bytes.length)                 // 用实际长度
-                .contentType(MediaType.APPLICATION_OCTET_STREAM) // 强制下载
+                .contentLength(bytes.length)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
 
+
     /**
-     * 删除文件（基于 x-file-storage）
+     * 删除文件（基于 x-file-storage，不依赖 FileRecorder）
      *
-     * @param filePath 文件路径 / URL（上传返回的 url）
+     * @param fileStorageService 文件存储服务
+     * @param fileUrl            文件 URL（上传返回的 url）
      * @return 是否删除成功
      */
-    public static boolean deleteFile(FileStorageService fileStorageService, String filePath) {
-        if (filePath == null || filePath.isEmpty()) {
+    public static boolean deleteFile(FileStorageService fileStorageService, String fileUrl) {
+
+        if (fileUrl == null || fileUrl.isEmpty()) {
             return false;
         }
 
-        // 1. 通过 URL 查出 FileInfo
-        FileInfo fileInfo = fileStorageService.getFileInfoByUrl(filePath);
-        if (fileInfo == null) {
-            // 记录不存在，认为已经被删了
-            return false;
-        }
-
-        // 2. 调用 x-file-storage 删除
         try {
+            // 尝试把 URL 转成 FileInfo
+            FileInfo fileInfo;
+            try {
+                fileInfo = FileInfoUtil.buildFileInfoFromUrl(fileUrl);
+            } catch (FileNotFoundException e) {
+                // 说明 URL 不属于我们平台，例如外链，直接当删除成功
+                return true;
+            }
+
+            // 1. 先检查是否存在
+            if (!fileStorageService.exists(fileInfo)) {
+                return true; // 不存在也算成功
+            }
+
+            // 2. 正常删除
             fileStorageService.delete(fileInfo);
             return true;
+
         } catch (Exception e) {
             return false;
         }

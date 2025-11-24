@@ -34,10 +34,9 @@ public class CommonController {
      *
      * @param file 上传的文件
      * @return Result
-     * @throws Exception
      */
     @PostMapping("/upload")
-    public Result uploadFile(MultipartFile file) throws Exception {
+    public Result uploadFile(MultipartFile file) {
         try {
             // 指定oss保存文件路径 intelligent-resources/2025/11/4/ intelligent-resources/2025/11/5/
             String objectName = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/";
@@ -66,7 +65,7 @@ public class CommonController {
             log.warn("资源未找到，id={}", id);
             return ResponseEntity.notFound().build();
         }
-        // 2. 获取文件路径
+        // 2. 获取文件路径和名称
         String filePath = resource.getUrl();
         // 3. 更新下载次数
         resource.setDownloads(resource.getDownloads() + 1);
@@ -91,7 +90,7 @@ public class CommonController {
      * @param id 资源ID
      * @return 操作结果
      */
-    @DeleteMapping("resources/{id}")
+    @DeleteMapping("/resources/{id}")
     public Result deleteFile(@PathVariable String id) {
         log.info("删除文件，id={}", id);
         // 1. 根据ID查找资源
