@@ -7,7 +7,7 @@ import com.web.api.pojo.PageQueryDTO;
 import com.web.api.pojo.PageResult;
 import com.web.api.pojo.Resource;
 import com.web.api.service.ResourceService;
-import com.web.api.util.ShortIDUtil;
+import com.web.api.util.file.ShortIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;

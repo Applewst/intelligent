@@ -17,10 +17,19 @@ server:
   servlet:
     context-path: /api
 
-file:
-  resource-dir: D:/resources/
-  access-domain: http://localhost:8080
-  access-prefix: /files/
+dromara:
+  x-file-storage: #文件存储配置
+    default-platform: minio-1 #默认使用的存储平台
+    thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
+    minio:
+      - platform: minio-1 # 存储平台标识
+        enable-storage: true  # 启用存储
+        access-key: ${MINIO_ACCESS_KEY} # MinIO访问key环境变量
+        secret-key: ${MINIO_SECRET_KEY} # MinIO访问secret环境变量
+        end-point: ${MINIO_ENDPOINT} # MinIO访问节点环境变量
+        bucket-name: intelligent
+        domain: ${MINIO_DOMAIN} # 访问域名，注意“/”结尾，例如：http://minio.abc.com/abc/
+        base-path: intelligent-resources/ # 基础路径
 
 mybatis:
   configuration:
