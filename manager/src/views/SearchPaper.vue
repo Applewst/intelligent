@@ -38,7 +38,7 @@
       </el-table-column>
         <el-table-column prop="title" label="论文名称" width="240" />
         <el-table-column prop="author" label="论文作者" width="100" />
-        <el-table-column prop="detail" label="论文内容" width="600" />
+        <el-table-column prop="detail" label="论文内容" min-width="300" />
         <el-table-column prop="files" label="论文文件" width="60">
         <template #default="{ row }">
           <el-link v-if="row.files" type="primary" :href="row.files" target="_blank" download>下载</el-link>
@@ -210,6 +210,7 @@ const DeleteSearchPaper = async (id) => {
     ElMessage.error('删除失败');
   }
 };
+
 const handleDelete = (row) => {
   currentDeleteRow.value = row;
   deleteDialogVisible.value = true;

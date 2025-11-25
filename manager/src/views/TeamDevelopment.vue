@@ -27,7 +27,7 @@
         </el-table-column>
         <el-table-column prop="name" label="姓名" width="150" />
         <el-table-column prop="time" label="时间" width="150" />
-        <el-table-column prop="detail" label="详细" width="700" />
+        <el-table-column prop="detail" label="详细" min-width="300" sortable/>
         <el-table-column prop="file" label="照片" width="150">
         <template #default="{ row }">
           <el-image

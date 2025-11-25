@@ -42,11 +42,11 @@ const router = useRouter();
 // 生成随机样式的函数
 const generateRandomStyle = () => {
   return {
-    width: `${Math.floor(Math.random() * 400) + 100}px`, // 宽度：100-500px
-    height: `${Math.floor(Math.random() * 300) + 100}px`, // 高度：100-400px
-    rotate: Math.floor(Math.random() * 40) - 20, // 旋转角度：-20到20度
-    top: `${Math.floor(Math.random() * 1000)}px`, // 顶部距离：0-1000px
-    left: `${Math.floor(Math.random() * 1500)}px`, // 左侧距离：0-1500px
+    width: `${Math.floor(Math.random() * 200) + 150}px`, // 宽度：150-350px
+    height: `${Math.floor(Math.random() * 200) + 150}px`, // 高度：150-350px
+    rotate: Math.floor(Math.random() * 20) - 10, // 旋转角度：-10到10度
+    top: `${Math.floor(Math.random() * 600)}px`, // 顶部距离：0-600px
+    left: `${Math.floor(Math.random() * 600)}px`, // 左侧距离：0-600px
   };
 };
 //跳转
@@ -89,8 +89,8 @@ onMounted(() => {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  width: 1400px;
-  height: 1000px;
+  width: 1000px;
+  height: 800px;
   margin: 0 auto;
   margin-top: 100px;
 }
@@ -104,9 +104,10 @@ onMounted(() => {
 .card-container {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   height: 100%;
-  width: 100%; /* 确保容器占满父元素，避免卡片溢出不可见 */
+  width: 100%; /* 容器宽度与父元素一致 */
 }
 
 .card {

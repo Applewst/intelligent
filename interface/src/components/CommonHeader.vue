@@ -225,7 +225,7 @@ const handleLogout = () => {
 // 处理“后台管理”跳转
 const handleGoToBackend = () => {
   if (store.userType === 'admin') {
-    const backendUrl = 'http://localhost:5173/home'
+    const backendUrl = 'http://localhost:5174/home'
     const token = sessionStorage.getItem('token')
     window.open(`${backendUrl}?token=${token}`, '_blank')
   }
