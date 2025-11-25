@@ -5,7 +5,7 @@ CREATE TABLE `contact`
     `location`       varchar(40)  DEFAULT NULL,
     `location_image` varchar(255) DEFAULT NULL,
     `wechat_account` varchar(80)  DEFAULT NULL,
-    `wechat_qc_code` varchar(255) DEFAULT NULL,
+    `wechat_qr_code` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
