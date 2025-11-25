@@ -13,7 +13,7 @@ CREATE TABLE `contact`
     `location`       VARCHAR(40)  DEFAULT NULL,
     `location_image` VARCHAR(255) DEFAULT NULL,
     `wechat_account` VARCHAR(80)  DEFAULT NULL,
-    `wechat_qc_code` VARCHAR(255) DEFAULT NULL,
+    `wechat_qr_code` VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -21,7 +21,7 @@ CREATE TABLE `contact`
     COMMENT ='联系我们';
 
 -- 示例数据
-INSERT INTO `contact` (`email`, `location`, `location_image`, `wechat_account`, `wechat_qc_code`)
+INSERT INTO `contact` (`email`, `location`, `location_image`, `wechat_account`, wechat_qr_code)
 VALUES ('contact@example.com', '上海', 'https://example.com/location1.jpg', 'wechat123',
         'https://example.com/qrcode1.png'),
        ('info@example.com', '北京', 'https://example.com/location2.jpg', 'wechat456',
