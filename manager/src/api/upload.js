@@ -10,7 +10,7 @@ export function uploadImage(file) {
   formData.append("file", file);
 
   return request({
-    url: "/upload/file", 
+    url: "/upload", 
     method: "post",
     data: formData,
     headers: {
