@@ -317,9 +317,9 @@ const handleSearch = () => {
 const handleAdd = () => {
   dialogTitle.value = '新增论文';
   isEdit.value = false;
-  form.title = '';
-  form.author = '';
-  form.file = '';
+  form.title = ''
+  form.author = ''
+  form.file = ''
   form.files = [];
   form.detail = '';
   dialogVisible.value = true;
