@@ -13,7 +13,9 @@ const activityChart = ref(null);
 const studentDate = ref([]);
 const paperData = ref({ years: [], counts: [] });
 const activityData = ref({ months: [], counts: [] });
-
+//拿userName
+    const USERNAME = new URLSearchParams(window.location.search);
+    const userName = USERNAME.get('userName');
 const isToday = (date) => {
   const today = new Date();
   const checkDate = new Date(date);
@@ -299,11 +301,10 @@ onMounted(() => {
             src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
           />
           <div class="user-details">
-            <h2>张教授</h2>
-            <p class="user-role">研究生导师</p>
-            <p class="user-dept">计算机科学与技术学院</p>
+            <h2>{{userName}}</h2>
+            <p class="user-dept">计算机与人工智能学院</p>
           </div>
-          <div class="user-stats">
+          <!-- <div class="user-stats">
             <div class="stat-item">
               <div class="stat-value">28</div>
               <div class="stat-label">在读学生</div>
@@ -316,7 +317,7 @@ onMounted(() => {
               <div class="stat-value">42</div>
               <div class="stat-label">科研项目</div>
             </div>
-          </div>
+          </div> -->
         </div>
       </el-card>
 

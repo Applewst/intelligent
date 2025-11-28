@@ -132,7 +132,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted,computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useCounterStore } from '../stores/counter'
 import { useRouter, useRoute } from 'vue-router'
@@ -141,6 +141,7 @@ import { Menu, Close, ArrowRight } from '@element-plus/icons-vue'
 const router = useRouter()
 const route = useRoute()
 const store = useCounterStore()
+
 
 // 组件内只需要定义与自身UI相关的状态
 const isMobileMenuOpen = ref(false) // 移动端菜单是否展开
@@ -225,9 +226,10 @@ const handleLogout = () => {
 // 处理“后台管理”跳转
 const handleGoToBackend = () => {
   if (store.userType === 'admin') {
+    const userName = computed(() => store.$state.userName)
     const backendUrl = 'http://localhost:5174/home'
     const token = sessionStorage.getItem('token')
-    window.open(`${backendUrl}?token=${token}`, '_blank')
+    window.open(`${backendUrl}?token=${token}&userName=${userName.value}`, '_blank')
   }
 }
 

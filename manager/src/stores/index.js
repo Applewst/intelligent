@@ -4,6 +4,7 @@ import {ref} from 'vue'
 function initState(){
   return {
     isCollapse:false,  //侧边栏是否折叠
+    userName:'',//从前台传来
   }
 }
 
