@@ -1,114 +1,233 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { getNewsList } from '@/api/news.js'
-import { ElMessage } from 'element-plus'
-
-// 新闻列表数据
-const newList = ref([])
-// 加载状态
-const loading = ref(true)
-// 错误图片占位图
-const errorImage = 'https://picsum.photos/error/120/120'
-// 路由实例
-const router = useRouter()
-
-// 查看更多按钮点击事件
-const handleViewMore = () => {
-  router.push('/news/activity') // 跳转到新闻列表页
-}
-
-onMounted(async () => {
-  try {
-    loading.value = true
-    // 2. 调用统一的函数，并指定只获取第1页的4条数据
-    const response = await getNewsList({
-      pageNum: 1,
-      pageSize: 4,
-      title: '',
-    })
-    // console.log(response)
-
-    // 3. 正确处理分页格式的返回数据
-    if (response.code === 1) {
-      newList.value = response.data.data || []
-    } else {
-      newList.value = []
-      ElMessage.warning(response.message || '获取动态列表失败')
-    }
-
-    // 空数据提示
-    if (newList.value.length === 0) {
-      ElMessage.info('当前没有动态数据')
-    }
-  } catch (err) {
-    ElMessage.error(err.message || '获取动态失败，请重试')
-    newList.value = [] // 错误时清空数据
-  } finally {
-    loading.value = false
-  }
-})
-</script>
-
 <template>
-  <!-- 模板部分无需改动 -->
-  <div class="new-container">
+  <section class="latest-news">
+      <!-- 模板部分无需改动 -->
+
     <div class="new-header">
       <div class="header-content">
-        <h2>最新科研动态</h2>
-        <el-button type="text" class="view-more-btn" @click="handleViewMore">
+        <h2>最新动态</h2>
+        <!-- <el-button type="text" class="view-more-btn" @click="handleViewMore">
           查看更多
           <el-icon class="btn-icon"><ArrowRight /></el-icon>
-        </el-button>
+        </el-button> -->
       </div>
     </div>
 
-    <div class="new-grid">
-      <div v-if="loading" class="skeleton-container">
-        <el-skeleton v-for="i in 4" :key="i" :rows="3" width="100%" class="skeleton-item" />
+    <div class="news-container">
+      <!-- 第一行：学生获奖 + 团队活动 -->
+      <div class="row">
+        <!-- 学生获奖 -->
+        <el-card class="card flex-1" shadow="hover">
+          <template #header>
+            <div class="card-header">
+              <div>
+                <h3 class="card-title purple">
+                  <el-icon><Trophy /></el-icon>
+                  奖励荣誉
+                </h3>
+                <p class="card-subtitle">REWARDS AND HONORS</p>
+              </div>
+              <el-link type="primary" :underline="false" href="#">
+                更多 <el-icon><ArrowRight /></el-icon>
+              </el-link>
+            </div>
+          </template>
+
+          <div class="awards-list">
+            <a v-for="(item, index) in awardsList" :key="index" href="#" class="award-item">
+              <span class="date purple">{{ item.date }}</span>
+              <span class="title">{{ item.title }}</span>
+            </a>
+          </div>
+
+          <el-divider />
+
+          <div class="featured-awards">
+            <a v-for="(item, index) in featuredAwards" :key="index" href="#" class="featured-card">
+              <div class="featured-date">
+                <span class="month">{{ item.month }}</span>
+                <span class="year">{{ item.year }}</span>
+              </div>
+              <div class="featured-content">
+                <h4>{{ item.title }}</h4>
+                <p>{{ item.description }}</p>
+              </div>
+            </a>
+          </div>
+        </el-card>
+
+        <!-- 团队活动 -->
+        <el-card class="card flex-1" shadow="hover">
+          <template #header>
+            <div class="card-header">
+              <h3 class="card-title blue">
+                <el-icon><User /></el-icon>
+                团队活动
+              </h3>
+              <el-link type="primary" :underline="false" href="#">
+                更多 <el-icon><ArrowRight /></el-icon>
+              </el-link>
+            </div>
+          </template>
+
+          <div class="activities-grid">
+            <a v-for="(item, index) in activitiesList" :key="index" href="#" class="activity-item">
+              <h4>{{ item.title }}</h4>
+              <div class="activity-date">
+                <el-icon><Calendar /></el-icon>
+                {{ item.date }}
+              </div>
+            </a>
+          </div>
+        </el-card>
       </div>
 
-      <!-- v-for 遍历的仍然是 newList -->
-      <el-card v-for="item in newList" :key="item.id" v-else class="new-card" hoverable>
-        <el-image
-          :src="item.image"
-          :alt="`${item.title}的图片`"
-          class="new-image"
-          fit="contain"
-          lazy
-          :error="errorImage"
-        />
-        <div class="new-info">
-          <h3 class="new-title">{{ item.title }}</h3>
-          <p class="new-detail">{{ item.detail }}</p>
-          <p class="new-time">
-            <el-icon size="14"><Clock /></el-icon>
-            {{ item.time }}
-          </p>
-        </div>
-      </el-card>
-    </div>
+      <!-- 第二行：论文发表 + 教学科研 -->
+      <div class="row-flex">
+        <!-- 论文发表 -->
+        <el-card class="card flex-1 paper-card" shadow="hover">
+          <div class="left-border"></div>
+          <template #header>
+            <div class="card-header">
+              <div>
+                <h3 class="card-title purple">
+                  <el-icon><Document /></el-icon>
+                  论文发表
+                </h3>
+                <p class="card-subtitle">PAPER PUBLICATIONS</p>
+              </div>
+              <el-link type="primary" :underline="false" href="#">
+                更多 <el-icon><ArrowRight /></el-icon>
+              </el-link>
+            </div>
+          </template>
 
-    <el-empty
-      v-if="!loading && newList.length === 0"
-      description="暂无动态数据"
-      class="empty-state"
-    />
-  </div>
+          <div class="papers-list">
+            <a
+              v-for="(item, index) in papersList"
+              :key="index"
+              href="#"
+              class="paper-item"
+              :class="{ highlight: item.highlight }"
+            >
+              <div class="paper-date">
+                <span class="day">{{ item.day }}</span>
+                <span class="year-month">{{ item.yearMonth }}</span>
+              </div>
+              <p class="paper-title">{{ item.title }}</p>
+            </a>
+          </div>
+        </el-card>
+
+        <!-- 教学科研 -->
+        <el-card class="card flex-1" shadow="hover">
+          <template #header>
+            <div class="card-header">
+              <h3 class="card-title blue">
+                <el-icon><Reading /></el-icon>
+                教学科研
+              </h3>
+              <el-link type="primary" :underline="false" href="#">
+                更多 <el-icon><ArrowRight /></el-icon>
+              </el-link>
+            </div>
+          </template>
+
+          <div class="research-top">
+            <el-image
+              src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=200&h=140&fit=crop"
+              fit="cover"
+              class="research-image"
+            />
+            <div class="research-items">
+              <a v-for="(item, index) in projectsList" :key="index" href="#" class="research-link">
+                <span class="dot blue">·</span>{{ item }}
+              </a>
+            </div>
+          </div>
+
+          <el-divider />
+
+          <div class="news-list">
+            <a
+              v-for="(item, index) in newsList"
+              :key="index"
+              href="#"
+              class="news-item"
+              :class="{ first: index === 0 }"
+            >
+              <span class="dot" :class="index === 0 ? 'blue' : 'gray'">·</span>{{ item }}
+            </a>
+          </div>
+        </el-card>
+      </div>
+    </div>
+  </section>
 </template>
 
-<!-- style 部分不变 -->
+<script setup>
+import { ref } from 'vue'
+import {
+  Trophy,
+  ArrowRight,
+  User,
+  Calendar,
+  Document,
+  Reading
+} from '@element-plus/icons-vue'
+
+const awardsList = ref([
+  { date: '06-24', title: '张三荣获2024年度xx奖学金' },
+  { date: '02-01', title: '基于融合网络的流媒体新技术' },
+  { date: '01-01', title: '新一代立体视觉关键技术及产业化' }
+])
+
+const featuredAwards = ref([
+  {
+    month: '02',
+    year: '2015-01',
+    title: '动态立体视觉系统关键技术及应用',
+    description: '省部级，科技进步奖，一等奖'
+  },
+  {
+    month: '01',
+    year: '2012-01',
+    title: '立体视频重建与显示技术及装置',
+    description: '国家技术发明奖，一等奖'
+  }
+])
+
+const papersList = ref([
+  { day: '12', yearMonth: '2025.12', title: '聚焦绿色与智能包装，共话产教融合新篇章' },
+  { day: '11', yearMonth: '2025.12', title: '调研摸实情 谋良策促发展 校长曾祥君带队开展密集调研', highlight: true },
+  { day: '08', yearMonth: '2025.12', title: '湖南工业大学第八次学生代表大会顺利召开' }
+])
+
+const projectsList = ref([
+  'aaaaaaaaaaaaaaaa',
+  'bbbbbbbbbbbbbbbb',
+  'ccccccccccccccccccccccccccccccc'
+])
+
+const newsList = ref([
+  '安理会降低我就打啊是点击开始了就阿喀琉斯点击是阿达按时 按时的',
+  '爱护这可是擦脸上按市场ask来查看老师曾经撒开绿灯骄傲洒大赛',
+  '拉我i会搭理我很多爱乐维的话艾伦我的哈撒先擦达瓦',
+  '奥委会库达哈卡舞对话框我哈伍德和啊的话我的客户吖'
+])
+
+const activitiesList = ref([
+  { title: '李建成：担当教育科技人才一体化发展的中南责任', date: '2025-12-15' },
+  { title: '易红率队参加2025年度对口支援新疆医科大学工作会议', date: '2025-12-13' },
+  { title: '中南学子获2025全国大学生外语能力大赛4项金奖', date: '2025-12-13' },
+  { title: '长沙银行向中南大学捐赠1000万元', date: '2025-12-12' },
+  { title: '中南大学举行2025年新当选院士师生座谈会', date: '2025-12-11' },
+  { title: '黄伯云院士将100万元奖金捐赠中南大学', date: '2025-12-11' }
+])
+</script>
 
 <style scoped>
-.new-container {
-  /* margin-top: 1000px; */
-  padding: 20px;
-  max-width: 1200px;
-  margin: 80px auto;
-}
 
-/* 标题栏样式 */
-.new-header {
+  .new-header {
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
@@ -116,141 +235,396 @@ onMounted(async () => {
 
 .header-content {
   display: flex;
+  font-size: 28px;
+  font-weight: 600;
   justify-content: space-between;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
 }
-
-.new-header h2 {
-  margin: 0;
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
-}
-
-/* 查看更多按钮样式 */
-.view-more-btn {
-  color: #409eff;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: color 0.2s;
-}
-
-.view-more-btn:hover {
-  color: #66b1ff;
-}
-
-.btn-icon {
-  font-size: 14px;
-  transition: transform 0.2s;
-}
-
-.view-more-btn:hover .btn-icon {
-  transform: translateX(2px);
-}
-
-/* 动态网格布局 */
-.new-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
-}
-
-/* 骨架屏样式 */
-.skeleton-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
-}
-
-.skeleton-item {
-  height: 320px;
-}
-
-/* 动态卡片样式 */
-.new-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.latest-news {
+  
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 80px;
   padding: 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.new-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  border-bottom: 3px solid #7c3aed;
 }
 
-.new-image {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 16px;
-  display: block;
-  object-fit: contain;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-}
-
-.new-info {
-  width: 100%;
-  text-align: center;
-  flex-grow: 1; /* 让内容区域自适应填充 */
+.news-container {
   display: flex;
   flex-direction: column;
+  gap: 16px;
 }
 
-.new-title {
-  font-size: 16px;
-  margin-bottom: 8px;
-  font-weight: 500;
+.row {
+  display: flex;
+  gap: 16px;
+}
+
+.row-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.card {
+  border-radius: 8px;
+}
+
+.card :deep(.el-card__header) {
+  padding: 10px 14px;
+}
+
+.card :deep(.el-card__body) {
+  padding: 10px 14px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.card-title.purple {
+  color: #7c3aed;
+}
+
+.card-title.blue {
+  color: #2563eb;
+}
+
+.card-subtitle {
+  font-size: 9px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 2px 0 0 0;
+}
+
+/* 学生获奖样式 */
+.awards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.award-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.award-item:hover {
+  background-color: #f3f4f6;
+}
+
+.award-item .date {
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 40px;
+}
+
+.award-item .date.purple {
+  color: #7c3aed;
+}
+
+.award-item .title {
+  font-size: 12px;
+  color: #374151;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.new-detail {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 12px;
-  line-height: 1.5;
-  height: 42px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.featured-awards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.featured-card {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: box-shadow 0.2s;
+}
+
+.featured-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.featured-date {
+  text-align: center;
+}
+
+.featured-date .month {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #7c3aed;
+}
+
+.featured-date .year {
+  display: block;
+  font-size: 9px;
+  color: #9ca3af;
+}
+
+.featured-content h4 {
+  font-size: 11px;
+  font-weight: 500;
+  color: #1f2937;
+  margin: 0 0 4px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  flex-grow: 1;
+  overflow: hidden;
 }
 
-.new-time {
-  font-size: 13px;
-  color: #888;
+.featured-content p {
+  font-size: 9px;
+  color: #6b7280;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 团队活动样式 */
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+}
+
+.activity-item {
+  display: block;
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+  text-decoration: none;
+}
+
+.activity-item:hover h4 {
+  text-decoration: underline;
+}
+
+.activity-item h4 {
+  font-size: 12px;
+  color: #2563eb;
+  font-weight: 400;
+  margin: 0 0 4px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.activity-date {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 4px;
-  margin-top: auto;
+  font-size: 10px;
+  color: #9ca3af;
 }
 
-/* 空状态样式 */
-.empty-state {
-  margin: 60px 0;
+/* 论文发表样式 */
+.paper-card {
+  position: relative;
+  overflow: hidden;
 }
 
-/* 适配不同屏幕尺寸 */
+.left-border {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #7c3aed, #a78bfa, #ddd6fe);
+}
+
+.papers-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.paper-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 6px;
+  border-bottom: 1px solid #f3f4f6;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.paper-item:last-child {
+  border-bottom: none;
+}
+
+.paper-item:hover {
+  background-color: #faf5ff;
+}
+
+.paper-item.highlight {
+  background-color: #faf5ff;
+}
+
+.paper-date {
+  text-align: center;
+  min-width: 40px;
+}
+
+.paper-date .day {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #7c3aed;
+}
+
+.paper-item.highlight .paper-date .day {
+  color: #6d28d9;
+}
+
+.paper-date .year-month {
+  display: block;
+  font-size: 9px;
+  color: #9ca3af;
+}
+
+.paper-title {
+  font-size: 12px;
+  color: #374151;
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.paper-item.highlight .paper-title {
+  color: #581c87;
+  font-weight: 500;
+}
+
+/* 教学科研样式 */
+.research-top {
+  display: flex;
+  gap: 10px;
+}
+
+.research-image {
+  width: 100px;
+  height: 70px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.research-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.research-link {
+  font-size: 11px;
+  color: #4b5563;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.research-link:hover {
+  color: #2563eb;
+}
+
+.dot {
+  margin-right: 4px;
+  font-weight: bold;
+}
+
+.dot.blue {
+  color: #2563eb;
+}
+
+.dot.gray {
+  color: #9ca3af;
+}
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.news-item {
+  font-size: 11px;
+  color: #374151;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 3px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.news-item:hover {
+  color: #2563eb;
+}
+
+.news-item.first {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+:deep(.el-divider) {
+  margin: 10px 0;
+}
+
 @media (max-width: 768px) {
-  .new-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  .row,
+  .row-flex {
+    flex-direction: column;
   }
 
-  .skeleton-container {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  .featured-awards,
+  .activities-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
