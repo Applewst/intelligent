@@ -93,6 +93,12 @@ const list = ref([
         label: "获奖管理",
         icon: "setting",
       },
+      {
+        path: "/search/direction",
+        name: "SearchDirection",
+        label: "研究方向",
+        icon: "setting",
+      }
     ],
   },
   {
@@ -139,6 +145,8 @@ const store = useDataStore();
 const isCollapse = computed(() => store.state.isCollapse);
 //侧边栏宽度
 const widths = computed(() => (store.state.isCollapse ? "60px" : "180px"));
+
+
 </script>
 
 <template>

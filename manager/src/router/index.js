@@ -76,6 +76,11 @@ const routes = [
             name:'SearchAward',
             component:()=> import('@/views/SearchAward.vue')
           },
+          {
+            path:'/search/direction',
+            name:'SearchDirection',
+            component:()=> import('@/views/SearchDirection.vue')
+          }
         ]
       },
       {

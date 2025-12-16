@@ -293,7 +293,7 @@ const handleSearch = () => {
 }
 
 const handleAdd = () => {
-  dialogTitle.value = '新增论文'
+  dialogTitle.value = '新增研究项目'
   isEdit.value = false
   form.title = ''
   form.image = ''
