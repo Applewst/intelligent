@@ -30,16 +30,19 @@
     </div>
 
     <!-- 数据表格 -->
-      <el-table :data="tableData" border class="data-table">
+    <el-table :data="tableData" border class="data-table">
       <el-table-column label="ID" width="60" align="center">
         <template #default="{ row }">
           {{ row.calculatedIndex }}
         </template>
       </el-table-column>
-        <el-table-column prop="title" label="论文名称" width="240" />
-        <el-table-column prop="author" label="论文作者" width="100" />
-        <el-table-column prop="detail" label="论文内容" min-width="300" />
-   
+      <el-table-column prop="title" label="论文名称" width="240" />
+      <el-table-column prop="author" label="论文作者" width="100" />
+      <el-table-column label="论文摘要" min-width="300" min-height="200">
+        <template #default="{ row }">
+          <div class="detail-cell" v-html="row.detail"></div>
+        </template>
+      </el-table-column>
       <el-table-column prop="file" label="论文图片" width="120">
         <template #default="{ row }">
           <el-image
@@ -113,8 +116,7 @@
             />
           </div>
         </el-form-item>
-        
-        <el-form-item label="论文内容" prop="detail" class="editor-form-form">
+        <el-form-item label="论文摘要" prop="detail" class="editor-form-form">
           <div ref="quillEditor" class="quill-editor"></div>
         </el-form-item>
       </el-form>
@@ -141,8 +143,10 @@ import axios from 'axios';
 import { GetPaperList, AddPaper, UpdatePaper, DeletePaper } from '@/api/SearchApi.js';
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
 import { uploadImage } from "@/api/upload";
+
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
+
 // 搜索表单
 const searchForm = reactive({
   title: '',
@@ -160,8 +164,7 @@ const tableData = ref([]);
 // 获取论文列表
 const GetAllSearchProject = async (pageNum, pageSize, author, title) => {
   const response = await GetPaperList(pageNum, pageSize, author, title);
-  console.log('获取论文列表文本处',response)
-  
+  console.log('获取论文列表文本处', response);
   tableData.value = response.data.data.map((item, index) => ({
     ...item,
     calculatedIndex: (pageNum - 1) * pageSize + index + 1
@@ -170,9 +173,9 @@ const GetAllSearchProject = async (pageNum, pageSize, author, title) => {
 };
 
 // 新增论文
-const AddSearchPaper = async (title, author, detail, file, files) => {
-  console.log('新增论文:', title, author, detail, file, files);
-  const response = await AddPaper(title, author, detail, file, files);
+const AddSearchPaper = async (title, author, detail, file) => {
+  console.log('新增论文:', title, author, detail, file);
+  const response = await AddPaper(title, author, detail, file);
   if (response.code === 1) {
     ElMessage.success('新增成功');
     pageNum.value = 1;
@@ -183,9 +186,9 @@ const AddSearchPaper = async (title, author, detail, file, files) => {
 };
 
 // 修改论文
-const EditSearchPaper = async (id, title, author, detail, file, files) => {
-  console.log('修改论文文本中:', id, title, author, detail, file, files);
-  const response = await UpdatePaper(id, title, author, detail, file, files);
+const EditSearchPaper = async (id, title, author, detail, file) => {
+  console.log('修改论文文本中:', id, title, author, detail, file);
+  const response = await UpdatePaper(id, title, author, detail, file);
   if (response.code === 1) {
     ElMessage.success('修改成功');
     GetAllSearchProject(pageNum.value, pageSize.value, searchForm.author, searchForm.title);
@@ -219,7 +222,6 @@ onMounted(() => {
 
 // 监视每页页数和当前页数
 watch([pageNum, pageSize, searchForm.author, searchForm.title], () => {
-
   console.log('获取每次分页参数', pageNum.value, pageSize.value, searchForm.author, searchForm.title);
   GetAllSearchProject(pageNum.value, pageSize.value, searchForm.author, searchForm.title);
 });
@@ -242,10 +244,7 @@ const rules = reactive({
   title: [{ required: true, message: '请输入论文名称', trigger: 'blur' }],
   author: [{ required: true, message: '请输入作者', trigger: 'blur' }],
   file: [{ required: true, message: '请上传论文图片', trigger: 'change' }],
-  files: [{ required: true, message: '请上传论文文件', trigger: 'change' }],
 });
-
-
 
 const beforeUpload = async (rawFile) => {
   // 示例：校验文件格式和大小
@@ -275,21 +274,24 @@ const beforeUpload = async (rawFile) => {
 
   return false;
 };
+
 // 提交表单
 const handleSubmit = () => {
-  
-      if (isEdit.value) {
-        // 编辑接口
-        EditSearchPaper(editId.value, form.title, form.author, form.detail, form.file);
-      } else {
-        AddSearchPaper(form.title, form.author, form.detail, form.file);
-      }
-      dialogVisible.value = false;
-}
+  if (quillInstance) {
+    form.detail = quillInstance.root.innerHTML; // 获取带格式的 HTML 内容
+  }
+  if (isEdit.value) {
+    // 编辑接口
+    EditSearchPaper(editId.value, form.title, form.author, form.detail, form.file);
+  } else {
+    AddSearchPaper(form.title, form.author, form.detail, form.file);
+  }
+  dialogVisible.value = false;
+};
 
 // 删除
 const confirmDelete = () => {
-  DeleteSearchPaper(currentDeleteRow.value.id)
+  DeleteSearchPaper(currentDeleteRow.value.id);
   deleteDialogVisible.value = false;
 };
 
@@ -314,10 +316,9 @@ const handleSearch = () => {
 const handleAdd = () => {
   dialogTitle.value = '新增论文';
   isEdit.value = false;
-  form.title = ''
-  form.author = ''
-  form.file = ''
-  form.files = [];
+  form.title = '';
+  form.author = '';
+  form.file = '';
   form.detail = '';
   dialogVisible.value = true;
   initQuillEditor();
@@ -334,12 +335,10 @@ const handleEdit = (row) => {
   isEdit.value = true;
   editId.value = row.id;
   form.title = row.title;
-  form.file = row.file 
-  // form.files = row.files ? [{ name: row.files, url: row.files }] : [];
+  form.file = row.file;
   form.author = row.author;
   form.detail = row.detail || '';
   dialogVisible.value = true;
-
   initQuillEditor();
   nextTick(() => {
     if (quillInstance) {
@@ -369,8 +368,7 @@ const handleDialogClose = () => {
   form.title = '';
   form.author = '';
   form.detail = '';
-  form.file = [];
-  form.files = [];
+  form.file = '';
 };
 
 // 初始化 Quill 编辑器
@@ -395,16 +393,27 @@ const initQuillEditor = () => {
         theme: 'snow',
         modules: {
           toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
             ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
             [{ 'color': [] }, { 'background': [] }],
-            [{ 'align': '' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'align': [] }],
+            ['blockquote', 'code-block'],
             ['link', 'image'],
             ['clean']
           ]
         },
         placeholder: '请输入论文内容...'
+      });
+
+      // Handle text change event
+      quillInstance.on('text-change', () => {
+        form.detail = quillInstance.root.innerHTML;
       });
     }
   });
@@ -509,10 +518,97 @@ const initQuillEditor = () => {
 :deep(.ql-toolbar) {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
+  background: #f5f5f5;
 }
 
 :deep(.ql-container) {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
+}
+
+/* 添加工具栏按钮的样式，确保所有功能可用 */
+:deep(.ql-toolbar .ql-formats) {
+  margin-right: 10px;
+}
+
+:deep(.ql-toolbar button:hover),
+:deep(.ql-toolbar button.ql-active),
+:deep(.ql-toolbar .ql-picker-label:hover),
+:deep(.ql-toolbar .ql-picker-label.ql-active) {
+  color: #409eff;
+}
+
+:deep(.ql-toolbar button:hover .ql-stroke),
+:deep(.ql-toolbar button.ql-active .ql-stroke),
+:deep(.ql-toolbar .ql-picker-label:hover .ql-stroke) {
+  stroke: #409eff;
+}
+
+:deep(.ql-toolbar button:hover .ql-fill),
+:deep(.ql-toolbar button.ql-active .ql-fill) {
+  fill: #409eff;
+}
+
+:deep(.ql-snow .ql-picker) {
+  color: #444;
+}
+
+:deep(.ql-snow .ql-picker-options) {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* 添加表格中富文本内容的样式 */
+.detail-cell {
+  min-height: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* 富文本内容样式 */
+.detail-cell :deep(p) {
+  margin: 0 0 8px 0;
+}
+
+.detail-cell :deep(img) {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.detail-cell :deep(h1),
+.detail-cell :deep(h2),
+.detail-cell :deep(h3),
+.detail-cell :deep(h4),
+.detail-cell :deep(h5),
+.detail-cell :deep(h6) {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.detail-cell :deep(ul),
+.detail-cell :deep(ol) {
+  margin: 0 0 8px 0;
+  padding-left: 20px;
+}
+
+.detail-cell :deep(blockquote) {
+  margin: 0 0 8px 0;
+  padding-left: 10px;
+  border-left: 3px solid #ddd;
+  color: #666;
+}
+
+.detail-cell :deep(pre) {
+  background: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  overflow: auto;
 }
 </style>

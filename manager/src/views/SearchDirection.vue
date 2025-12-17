@@ -186,7 +186,7 @@ const AddSearchDirection = async (name, author, detail, file) => {
 }
 //编辑研究方向
 const EditSearchDirection = async (id, name, author, detail, file) => {
-  const response = await UpdateResearchDirection(id, name, author, detail, file);
+  const response = await EditResearchDirection(id, name, author, detail, file);
   console.log('编辑研究方向文本处',response)
   if (response.code === 1) {
     ElMessage.success('编辑研究方向成功');

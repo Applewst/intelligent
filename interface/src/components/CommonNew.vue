@@ -1,7 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { ArrowRight } from '@element-plus/icons-vue'
-import {GetsearchPapers} from '@/api/search'
+import {GetsearchPapers,GetAwards} from '@/api/search'
+import {getEventList} from '@/api/events'
+import { getProjectList } from '@/api/project'
 import { ElMessage } from 'element-plus'
 
 const activeLeftTab = ref('award')
@@ -19,89 +21,89 @@ const rightTabs = [
 
 // 左侧数据
 const awardsNews = ref([
-  {
-    id: 1,
-    title: '我院教师荣获国家自然科学基金优秀青年科学基金项目',
-    description: '近日，国家自然科学基金委员会公布了2025年度优秀青年科学基金项目评审结果...',
-    image: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.9a4umpl2vucdEY3UAtgGWAHaGw?w=186&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.1&pid=1.7&rm=3&ucfimg=1',
-    day: '15',
-    month: '2025.12'
-  },
-  {
-    id: 2,
-    title: '团队成员获评省级优秀科技工作者称号',
-    description: '在省科技厅组织的评选活动中，我院多名教师凭借突出的科研成果和学术贡献...',
-    image: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.9a4umpl2vucdEY3UAtgGWAHaGw?w=186&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.1&pid=1.7&rm=3&ucfimg=1',
-    day: '12',
-    month: '2025.12'
-  },
-  {
-    id: 3,
-    title: '研究成果入选年度十大科技进展',
-    description: '由我院牵头完成的重大研究项目成功入选本年度十大科技进展评选...',
-    image: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.v2oANx86DIzTQrxI3C9-XgHaEJ?w=307&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.1&pid=1.7&rm=3&ucfimg=1',
-    day: '08',
-    month: '2025.12'
-  },
-  {
-    id: 4,
-    title: '青年教师在国际学术竞赛中获得金奖',
-    description: '在刚刚结束的国际学术创新大赛中，我院青年教师团队脱颖而出...',
-    image: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.v2oANx86DIzTQrxI3C9-XgHaEJ?w=307&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.1&pid=1.7&rm=3&ucfimg=1',
-    day: '05',
-    month: '2025.12'
-  },
-  {
-    id: 5,
-    title: '实验室获批国家重点实验室建设项目',
-    description: '经过多轮严格评审，我院实验室成功获批国家重点实验室建设项目...',
-    image: '/placeholder.svg?height=200&width=300',
-    day: '01',
-    month: '2025.12'
-  }
+  // {
+  //   id: 1,
+  //   title: '我院教师荣获国家自然科学基金优秀青年科学基金项目',
+  //   description: '近日，国家自然科学基金委员会公布了2025年度优秀青年科学基金项目评审结果...',
+  //   image: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.9a4umpl2vucdEY3UAtgGWAHaGw?w=186&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.1&pid=1.7&rm=3&ucfimg=1',
+  //   day: '15',
+  //   month: '2025.12'
+  // },
+  // {
+  //   id: 2,
+  //   title: '团队成员获评省级优秀科技工作者称号',
+  //   description: '在省科技厅组织的评选活动中，我院多名教师凭借突出的科研成果和学术贡献...',
+  //   image: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.9a4umpl2vucdEY3UAtgGWAHaGw?w=186&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.1&pid=1.7&rm=3&ucfimg=1',
+  //   day: '12',
+  //   month: '2025.12'
+  // },
+  // {
+  //   id: 3,
+  //   title: '研究成果入选年度十大科技进展',
+  //   description: '由我院牵头完成的重大研究项目成功入选本年度十大科技进展评选...',
+  //   image: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.v2oANx86DIzTQrxI3C9-XgHaEJ?w=307&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.1&pid=1.7&rm=3&ucfimg=1',
+  //   day: '08',
+  //   month: '2025.12'
+  // },
+  // {
+  //   id: 4,
+  //   title: '青年教师在国际学术竞赛中获得金奖',
+  //   description: '在刚刚结束的国际学术创新大赛中，我院青年教师团队脱颖而出...',
+  //   image: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.v2oANx86DIzTQrxI3C9-XgHaEJ?w=307&h=180&c=7&r=0&o=7&cb=ucfimg2&dpr=1.1&pid=1.7&rm=3&ucfimg=1',
+  //   day: '05',
+  //   month: '2025.12'
+  // },
+  // {
+  //   id: 5,
+  //   title: '实验室获批国家重点实验室建设项目',
+  //   description: '经过多轮严格评审，我院实验室成功获批国家重点实验室建设项目...',
+  //   image: '/placeholder.svg?height=200&width=300',
+  //   day: '01',
+  //   month: '2025.12'
+  // }
 ])
 
 const activitiesNews = ref([
-  {
-    id: 1,
-    title: '团队年度学术研讨会圆满举办',
-    description: '2025年度团队学术研讨会在学术报告厅成功举办，来自全国各地的专家学者齐聚一堂...',
-    image: './assets/images/1.jpg',
-    day: '14',
-    month: '2025.12'
-  },
-  {
-    id: 2,
-    title: '研究生团建活动顺利开展',
-    description: '为增强团队凝聚力，丰富研究生课余生活，我院组织开展了户外团建活动...',
-    image: '/placeholder.svg?height=200&width=300',
-    day: '10',
-    month: '2025.12'
-  },
-  {
-    id: 3,
-    title: '国际合作交流访问团来访',
-    description: '来自欧洲知名高校的学术访问团一行来我院进行学术交流访问...',
-    image: '/placeholder.svg?height=200&width=300',
-    day: '06',
-    month: '2025.12'
-  },
-  {
-    id: 4,
-    title: '实验室开放日活动成功举办',
-    description: '为促进科学普及，实验室举办了面向公众的开放日活动...',
-    image: '/placeholder.svg?height=200&width=300',
-    day: '03',
-    month: '2025.12'
-  },
-  {
-    id: 5,
-    title: '新生入学欢迎会暨导师见面会',
-    description: '2025级研究生新生入学欢迎会暨导师见面会在多功能厅举行...',
-    image: '/placeholder.svg?height=200&width=300',
-    day: '28',
-    month: '2025.11'
-  }
+  // {
+  //   id: 1,
+  //   title: '团队年度学术研讨会圆满举办',
+  //   description: '2025年度团队学术研讨会在学术报告厅成功举办，来自全国各地的专家学者齐聚一堂...',
+  //   image: './assets/images/1.jpg',
+  //   day: '14',
+  //   month: '2025.12'
+  // },
+  // {
+  //   id: 2,
+  //   title: '研究生团建活动顺利开展',
+  //   description: '为增强团队凝聚力，丰富研究生课余生活，我院组织开展了户外团建活动...',
+  //   image: '/placeholder.svg?height=200&width=300',
+  //   day: '10',
+  //   month: '2025.12'
+  // },
+  // {
+  //   id: 3,
+  //   title: '国际合作交流访问团来访',
+  //   description: '来自欧洲知名高校的学术访问团一行来我院进行学术交流访问...',
+  //   image: '/placeholder.svg?height=200&width=300',
+  //   day: '06',
+  //   month: '2025.12'
+  // },
+  // {
+  //   id: 4,
+  //   title: '实验室开放日活动成功举办',
+  //   description: '为促进科学普及，实验室举办了面向公众的开放日活动...',
+  //   image: '/placeholder.svg?height=200&width=300',
+  //   day: '03',
+  //   month: '2025.12'
+  // },
+  // {
+  //   id: 5,
+  //   title: '新生入学欢迎会暨导师见面会',
+  //   description: '2025级研究生新生入学欢迎会暨导师见面会在多功能厅举行...',
+  //   image: '/placeholder.svg?height=200&width=300',
+  //   day: '28',
+  //   month: '2025.11'
+  // }
 ])
 
 // 右侧数据
@@ -116,14 +118,15 @@ const papersNews = ref([
 ])
 
 const researchNews = ref([
-  { id: 1, title: '化工系唐城等在过氧化氢绿电合成领域取得新进展', day: '15', month: '2025.12' },
-  { id: 2, title: '深圳国际研究生院耿洪亚团队在跨尺度生物样本冷冻保存领域取得新进展', day: '15', month: '2025.12' },
-  { id: 3, title: '生命学院陈春来研究组合作揭示全长T-box核糖开关调控翻译起始的构象动态机制', day: '14', month: '2025.12' },
-  { id: 4, title: '生医工程学院杜亚楠团队实现基于相分离调控的人工细胞智造和体内应用', day: '14', month: '2025.12' },
-  { id: 5, title: '材料学院在新型热电材料研究方面取得重要突破', day: '13', month: '2025.12' },
-  { id: 6, title: '计算机系团队在大语言模型安全性研究中取得新进展', day: '12', month: '2025.12' },
-  { id: 7, title: '物理系研究组在量子计算领域发表重要论文', day: '11', month: '2025.12' }
+  // { id: 1, title: '化工系唐城等在过氧化氢绿电合成领域取得新进展', day: '15', month: '2025.12' },
+  // { id: 2, title: '深圳国际研究生院耿洪亚团队在跨尺度生物样本冷冻保存领域取得新进展', day: '15', month: '2025.12' },
+  // { id: 3, title: '生命学院陈春来研究组合作揭示全长T-box核糖开关调控翻译起始的构象动态机制', day: '14', month: '2025.12' },
+  // { id: 4, title: '生医工程学院杜亚楠团队实现基于相分离调控的人工细胞智造和体内应用', day: '14', month: '2025.12' },
+  // { id: 5, title: '材料学院在新型热电材料研究方面取得重要突破', day: '13', month: '2025.12' },
+  // { id: 6, title: '计算机系团队在大语言模型安全性研究中取得新进展', day: '12', month: '2025.12' },
+  // { id: 7, title: '物理系研究组在量子计算领域发表重要论文', day: '11', month: '2025.12' }
 ])
+// 获取论文数据
 const GetAllsearchPapers = async (pageNum,pageSize,author,title) => {
   const res = await GetsearchPapers(pageNum,pageSize,author,title)
   console.log(res)
@@ -151,8 +154,87 @@ const GetAllsearchPapers = async (pageNum,pageSize,author,title) => {
     ElMessage.error('获取论文列表失败')
   }
 }
+// 获取获奖数据
+const GetAllAwards = async (pageNum,pageSize,author,title) => {
+  
+  const res = await GetAwards(pageNum,pageSize,author,title)
+  console.log("获奖内容",res)
+  if(res.code === 1){
+    res.data.data.filter(item => {
+      //将时间time以中间的-分割，取出day和month
+      const dateParts = item.time.split('-')
+      const month = `${dateParts[0]}.${dateParts[1]}`
+      const day = dateParts[2]  
+      awardsNews.value.push({
+        id: item.id,
+        title: item.author,
+        description: item.detail,
+        image: item.file,
+        day: day,
+        month: month,
+      })
+    })
+    console.log(awardsNews.value)
+  }
+}
+//获取团队活动的数据
+const GetAllEvents = async (pageNum,pageSize,title) => {
+  const params = {
+    pageNum: pageNum,
+    pageSize: pageSize,
+    title: title
+  }
+  const res = await getEventList(params)
+  console.log("团队活动",res)
+  if(res.code === 1){
+    res.data.data.filter(item => {
+      //将时间time以中间的-分割，取出day和month
+      const dateParts = item.time.split('-')
+      const month = `${dateParts[0]}.${dateParts[1]}`
+      const day = dateParts[2]  
+      activitiesNews.value.push({
+        id: item.id,
+        title: item.title,
+        description: item.detail,
+        image: item.file,
+        day: day,
+        month: month,
+      })
+    })
+    console.log(activitiesNews.value)
+  }
+}
+
+//获取研究项目数据
+const GetAllProjects = async (pageNum,pageSize,title) => {
+  const params = {
+    pageNum: pageNum,
+    pageSize: pageSize,
+    title: title
+  }
+  const res = await getProjectList(params)
+  console.log("研究项目",res)
+  if(res.code === 1){
+    res.data.data.filter(item => {
+      //将时间time以中间的-分割，取出day和month
+      const dateParts = item.time.split('-')
+      const month = `${dateParts[0]}.${dateParts[1]}`
+      const day = dateParts[2]  
+      researchNews.value.push({
+        id: item.id,
+        title: item.title,
+        day: day,
+        month: month,
+      })
+    })
+    console.log(researchNews.value)
+  }
+}
 onMounted(() => {
   GetAllsearchPapers(1,5,'','')
+  GetAllAwards(1,5,'','')
+  GetAllEvents(1,5,'','')
+  GetAllProjects(1,5,'','')
 })
 
 const currentLeftNews = computed(() => {
