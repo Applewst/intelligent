@@ -8,13 +8,13 @@ const activeLeftTab = ref('award')
 const activeRightTab = ref('paper')
 
 const leftTabs = [
-  { key: 'award', label: '奖励荣誉' },
+  { key: 'award', label: '获奖荣誉' },
   { key: 'activity', label: '团队活动' }
 ]
 
 const rightTabs = [
   { key: 'paper', label: '论文发表' },
-  { key: 'project', label: '教学科研' }
+  { key: 'project', label: '研究项目' }
 ]
 
 // 左侧数据

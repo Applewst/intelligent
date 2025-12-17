@@ -1,3 +1,4 @@
+import { time } from 'echarts';
 import service from './request';
 // import axios from 'axios';
 const projectList = [
@@ -230,7 +231,32 @@ const awardList = [
     image:'https://example.com/award10.jpg',
   }
 ]//获奖数据
-
+const direction =  [
+          {
+            id: 1,
+            name: '深度学习在图像识别中的应用',
+            file: '/placeholder.svg?height=300&width=400',     
+            time : '2023-10-01',
+            detail: '这是关于深度学习在图像识别中的应用的研究方向。',
+            author:"张伟",
+          },
+          {
+            id: 2,
+            name: '自然语言处理的最新进展',
+            file: '/placeholder.svg?height=300&width=400',     
+            time : '2023-11-15',
+            detail: '这是关于自然语言处理最新进展的研究方向。',
+            author:"李红",
+          },
+          {
+            id: 3,
+            name: '强化学习在游戏中的应用',
+            file: '/placeholder.svg?height=300&width=400',     
+            time : '2023-09-20',
+            detail: '这是关于强化学习在游戏中应用的研究方向。',
+            author:"王丽",
+          }
+] //研究方向数据
 const useMock = false
 
 //-----------------------------------------------------------
@@ -441,4 +467,80 @@ export const DeleteAward = async (id) => {
     }
   }
   return service.delete('/search/awards',  { params: { id } })
+}
+
+
+
+//查询研究方向
+export const GetResearchDirections = async (pageNum,pageSize,name,author) => {
+  console.log("查询研究方向API",pageNum,pageSize,name,author)
+  let useMock1 = true
+  if(useMock1){
+    return {
+      "code": 1,
+      "message": "success",
+      "data": {
+        "data": direction,
+        "total": direction.length
+      }
+    }
+  }
+  return service.get('/search/direction', {
+      params: {
+        pageNum,
+        pageSize,
+        name,
+        author
+      }
+    })
+}
+//新增研究方向
+export const AddResearchDirection = async (name,detail,author,file) => {
+  console.log("新增研究方向API",name,detail,author,file)
+  let useMock1 = true
+  if(useMock1){
+    return {
+      "code": 1,
+      "message": "success",
+      "data": null
+    }
+  }
+  return service.post('/search/direction', {
+    title,
+    detail,
+    author,
+    file
+   })
+}
+//编辑研究方向
+export const EditResearchDirection = async (id,name,detail,author,file) => {
+  console.log("编辑研究方向API",id,name,detail,author,file)
+  let useMock1 = true
+  if(useMock1){
+    return {
+      "code": 1,
+      "message": "success",
+      "data": null
+    }
+  }       
+  return service.put('/search/direction', {
+    id,
+    title,
+    detail,
+    author,
+    file
+   })
+}
+//删除研究方向
+export const DeleteResearchDirection = async (id) => {
+  console.log("删除研究方向API",id)
+  let useMock1 = true
+  if(useMock1){
+    return {
+      "code": 1,
+      "message": "success",
+      "data": null
+    }
+  }
+  return service.delete('/search/direction', { params: { id } })
 }
