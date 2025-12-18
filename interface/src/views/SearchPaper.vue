@@ -180,8 +180,9 @@ const handleCurrentChange = (newPage) => {
   padding-left: 2em;
 
   :deep(h1), :deep(h2), :deep(h3), :deep(h4), :deep(h5), :deep(h6) {
-    margin: 0.5em 0;
-    font-weight: bold;
+     margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
   }
 
   :deep(h1) {
@@ -244,7 +245,57 @@ const handleCurrentChange = (newPage) => {
   :deep(.ql-align-justify) {
     text-align: justify;
   }
+  :deep(p){
+    margin: 0 0 8px 0;
+  }
+  :deep(strong) {
+  font-weight: bold !important;
+  }
+ :deep(em) {
+  font-style: italic !important;
+  }
+  :deep(u) {
+  text-decoration: underline !important;
 }
+:deep(s),:deep(strike) {
+  text-decoration: line-through !important;
+}
+:deep(img) {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+:deep(ul),:deep(ol) {
+  margin: 0 0 8px 0;
+  padding-left: 20px;
+}
+ :deep(blockquote) {
+  margin: 0 0 8px 0;
+  padding-left: 10px;
+  border-left: 3px solid #ddd;
+  color: #666;
+}
+:deep(pre) {
+  background: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  overflow: auto;
+}
+:deep(code) {
+  background: #f5f5f5;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+:deep(a) {
+  color: #409eff;
+  text-decoration: underline;
+}
+
+}
+
 
 .paper-footer {
   display: flex;
