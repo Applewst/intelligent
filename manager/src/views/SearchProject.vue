@@ -29,7 +29,8 @@
             {{ (pageNum - 1) * pageSize + $index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="项目名称" min-width="300" />
+        <el-table-column prop="title" label="项目名称" width="150" />
+        <el-table-column prop="detail" label="项目内容" min-width="150"  />
         <el-table-column prop="time" label="上传时间" width="150" sortable />
         <el-table-column prop="image" label="照片" width="120">
           <template #default="{ row }">
@@ -99,9 +100,14 @@
             />
           </div>
         </el-form-item>
-        <!-- <el-form-item label="项目内容" class="editor-form-item">
-          <div ref="quillEditor" class="quill-editor"></div>
-        </el-form-item> -->
+        <el-form-item label="项目内容" prop="detail" class="editor-form-form">
+          <RichTextEditor
+            ref="editorRef"
+            v-model="form.detail"
+            placeholder="请输入项目内容..."
+            height="300px"
+          />
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -118,15 +124,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, onMounted,watch } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import Quill from 'quill'
-import 'quill/dist/quill.snow.css'
 import { GetSearchProject,AddSearchProject,DeleteSearchProject,EditSearchProject } from '../api/SearchApi'
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
 import { uploadImage } from "@/api/upload";
+import RichTextEditor from '@/components/RichTextEditor.vue';
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
+
+// 使用 editorRef 替代原来的 quillEditor
+const editorRef = ref(null);
 
 const props = {
   label: 'label',
@@ -163,9 +171,9 @@ const GetAllSearchProject = async (pageNum, pageSize,name)=>{
   total = response.data.total
 }
 //新增项目
-const AddAllSearchProject = async (title,image)=>{
-  const response = await AddSearchProject(title,image);
-  console.log("新增项目文本处",title,image)
+const AddAllSearchProject = async (title,detail,image)=>{
+  const response = await AddSearchProject(title,detail,image);
+  console.log("新增项目文本处",title,detail,image)
   if(response.code===1){
     ElMessage.success('新增成功');
     pageNum.value = 1
@@ -175,9 +183,9 @@ const AddAllSearchProject = async (title,image)=>{
   }
 }
 //编辑项目
-const EditAllSearchProject = async (id,title,image)=>{
-  const response = await EditSearchProject(id,title,image);
-  console.log("编辑项目文本处",id,title,image)
+const EditAllSearchProject = async (id,title,detail,image)=>{
+  const response = await EditSearchProject(id,title,detail,image);
+  console.log("编辑项目文本处",id,title,detail,image)
   if(response.code===1){
     ElMessage.success('编辑成功');
     GetAllSearchProject(pageNum.value, pageSize.value,SearchVal.value);
@@ -241,49 +249,14 @@ const dialogVisible = ref(false)
 const dialogTitle = ref('')
 const isEdit = ref(false)
 const editId = ref(null)
-const quillEditor = ref(null)
-let quillInstance = null
 
 const form = reactive({
   title: '',
+  detail: '',
   image: '',
 })
 
-const initQuillEditor = () => {
-  nextTick(() => {
-    if (quillEditor.value) {
-      // Destroy existing Quill instance if it exists
-      if (quillInstance) {
-        quillInstance.off('text-change')
-        const toolbar = quillInstance.getModule('toolbar')
-        if (toolbar) {
-          toolbar.container.remove()
-        }
-        quillInstance = null
-      }
-      
-      // Clear the DOM element completely
-      quillEditor.value.innerHTML = ''
-      
-      // Create new Quill instance
-      quillInstance = new Quill(quillEditor.value, {
-        theme: 'snow',
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'align': [] }],
-            ['link', 'image'],
-            ['clean']
-          ]
-        },
-        placeholder: '请输入论文内容...'
-      })
-    }
-  })
-}
+// 删除 initQuillEditor 函数，组件内部已处理
 
 // 搜索
 const handleSearch = () => {
@@ -296,14 +269,9 @@ const handleAdd = () => {
   dialogTitle.value = '新增研究项目'
   isEdit.value = false
   form.title = ''
+  form.detail = ''
   form.image = ''
   dialogVisible.value = true
-  initQuillEditor()
-  // nextTick(() => {
-  //   if (quillInstance) {
-  //     quillInstance.setContents([])
-  //   }
-  // })
 }
 
 const handleEdit = (row) => {
@@ -311,34 +279,15 @@ const handleEdit = (row) => {
   isEdit.value = true
   editId.value = row.id
   form.title = row.title
+  form.detail = row.detail || ''
   form.image = row.image
   dialogVisible.value = true
-  initQuillEditor()
-  nextTick(() => {
-    if (quillInstance) {
-      quillInstance.clipboard.dangerouslyPasteHTML(form.content)
-    }
-  })
 }
 
 const handleDialogClose = () => {
-  if (quillInstance) {
-    // Remove all event listeners
-    quillInstance.off('text-change')
-    // Get and remove toolbar
-    const toolbar = quillInstance.getModule('toolbar')
-    if (toolbar && toolbar.container) {
-      toolbar.container.remove()
-    }
-    // Set instance to null
-    quillInstance = null
-  }
-  // Clear the editor div content
-  if (quillEditor.value) {
-    quillEditor.value.innerHTML = ''
-  }
   // Reset form
   form.title = ''
+  form.detail = ''
   form.image = ''
 }
 
@@ -353,11 +302,11 @@ const handleSubmit = () => {
   // }
   
   if (isEdit.value) {
-    console.log('编辑论文文本处:', form)
-    EditAllSearchProject(editId.value,form.title,form.image);
+    console.log('编辑项目文本处:', form)
+    EditAllSearchProject(editId.value,form.title,form.detail,form.image);
   } else {
-    console.log('新增论文文本处:', form)
-    AddAllSearchProject(form.title,form.image);
+    console.log('新增项目文本处:', form)
+    AddAllSearchProject(form.title,form.detail,form.image);
   }
   
   dialogVisible.value = false
@@ -468,25 +417,13 @@ const handlePageSizeChange = (size) => {
   margin-left: 0 !important;
 }
 
-/* Added styles for Quill editor */
-.quill-editor {
-  height: 300px;
-  /* Added width to ensure full width */
-  width: 100%;
+/* 保留 editor-form-form 样式，删除所有 Quill 相关样式 */
+:deep(.editor-form-form) {
+  display: block;
 }
 
-:deep(.ql-container) {
-  height: 250px;
-  font-size: 14px;
-}
-
-:deep(.ql-toolbar) {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
-:deep(.ql-container) {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+:deep(.editor-form-form .el-form-item__content) {
+  display: block;
+  margin-left: 0 !important;
 }
 </style>

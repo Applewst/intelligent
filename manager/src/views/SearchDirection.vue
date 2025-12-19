@@ -119,7 +119,12 @@
         </el-form-item>
         
         <el-form-item label="论文内容" prop="detail" class="editor-form-form">
-          <div ref="quillEditor" class="quill-editor"></div>
+          <RichTextEditor
+            ref="editorRef"
+            v-model="form.detail"
+            placeholder="请输入论文内容..."
+            height="300px"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -137,14 +142,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, onMounted, watch } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import Quill from 'quill';
-import 'quill/dist/quill.snow.css';
 import axios from 'axios';
 import { GetResearchDirections, AddResearchDirection, EditResearchDirection, DeleteResearchDirection } from '@/api/SearchApi.js';
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
 import { uploadImage } from "@/api/upload";
+import RichTextEditor from '@/components/RichTextEditor.vue';
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
 // 搜索表单
@@ -226,8 +230,8 @@ const dialogVisible = ref(false);
 const dialogTitle = ref('');
 const isEdit = ref(false);
 const editId = ref(null);
-const quillEditor = ref(null);
-let quillInstance = null;
+// 使用 editorRef 替代原来的 quillEditor
+const editorRef = ref(null);
 
 const form = reactive({
   author: '',
@@ -307,7 +311,7 @@ const handleSearch = () => {
   GetAllSearchDirection(pageNum.value, pageSize.value, searchForm.name, searchForm.author);
 };
 
-// 新增研究方向
+// 简化新增逻辑，不再需要手动初始化 Quill
 const handleAdd = () => {
   dialogTitle.value = '新增研究方向';
   isEdit.value = false;
@@ -315,54 +319,25 @@ const handleAdd = () => {
   form.author = ''
   form.file = ''
   form.files = [];
-  form.detail = '';
+  form.detail = '';  // 清空内容，v-model 会自动同步到编辑器
   dialogVisible.value = true;
-  initQuillEditor();
-  nextTick(() => {
-    if (quillInstance) {
-      quillInstance.setContents([]);
-    }
-  });
 };
 
-// 编辑研究方向
+// 简化编辑逻辑，不再需要手动设置 Quill 内容
 const handleEdit = (row) => {
   dialogTitle.value = '编辑研究方向';
   isEdit.value = true;
   editId.value = row.id;
   form.name = row.name;
-  form.file = row.file 
+  form.file = row.file
   // form.files = row.files ? [{ name: row.files, url: row.files }] : [];
   form.author = row.author;
-  form.detail = row.detail || '';
+  form.detail = row.detail || '';  // 设置内容，v-model 会自动同步到编辑器
   dialogVisible.value = true;
-
-  initQuillEditor();
-  nextTick(() => {
-    if (quillInstance) {
-      quillInstance.clipboard.dangerouslyPasteHTML(form.detail);
-    }
-  });
 };
 
-// 关闭对话框
+// 简化关闭逻辑，不再需要手动清理 Quill 实例
 const handleDialogClose = () => {
-  if (quillInstance) {
-    // Remove all event listeners
-    quillInstance.off('text-change');
-    // Get and remove toolbar
-    const toolbar = quillInstance.getModule('toolbar');
-    if (toolbar && toolbar.container) {
-      toolbar.container.remove();
-    }
-    // Set instance to null
-    quillInstance = null;
-  }
-  // Clear the editor div content
-  if (quillEditor.value) {
-    quillEditor.value.innerHTML = '';
-  }
-  // Reset form
   form.name = '';
   form.author = '';
   form.detail = '';
@@ -370,42 +345,7 @@ const handleDialogClose = () => {
   form.files = [];
 };
 
-// 初始化 Quill 编辑器
-const initQuillEditor = () => {
-  nextTick(() => {
-    if (quillEditor.value) {
-      // Destroy existing Quill instance if it exists
-      if (quillInstance) {
-        quillInstance.off('text-change');
-        const toolbar = quillInstance.getModule('toolbar');
-        if (toolbar) {
-          toolbar.container.remove();
-        }
-        quillInstance = null;
-      }
-
-      // Clear the DOM element completely
-      quillEditor.value.innerHTML = '';
-
-      // Create new Quill instance
-      quillInstance = new Quill(quillEditor.value, {
-        theme: 'snow',
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'align': '' }],
-            ['link', 'image'],
-            ['clean']
-          ]
-        },
-        placeholder: '请输入论文内容...'
-      });
-    }
-  });
-};
+// 删除 initQuillEditor 函数，组件内部已处理
 </script>
 
 <style scoped>
@@ -491,25 +431,5 @@ const initQuillEditor = () => {
   margin-left: 0 !important;
 }
 
-/* Added styles for Quill editor */
-.quill-editor {
-  height: 300px;
-  /* Added width to ensure full width */
-  width: 100%;
-}
-
-:deep(.ql-container) {
-  height: 250px;
-  font-size: 14px;
-}
-
-:deep(.ql-toolbar) {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
-:deep(.ql-container) {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
+/* 保留 editor-form-form 样式，删除所有 Quill 相关样式 */
 </style>

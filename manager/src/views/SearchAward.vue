@@ -84,6 +84,7 @@
         <el-form-item label="获奖内容">
           <el-input v-model="form.detail" placeholder="请输入获奖内容" />
         </el-form-item>
+
         <el-form-item label="获奖人">
           <el-input v-model="form.author" placeholder="请输入获奖人名称" />
         </el-form-item>
@@ -133,12 +134,15 @@
 import { ref, reactive, nextTick, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetAwardList, AddAward, UpdateAward, DeleteAward } from '@/api/SearchApi.js'
-import Quill from 'quill'
+
 import { uploadImage } from "@/api/upload";
-import 'quill/dist/quill.snow.css'
+
 import ConfirmDeleteDialog from "@/components/ConfirmDeleteDialog.vue";
 const deleteDialogVisible = ref(false);
 const currentDeleteRow = ref(null);
+
+
+
 // 搜索表单
 const searchForm = reactive({
   detail: '',
@@ -260,8 +264,6 @@ const dialogVisible = ref(false)
 const dialogTitle = ref('')
 const isEdit = ref(false)
 const editId = ref(null)
-const quillEditor = ref(null)
-let quillInstance = null
 
 const form = reactive({
   detail: '',
@@ -270,41 +272,7 @@ const form = reactive({
   time: ''
 })
 
-const initQuillEditor = () => {
-  nextTick(() => {
-    if (quillEditor.value) {
-      // Destroy existing Quill instance if it exists
-      if (quillInstance) {
-        quillInstance.off('text-change')
-        const toolbar = quillInstance.getModule('toolbar')
-        if (toolbar) {
-          toolbar.container.remove()
-        }
-        quillInstance = null
-      }
-      
-      // Clear the DOM element completely
-      quillEditor.value.innerHTML = ''
-      
-      // Create new Quill instance
-      quillInstance = new Quill(quillEditor.value, {
-        theme: 'snow',
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'align': [] }],
-            ['link', 'image'],
-            ['clean']
-          ]
-        },
-        placeholder: '请输入论文内容...'
-      })
-    }
-  })
-}
+
 
 // 搜索
 const handleSearch = () => {
@@ -322,7 +290,7 @@ const handleAdd = () => {
   form.detail = ''
   form.author = ''
   form.file = ''
-  form.time = ''  // 添加这行代码
+  form.time = ''
   dialogVisible.value = true
   initQuillEditor()
   nextTick(() => {
@@ -341,30 +309,11 @@ const handleEdit = (row) => {
   form.file = row.file || ''
   form.time = row.time || ''  // 添加这行代码
   dialogVisible.value = true
-  initQuillEditor()
-  nextTick(() => {
-    if (quillInstance) {
-      quillInstance.clipboard.dangerouslyPasteHTML(row.content || '')  // 确保这里使用正确的字段
-    }
-  })
+ 
 }
 
 const handleDialogClose = () => {
-  if (quillInstance) {
-    // Remove all event listeners
-    quillInstance.off('text-change')
-    // Get and remove toolbar
-    const toolbar = quillInstance.getModule('toolbar')
-    if (toolbar && toolbar.container) {
-      toolbar.container.remove()
-    }
-    // Set instance to null
-    quillInstance = null
-  }
-  // Clear the editor div content
-  if (quillEditor.value) {
-    quillEditor.value.innerHTML = ''
-  }
+
   // Reset form
   form.detail = ''
   form.author = ''
@@ -402,9 +351,7 @@ const handleSubmit = () => {
     formattedTime = `${year}-${month}-${day}`
   }
   
-  if (quillInstance) {
-    form.content = quillInstance.root.innerHTML
-  }
+
   
   if (isEdit.value) {
     EditAwardData(editId.value, form.detail, form.author, form.file, formattedTime)
