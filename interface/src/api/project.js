@@ -1,6 +1,6 @@
 import service from './request';
 
-// 模拟项目研究方向数据（固定5个）
+// 模拟项目研究方向数据
 const mockProjectData = [
   {
     id: 1,
