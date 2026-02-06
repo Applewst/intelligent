@@ -64,7 +64,7 @@ public class ResearchDirectionController {
     @PutMapping("/project")
     public Result updateDirection(@RequestBody ResearchDirection researchDirection) {
         if (researchDirection.getId() == null) {
-            log.warn("修改研究方向:未选择任何数据，ID为空");
+            log.warn("ID为空 无法删除");
             throw new NoIdException();
         }
         researchDirectionService.updateDirection(researchDirection);
@@ -79,7 +79,7 @@ public class ResearchDirectionController {
     @DeleteMapping("")
     public Result deleteDirection(Integer id) {
         if (id == null) {
-            log.warn("删除研究方向:未选择任何数据，ID为空");
+            log.warn("ID为空 无法删除");
             throw new NoIdException();
         }
         researchDirectionService.deleteDirection(id);
