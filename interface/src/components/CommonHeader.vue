@@ -72,6 +72,7 @@
         router
       >
         <el-menu-item index="/">首页</el-menu-item>
+        <el-menu-item index="/admission">招生信息</el-menu-item>
         <el-menu-item index="/team/introduction">团队介绍</el-menu-item>
         <el-sub-menu index="/search">
           <template #title>研究成果</template>
@@ -111,6 +112,7 @@
       >
         <!-- 菜单内容同桌面端 -->
         <el-menu-item index="/">首页</el-menu-item>
+        <el-menu-item index="/admission">招生信息</el-menu-item>
         <el-menu-item index="/team/introduction">团队介绍</el-menu-item>
         <el-sub-menu index="/search">
           <template #title>研究成果</template>
@@ -149,24 +151,25 @@ const isLoading = ref(false) // 加载状态
 
 const activeKey = ref('')
 // 根据路径设置激活的key
-const setActiveKeyByPath = (path) => {
-  const menuItems = [
-    '/',
-    '/team/introduction',
-    '/search/project',
-    '/search/paper',
-    '/search/award',
-    '/news/activity',
-    '/news/event',
-    '/news/student',
-    '/news/photo',
-    '/member/teacher',
-    '/member/studentlist',
-    '/member/alumni',
-    '/link/contact',
-    '/resource',
-    '/admin/dashboard',
-  ]
+  const setActiveKeyByPath = (path) => {
+    const menuItems = [
+      '/',
+      '/admission',
+      '/team/introduction',
+      '/search/project',
+      '/search/paper',
+      '/search/award',
+      '/news/activity',
+      '/news/event',
+      '/news/student',
+      '/news/photo',
+      '/member/teacher',
+      '/member/studentlist',
+      '/member/alumni',
+      '/link/contact',
+      '/resource',
+      '/admin/dashboard',
+    ]
 
   // 1. 优先匹配完全相等的路径
   let matchedKey = menuItems.find((item) => path === item)
