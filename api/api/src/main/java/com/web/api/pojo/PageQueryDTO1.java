@@ -1,0 +1,27 @@
+package com.web.api.pojo;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class PageQueryDTO1 {
+    // 页码
+    private Integer pageNum = 1;
+    // 每页大小
+    private Integer pageSize = 10;
+    // 根据项目名称搜索
+    private String name;
+    //作者名字
+    private String author;
+
+    public Integer getPageNum() {
+        return pageNum == null ? 1 : pageNum;
+    }
+
+    public Integer getPageSize() {
+        return pageSize == null ? 10 : pageSize;
+    }
+}

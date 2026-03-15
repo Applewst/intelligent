@@ -1,5 +1,6 @@
 <script setup>
 import CommonHeader from '../components/CommonHeader.vue'
+import CommonBanner from '../components/CommonBanner.vue'
 import CommonNew from '@/components/CommonNew.vue'
 import CommonProject from '@/components/CommonProject.vue'
 import CommonTeacher from '@/components/CommonTeacher.vue'
@@ -15,6 +16,7 @@ import CommonPhoto from '@/components/CommonPhoto.vue'
       <el-main class="common-main">
         <router-view></router-view>
         <div v-if="$route.name === 'home'">
+          <common-banner />
           <common-new />
           <common-project />
           <!-- 引用组件影响样式，外加标题 -->

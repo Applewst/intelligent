@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.api.mapper.ResearchDirectionGroupMapper">
+    <insert id="addResearchDirectionGroup">
+        insert into
+            research_direction_group (name, detail, file,author)
+        values
+            (#{name}, #{detail}, #{file},#{author})
+    </insert>
+    <delete id="deleteByPrimaryKey">
+        delete from
+            research_direction_group
+        where
+            id = #{id}
+    </delete>
+    <update id="updateResearchDirectionGroup">
+        UPDATE research_direction_group
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="detail != null and detail != ''">detail = #{detail},</if>
+            <if test="file != null and file != ''">file = #{file},</if>
+            <if test="author != null">`author` = #{author},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <select id="selectAllResearchDirectionGroup" resultType="com.web.api.pojo.ResearchDirectionGroup">
+        select *
+        from research_direction_group
+    </select>
+</mapper>

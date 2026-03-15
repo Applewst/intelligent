@@ -59,7 +59,7 @@ const router = createRouter({
         {
           path: '/member/studentlist',
           name: 'studentlist',
-          component: ()=>import('../views/MemberStudentList.vue')
+          component: ()=>import('../views/MemberStudentlist.vue')
         },
         {
           path: '/member/alumni',
@@ -88,6 +88,11 @@ const router = createRouter({
           name: 'TeacherDetail',
           component: ()=>import('../views/TeacherDetail.vue'),
           props: route => ({ projectId: route.params.teacherId })
+        },
+        {
+          path: '/admission',
+          name: 'admission',
+          component: ()=>import('../views/AdmissionInfo.vue'),
         },
         {
           path: '/photos',
