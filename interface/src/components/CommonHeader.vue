@@ -83,9 +83,9 @@
           <template #title>团队动态</template>
           <el-menu-item index="/news/activity">科研动态</el-menu-item>
           <el-menu-item index="/news/event">团队活动</el-menu-item>
-          <el-menu-item index="/news/student">学生发展</el-menu-item>
           <el-menu-item index="/news/photo">照片墙</el-menu-item>
         </el-sub-menu>
+        <el-menu-item index="/student">学生发展</el-menu-item>
         <el-sub-menu index="/member">
           <template #title>成员信息</template>
           <el-menu-item index="/member/teacher">师资队伍</el-menu-item>
@@ -93,7 +93,6 @@
           <el-menu-item index="/member/alumni">桃李天下</el-menu-item>
         </el-sub-menu>
         <el-menu-item index="/link/contact">联系我们</el-menu-item>
-        <!-- 直接使用 store.isLogin -->
         <el-menu-item index="/resource" v-show="store.isLogin">资源共享</el-menu-item>
       </el-menu>
     </div>
@@ -132,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted,computed } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useCounterStore } from '../stores/counter'
 import { useRouter, useRoute } from 'vue-router'
@@ -141,7 +140,6 @@ import { Menu, Close, ArrowRight } from '@element-plus/icons-vue'
 const router = useRouter()
 const route = useRoute()
 const store = useCounterStore()
-
 
 // 组件内只需要定义与自身UI相关的状态
 const isMobileMenuOpen = ref(false) // 移动端菜单是否展开
